@@ -1,0 +1,652 @@
+[
+ {
+  "id": "proxima-centauri",
+  "designation": "Proxima Centauri (GJ 551, α Cen C)",
+  "name": "Proxima Centauri",
+  "classification": "Red dwarf star",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 217.42896,
+  "dec_deg": -62.67947,
+  "distance_ly": 4.2465,
+  "distance_err_ly": [
+   0.0003,
+   0.0003
+  ],
+  "distance_note": "Gaia DR3 parallax",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "M5.5Ve",
+  "mass": {
+   "value": 0.122,
+   "unit": "M☉",
+   "err": null
+  },
+  "radius": {
+   "value": 0.154,
+   "unit": "R☉",
+   "err": null
+  },
+  "temperature_k": 3050,
+  "luminosity_lsun": 0.0017,
+  "characteristics": "Nearest known star to the Sun. A flare star with a confirmed planet, Proxima b, in its habitable zone region.",
+  "discovery": "Robert Innes, 1915",
+  "references": [
+   "Gaia Collaboration, Gaia Data Release 3 (2022)",
+   "Kervella et al. 2017, A&A",
+   "Anglada-Escudé et al. 2016, Nature"
+  ],
+  "source": "SIMBAD (CDS) and Gaia DR3 astrometry, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "alpha-centauri-a",
+  "designation": "Alpha Centauri A (HD 128620)",
+  "name": "Alpha Centauri A",
+  "classification": "Main-sequence star",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 219.90204,
+  "dec_deg": -60.834,
+  "distance_ly": 4.365,
+  "distance_err_ly": [
+   0.004,
+   0.004
+  ],
+  "distance_note": "Parallax from Kervella et al. 2016",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "G2V",
+  "mass": {
+   "value": 1.106,
+   "unit": "M☉",
+   "err": 0.004
+  },
+  "radius": {
+   "value": 1.2234,
+   "unit": "R☉",
+   "err": 0.0053
+  },
+  "temperature_k": 5790,
+  "luminosity_lsun": 1.5059,
+  "characteristics": "Brightest member of the closest stellar system to the Sun, orbiting Alpha Centauri B with a period of about 79.9 years.",
+  "discovery": "Known since antiquity (binary nature resolved 1689)",
+  "references": [
+   "Kervella et al. 2016, A&A 594, A107"
+  ],
+  "source": "SIMBAD (CDS) and Gaia DR3 astrometry, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "alpha-centauri-b",
+  "designation": "Alpha Centauri B (HD 128621)",
+  "name": "Alpha Centauri B",
+  "classification": "Main-sequence star",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 219.89608,
+  "dec_deg": -60.83753,
+  "distance_ly": 4.365,
+  "distance_err_ly": [
+   0.004,
+   0.004
+  ],
+  "distance_note": "Parallax from Kervella et al. 2016",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "K1V",
+  "mass": {
+   "value": 0.9373,
+   "unit": "M☉",
+   "err": 0.0033
+  },
+  "radius": {
+   "value": 0.8632,
+   "unit": "R☉",
+   "err": 0.0037
+  },
+  "temperature_k": 5260,
+  "luminosity_lsun": 0.4981,
+  "characteristics": "Orange companion of Alpha Centauri A.",
+  "discovery": "Known since antiquity (binary nature resolved 1689)",
+  "references": [
+   "Kervella et al. 2016, A&A 594, A107"
+  ],
+  "source": "SIMBAD (CDS) and Gaia DR3 astrometry, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "barnards-star",
+  "designation": "Barnard’s Star (GJ 699)",
+  "name": "Barnard’s Star",
+  "classification": "Red dwarf star",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 269.45208,
+  "dec_deg": 4.69336,
+  "distance_ly": 5.963,
+  "distance_err_ly": [
+   0.001,
+   0.001
+  ],
+  "distance_note": "Gaia DR3 parallax",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "M4V",
+  "mass": {
+   "value": 0.162,
+   "unit": "M☉",
+   "err": null
+  },
+  "radius": {
+   "value": 0.196,
+   "unit": "R☉",
+   "err": null
+  },
+  "temperature_k": 3278,
+  "luminosity_lsun": 0.0035,
+  "characteristics": "Has the largest proper motion of any known star (about 10.4 arcsec per year). A super-Earth candidate, Barnard b, has been reported.",
+  "discovery": "Edward E. Barnard, 1916",
+  "references": [
+   "Gaia Collaboration, Gaia Data Release 3 (2022)"
+  ],
+  "source": "SIMBAD (CDS) and Gaia DR3 astrometry, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "wolf-359",
+  "designation": "Wolf 359 (CN Leonis, GJ 406)",
+  "name": "Wolf 359",
+  "classification": "Red dwarf star",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 164.12042,
+  "dec_deg": 7.01472,
+  "distance_ly": 7.856,
+  "distance_err_ly": [
+   0.01,
+   0.01
+  ],
+  "distance_note": "Parallax-derived",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "M6.5V",
+  "mass": {
+   "value": 0.11,
+   "unit": "M☉",
+   "err": null
+  },
+  "radius": null,
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Faint, nearby flare star in Leo.",
+  "discovery": "Max Wolf, 1918",
+  "references": [
+   "Gaia Collaboration, Gaia Data Release 3 (2022)"
+  ],
+  "source": "SIMBAD (CDS) and Gaia DR3 astrometry, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "sirius-a",
+  "designation": "Sirius A (α Canis Majoris, HD 48915)",
+  "name": "Sirius A",
+  "classification": "Main-sequence star",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 101.28717,
+  "dec_deg": -16.71611,
+  "distance_ly": 8.601,
+  "distance_err_ly": [
+   0.036,
+   0.036
+  ],
+  "distance_note": "Hipparcos parallax",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "A1V",
+  "mass": {
+   "value": 2.063,
+   "unit": "M☉",
+   "err": 0.023
+  },
+  "radius": {
+   "value": 1.711,
+   "unit": "R☉",
+   "err": null
+  },
+  "temperature_k": 9940,
+  "luminosity_lsun": 25.4,
+  "characteristics": "Brightest star in the night sky. Orbited by the white dwarf Sirius B with a period of about 50 years.",
+  "discovery": "Known since antiquity",
+  "references": [
+   "Bond et al. 2017, ApJ 840, 70"
+  ],
+  "source": "SIMBAD (CDS) and Gaia DR3 astrometry, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "sirius-b",
+  "designation": "Sirius B",
+  "name": "Sirius B",
+  "classification": "White dwarf",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 101.2875,
+  "dec_deg": -16.71833,
+  "distance_ly": 8.601,
+  "distance_err_ly": [
+   0.036,
+   0.036
+  ],
+  "distance_note": "Hipparcos parallax",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "DA2",
+  "mass": {
+   "value": 1.018,
+   "unit": "M☉",
+   "err": 0.011
+  },
+  "radius": {
+   "value": 0.0084,
+   "unit": "R☉",
+   "err": null
+  },
+  "temperature_k": 25200,
+  "luminosity_lsun": 0.056,
+  "characteristics": "First white dwarf ever discovered; a dense stellar remnant roughly Earth-sized.",
+  "discovery": "Alvan Graham Clark, 1862",
+  "references": [
+   "Bond et al. 2017, ApJ 840, 70"
+  ],
+  "source": "SIMBAD (CDS) and Gaia DR3 astrometry, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "epsilon-eridani",
+  "designation": "Epsilon Eridani (HD 22049)",
+  "name": "Epsilon Eridani",
+  "classification": "Main-sequence star",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 53.23267,
+  "dec_deg": -9.45825,
+  "distance_ly": 10.5,
+  "distance_err_ly": [
+   0.005,
+   0.005
+  ],
+  "distance_note": "Gaia DR3 parallax",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "K2V",
+  "mass": {
+   "value": 0.82,
+   "unit": "M☉",
+   "err": null
+  },
+  "radius": {
+   "value": 0.74,
+   "unit": "R☉",
+   "err": null
+  },
+  "temperature_k": 5084,
+  "luminosity_lsun": 0.34,
+  "characteristics": "Young, active K dwarf with a debris disc and a long-period giant-planet candidate.",
+  "discovery": "Known since antiquity",
+  "references": [
+   "Gaia Collaboration, Gaia Data Release 3 (2022)"
+  ],
+  "source": "SIMBAD (CDS) and Gaia DR3 astrometry, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "tau-ceti",
+  "designation": "Tau Ceti (HD 10700)",
+  "name": "Tau Ceti",
+  "classification": "Main-sequence star",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 26.017,
+  "dec_deg": -15.93747,
+  "distance_ly": 11.91,
+  "distance_err_ly": [
+   0.01,
+   0.01
+  ],
+  "distance_note": "Parallax-derived",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "G8V",
+  "mass": {
+   "value": 0.78,
+   "unit": "M☉",
+   "err": null
+  },
+  "radius": {
+   "value": 0.79,
+   "unit": "R☉",
+   "err": null
+  },
+  "temperature_k": 5344,
+  "luminosity_lsun": 0.52,
+  "characteristics": "Sun-like star with a debris disc; several planet candidates have been proposed.",
+  "discovery": "Known since antiquity",
+  "references": [
+   "Gaia Collaboration, Gaia Data Release 3 (2022)"
+  ],
+  "source": "SIMBAD (CDS) and Gaia DR3 astrometry, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "vega",
+  "designation": "Vega (α Lyrae, HD 172167)",
+  "name": "Vega",
+  "classification": "Main-sequence star",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 279.23475,
+  "dec_deg": 38.78369,
+  "distance_ly": 25.04,
+  "distance_err_ly": [
+   0.07,
+   0.07
+  ],
+  "distance_note": "Parallax-derived",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "A0Va",
+  "mass": {
+   "value": 2.135,
+   "unit": "M☉",
+   "err": null
+  },
+  "radius": {
+   "value": 2.362,
+   "unit": "R☉",
+   "err": null
+  },
+  "temperature_k": 9602,
+  "luminosity_lsun": 40.12,
+  "characteristics": "A rapid rotator seen nearly pole-on; the polar radius is shown (equatorial radius is larger). Surrounded by a debris disc.",
+  "discovery": "Known since antiquity",
+  "references": [
+   "Monnier et al. 2012, ApJ 761, L3"
+  ],
+  "source": "SIMBAD (CDS) and Gaia DR3 astrometry, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "betelgeuse",
+  "designation": "Betelgeuse (α Orionis, HD 39801)",
+  "name": "Betelgeuse",
+  "classification": "Red supergiant",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 88.79296,
+  "dec_deg": 7.40706,
+  "distance_ly": 548,
+  "distance_err_ly": [
+   49,
+   88
+  ],
+  "distance_note": "Joyce et al. 2020 (distance estimates for this star differ between studies)",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "M1–M2 Ia–Iab",
+  "mass": {
+   "value": 18,
+   "unit": "M☉",
+   "err": null
+  },
+  "radius": {
+   "value": 764,
+   "unit": "R☉",
+   "err": null
+  },
+  "temperature_k": 3600,
+  "luminosity_lsun": 100000,
+  "characteristics": "Semi-regular variable and one of the largest stars visible to the naked eye. It underwent an unusual dimming in 2019–2020. Mass, radius and luminosity are model-dependent estimates.",
+  "discovery": "Known since antiquity",
+  "references": [
+   "Joyce et al. 2020, ApJ"
+  ],
+  "source": "SIMBAD (CDS) and Gaia DR3 astrometry, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "rigel",
+  "designation": "Rigel (β Orionis, HD 34085)",
+  "name": "Rigel",
+  "classification": "Blue supergiant",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 78.63446,
+  "dec_deg": -8.20164,
+  "distance_ly": 860,
+  "distance_err_ly": [
+   78,
+   78
+  ],
+  "distance_note": "Uncertainty derived from the Hipparcos parallax error",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "B8Ia",
+  "mass": {
+   "value": 21,
+   "unit": "M☉",
+   "err": null
+  },
+  "radius": {
+   "value": 79,
+   "unit": "R☉",
+   "err": null
+  },
+  "temperature_k": 12100,
+  "luminosity_lsun": 120000,
+  "characteristics": "Brightest star in Orion; a multiple system with a luminous blue supergiant primary.",
+  "discovery": "Known since antiquity",
+  "references": [
+   "Hipparcos (van Leeuwen 2007)"
+  ],
+  "source": "SIMBAD (CDS) and Gaia DR3 astrometry, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "polaris",
+  "designation": "Polaris (α Ursae Minoris, HD 8890)",
+  "name": "Polaris",
+  "classification": "Cepheid variable (supergiant)",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 37.95454,
+  "dec_deg": 89.26411,
+  "distance_ly": 433,
+  "distance_err_ly": [
+   6,
+   6
+  ],
+  "distance_note": "Hipparcos parallax; Gaia parallax is unreliable for this bright star",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "F7Ib",
+  "mass": {
+   "value": 5.4,
+   "unit": "M☉",
+   "err": null
+  },
+  "radius": {
+   "value": 46,
+   "unit": "R☉",
+   "err": null
+  },
+  "temperature_k": 6015,
+  "luminosity_lsun": 1260,
+  "characteristics": "The current northern pole star and the closest Cepheid variable.",
+  "discovery": "Known since antiquity",
+  "references": [
+   "Evans et al. 2008, ApJ 679, L109",
+   "Hipparcos (van Leeuwen 2007)"
+  ],
+  "source": "SIMBAD (CDS) and Gaia DR3 astrometry, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "trappist-1",
+  "designation": "TRAPPIST-1 (2MASS J23062928-0502285)",
+  "name": "TRAPPIST-1",
+  "classification": "Ultracool dwarf star",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 346.622,
+  "dec_deg": -5.04139,
+  "distance_ly": 40.54,
+  "distance_err_ly": [
+   0.02,
+   0.02
+  ],
+  "distance_note": "Gaia DR3 parallax",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "M8V",
+  "mass": {
+   "value": 0.0898,
+   "unit": "M☉",
+   "err": null
+  },
+  "radius": {
+   "value": 0.1192,
+   "unit": "R☉",
+   "err": null
+  },
+  "temperature_k": 2566,
+  "luminosity_lsun": 0.00055,
+  "characteristics": "Hosts seven Earth-sized transiting planets, several in or near the habitable zone.",
+  "discovery": "Gillon et al., 2016 (planets); star catalogued earlier",
+  "references": [
+   "Gillon et al. 2017, Nature 542, 456",
+   "Agol et al. 2021, PSJ 2, 1"
+  ],
+  "source": "SIMBAD (CDS) and Gaia DR3 astrometry, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "kepler-186",
+  "designation": "Kepler-186 (KOI-571)",
+  "name": "Kepler-186",
+  "classification": "Main-sequence star",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 298.65271,
+  "dec_deg": 43.955,
+  "distance_ly": 580,
+  "distance_err_ly": null,
+  "distance_note": "Approximate; archive values differ",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "M1V",
+  "mass": null,
+  "radius": null,
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Host of five known planets, including Kepler-186f.",
+  "discovery": "Kepler mission",
+  "references": [
+   "Quintana et al. 2014, Science 344, 277"
+  ],
+  "source": "NASA Exoplanet Archive, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "kepler-452",
+  "designation": "Kepler-452 (KOI-7016)",
+  "name": "Kepler-452",
+  "classification": "Main-sequence star",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 296.00371,
+  "dec_deg": 44.27756,
+  "distance_ly": 1402,
+  "distance_err_ly": null,
+  "distance_note": "NASA Exoplanet Archive value; uncertainty not recorded here",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "G2V",
+  "mass": null,
+  "radius": null,
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Sun-like star hosting Kepler-452b.",
+  "discovery": "Kepler mission",
+  "references": [
+   "Jenkins et al. 2015, AJ 150, 56"
+  ],
+  "source": "NASA Exoplanet Archive, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "toi-700",
+  "designation": "TOI-700 (TIC 150428135)",
+  "name": "TOI-700",
+  "classification": "Main-sequence star",
+  "group": "star",
+  "category": "known",
+  "ra_deg": 97.09583,
+  "dec_deg": -65.57806,
+  "distance_ly": 101.5,
+  "distance_err_ly": [
+   0.1,
+   0.1
+  ],
+  "distance_note": "Gilbert et al. 2020",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "M2V",
+  "mass": null,
+  "radius": null,
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Hosts several TESS planets, including TOI-700 d and e in the habitable zone.",
+  "discovery": "TESS mission",
+  "references": [
+   "Gilbert et al. 2020, AJ 160, 116"
+  ],
+  "source": "NASA Exoplanet Archive, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ }
+]

@@ -1,0 +1,14 @@
+export * as command from './command-centre.js';
+export * as explorer from './universe-explorer.js';
+export * as observatory from './observatory.js';
+export * as lab from './lab.js';
+export * as spacecraft from './spacecraft.js';
+export * as missions from './missions.js';
+export * as crew from './crew.js';
+export * as tech from './tech.js';
+export * as events from './events.js';
+export * as archive from './archive.js';
+export * as anomalies from './anomalies.js';
+export * as comms from './comms.js';
+export * as finance from './finance.js';
+export * as settings from './settings.js';

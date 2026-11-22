@@ -1,0 +1,146 @@
+[
+ {
+  "id": "sagittarius-a-star",
+  "designation": "Sagittarius A* (Sgr A*)",
+  "name": "Sagittarius A*",
+  "classification": "Supermassive black hole",
+  "group": "compact",
+  "category": "known",
+  "ra_deg": 266.41683,
+  "dec_deg": -29.00781,
+  "distance_ly": 26670,
+  "distance_err_ly": [
+   90,
+   90
+  ],
+  "distance_note": "GRAVITY Collaboration 2019 (R0 = 8178 pc)",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 4297000.0,
+   "unit": "M☉",
+   "err": 40000.0
+  },
+  "radius": null,
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Supermassive black hole at the Galactic Centre, imaged by the Event Horizon Telescope in 2022. Seen through dense dust in visible light, so it is observed mainly in radio, infrared and X-rays.",
+  "discovery": "Balick & Brown, 1974 (radio source); mass from stellar orbits (Genzel, Ghez)",
+  "references": [
+   "GRAVITY Collaboration 2019, A&A 625, L10",
+   "GRAVITY Collaboration 2022, A&A 657, L12",
+   "EHT Collaboration 2022, ApJL 930, L12"
+  ],
+  "source": "SIMBAD (CDS) and Gaia DR3 astrometry, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": [
+   {
+    "label": "Schwarzschild radius",
+    "value": "≈ 1.27 × 10^7 km (derived)"
+   }
+  ]
+ },
+ {
+  "id": "m87-star",
+  "designation": "Messier 87* (M87*)",
+  "name": "M87*",
+  "classification": "Supermassive black hole",
+  "group": "compact",
+  "category": "known",
+  "ra_deg": 187.70592,
+  "dec_deg": 12.39111,
+  "distance_ly": 54800000.0,
+  "distance_err_ly": [
+   2600000.0,
+   2600000.0
+  ],
+  "distance_note": "EHT 2019 distance 16.8 ± 0.8 Mpc",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 6500000000.0,
+   "unit": "M☉",
+   "err": 700000000.0
+  },
+  "radius": null,
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Supermassive black hole at the centre of M87. First black hole ever imaged directly (EHT, 2019). Drives a relativistic jet roughly 5,000 light-years long.",
+  "discovery": "Imaged by the Event Horizon Telescope, 2019",
+  "references": [
+   "EHT Collaboration 2019, ApJL 875, L1"
+  ],
+  "source": "NASA/IPAC Extragalactic Database (NED), compiled from published values",
+  "last_verified": null,
+  "parent": "m87",
+  "extra": []
+ },
+ {
+  "id": "ton-618",
+  "designation": "TON 618",
+  "name": "TON 618",
+  "classification": "Hyperluminous quasar (powered by a black hole)",
+  "group": "compact",
+  "category": "known",
+  "ra_deg": 187.10404,
+  "dec_deg": 31.47711,
+  "distance_ly": 10800000000.0,
+  "distance_err_ly": null,
+  "distance_note": "Light-travel distance derived from redshift z = 2.219 (ΛCDM, approximate)",
+  "distance_au": null,
+  "redshift": 2.219,
+  "spectral_type": null,
+  "mass": null,
+  "radius": null,
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Extremely luminous quasar powered by one of the most massive black holes known. Published mass estimates are of order 10^10 solar masses and differ between methods, so no single value is given here.",
+  "discovery": "Radio source catalogued in the Tonantzintla catalogue; identified as a quasar in 1970s",
+  "references": [
+   "Shemmer et al. 2004, ApJ 614, 547"
+  ],
+  "source": "NASA/IPAC Extragalactic Database (NED), compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ },
+ {
+  "id": "cygnus-x-1",
+  "designation": "Cygnus X-1 (HDE 226868)",
+  "name": "Cygnus X-1",
+  "classification": "Stellar-mass black hole (X-ray binary)",
+  "group": "compact",
+  "category": "known",
+  "ra_deg": 299.59033,
+  "dec_deg": 35.20161,
+  "distance_ly": 7240,
+  "distance_err_ly": [
+   550,
+   590
+  ],
+  "distance_note": "Miller-Jones et al. 2021 (2.22 +0.18 −0.17 kpc)",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": "Companion: O9.7 Iab supergiant",
+  "mass": {
+   "value": 21.2,
+   "unit": "M☉",
+   "err": 2.2
+  },
+  "radius": null,
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "First strong black-hole candidate, discovered as an X-ray source. The black hole accretes material stripped from its supergiant companion.",
+  "discovery": "X-ray source detected by rocket flight, 1964; identified as a black-hole candidate in the 1970s",
+  "references": [
+   "Miller-Jones et al. 2021, Science 371, 1046"
+  ],
+  "source": "SIMBAD (CDS) and Gaia DR3 astrometry, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
+ }
+]

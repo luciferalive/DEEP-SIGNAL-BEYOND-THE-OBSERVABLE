@@ -1,0 +1,628 @@
+[
+ {
+  "id": "proxima-b",
+  "designation": "Proxima Centauri b",
+  "name": "Proxima Centauri b",
+  "classification": "Exoplanet",
+  "group": "exoplanet",
+  "category": "known",
+  "ra_deg": 217.42896,
+  "dec_deg": -62.67947,
+  "distance_ly": 4.2465,
+  "distance_err_ly": [
+   0.0003,
+   0.0003
+  ],
+  "distance_note": "Same as host star (Proxima Centauri)",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 1.07,
+   "unit": "M⊕",
+   "err": 0.06
+  },
+  "radius": null,
+  "temperature_k": 234,
+  "luminosity_lsun": null,
+  "characteristics": "Minimum mass (M sin i) from radial velocity; radius unknown because no transit has been detected. A potentially temperate rocky planet, but exposed to strong stellar flares. Habitability is unconfirmed.",
+  "discovery": "2016 (radial velocity)",
+  "references": [
+   "Anglada-Escudé et al. 2016, Nature 536, 437",
+   "Faria et al. 2022, A&A 658, A115"
+  ],
+  "source": "NASA Exoplanet Archive, compiled from published values",
+  "last_verified": null,
+  "parent": "proxima-centauri",
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "11.19 d"
+   },
+   {
+    "label": "Semi-major axis",
+    "value": "0.0485 AU"
+   },
+   {
+    "label": "Host star",
+    "value": "Proxima Centauri"
+   },
+   {
+    "label": "Mass type",
+    "value": "Minimum mass (M sin i)"
+   },
+   {
+    "label": "Temperature note",
+    "value": "234 K is an equilibrium estimate assuming an Earth-like albedo; not a measurement."
+   }
+  ]
+ },
+ {
+  "id": "trappist-1b",
+  "designation": "TRAPPIST-1 b",
+  "name": "TRAPPIST-1 b",
+  "classification": "Exoplanet",
+  "group": "exoplanet",
+  "category": "known",
+  "ra_deg": 346.622,
+  "dec_deg": -5.04139,
+  "distance_ly": 40.54,
+  "distance_err_ly": [
+   0.02,
+   0.02
+  ],
+  "distance_note": "Same as host star (TRAPPIST-1)",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 1.374,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 1.116,
+   "unit": "R⊕",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "One of seven Earth-sized planets of TRAPPIST-1, all in a tight resonant chain.",
+  "discovery": "2016 (transit)",
+  "references": [
+   "Agol et al. 2021, PSJ 2, 1",
+   "Gillon et al. 2017, Nature 542, 456"
+  ],
+  "source": "NASA Exoplanet Archive, compiled from published values",
+  "last_verified": null,
+  "parent": "trappist-1",
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "1.511 d"
+   },
+   {
+    "label": "Semi-major axis",
+    "value": null
+   },
+   {
+    "label": "Host star",
+    "value": "TRAPPIST-1"
+   }
+  ]
+ },
+ {
+  "id": "trappist-1c",
+  "designation": "TRAPPIST-1 c",
+  "name": "TRAPPIST-1 c",
+  "classification": "Exoplanet",
+  "group": "exoplanet",
+  "category": "known",
+  "ra_deg": 346.622,
+  "dec_deg": -5.04139,
+  "distance_ly": 40.54,
+  "distance_err_ly": [
+   0.02,
+   0.02
+  ],
+  "distance_note": "Same as host star (TRAPPIST-1)",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 1.308,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 1.097,
+   "unit": "R⊕",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "One of seven Earth-sized planets of TRAPPIST-1, all in a tight resonant chain.",
+  "discovery": "2016 (transit)",
+  "references": [
+   "Agol et al. 2021, PSJ 2, 1",
+   "Gillon et al. 2017, Nature 542, 456"
+  ],
+  "source": "NASA Exoplanet Archive, compiled from published values",
+  "last_verified": null,
+  "parent": "trappist-1",
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "2.422 d"
+   },
+   {
+    "label": "Semi-major axis",
+    "value": null
+   },
+   {
+    "label": "Host star",
+    "value": "TRAPPIST-1"
+   }
+  ]
+ },
+ {
+  "id": "trappist-1d",
+  "designation": "TRAPPIST-1 d",
+  "name": "TRAPPIST-1 d",
+  "classification": "Exoplanet",
+  "group": "exoplanet",
+  "category": "known",
+  "ra_deg": 346.622,
+  "dec_deg": -5.04139,
+  "distance_ly": 40.54,
+  "distance_err_ly": [
+   0.02,
+   0.02
+  ],
+  "distance_note": "Same as host star (TRAPPIST-1)",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 0.388,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 0.788,
+   "unit": "R⊕",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "One of seven Earth-sized planets of TRAPPIST-1, all in a tight resonant chain.",
+  "discovery": "2016 (transit)",
+  "references": [
+   "Agol et al. 2021, PSJ 2, 1",
+   "Gillon et al. 2017, Nature 542, 456"
+  ],
+  "source": "NASA Exoplanet Archive, compiled from published values",
+  "last_verified": null,
+  "parent": "trappist-1",
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "4.049 d"
+   },
+   {
+    "label": "Semi-major axis",
+    "value": null
+   },
+   {
+    "label": "Host star",
+    "value": "TRAPPIST-1"
+   }
+  ]
+ },
+ {
+  "id": "trappist-1e",
+  "designation": "TRAPPIST-1 e",
+  "name": "TRAPPIST-1 e",
+  "classification": "Exoplanet",
+  "group": "exoplanet",
+  "category": "known",
+  "ra_deg": 346.622,
+  "dec_deg": -5.04139,
+  "distance_ly": 40.54,
+  "distance_err_ly": [
+   0.02,
+   0.02
+  ],
+  "distance_note": "Same as host star (TRAPPIST-1)",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 0.692,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 0.92,
+   "unit": "R⊕",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "One of seven Earth-sized planets of TRAPPIST-1, all in a tight resonant chain.",
+  "discovery": "2017 (transit)",
+  "references": [
+   "Agol et al. 2021, PSJ 2, 1",
+   "Gillon et al. 2017, Nature 542, 456"
+  ],
+  "source": "NASA Exoplanet Archive, compiled from published values",
+  "last_verified": null,
+  "parent": "trappist-1",
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "6.101 d"
+   },
+   {
+    "label": "Semi-major axis",
+    "value": null
+   },
+   {
+    "label": "Host star",
+    "value": "TRAPPIST-1"
+   }
+  ]
+ },
+ {
+  "id": "trappist-1f",
+  "designation": "TRAPPIST-1 f",
+  "name": "TRAPPIST-1 f",
+  "classification": "Exoplanet",
+  "group": "exoplanet",
+  "category": "known",
+  "ra_deg": 346.622,
+  "dec_deg": -5.04139,
+  "distance_ly": 40.54,
+  "distance_err_ly": [
+   0.02,
+   0.02
+  ],
+  "distance_note": "Same as host star (TRAPPIST-1)",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 1.039,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 1.045,
+   "unit": "R⊕",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "One of seven Earth-sized planets of TRAPPIST-1, all in a tight resonant chain.",
+  "discovery": "2017 (transit)",
+  "references": [
+   "Agol et al. 2021, PSJ 2, 1",
+   "Gillon et al. 2017, Nature 542, 456"
+  ],
+  "source": "NASA Exoplanet Archive, compiled from published values",
+  "last_verified": null,
+  "parent": "trappist-1",
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "9.208 d"
+   },
+   {
+    "label": "Semi-major axis",
+    "value": null
+   },
+   {
+    "label": "Host star",
+    "value": "TRAPPIST-1"
+   }
+  ]
+ },
+ {
+  "id": "trappist-1g",
+  "designation": "TRAPPIST-1 g",
+  "name": "TRAPPIST-1 g",
+  "classification": "Exoplanet",
+  "group": "exoplanet",
+  "category": "known",
+  "ra_deg": 346.622,
+  "dec_deg": -5.04139,
+  "distance_ly": 40.54,
+  "distance_err_ly": [
+   0.02,
+   0.02
+  ],
+  "distance_note": "Same as host star (TRAPPIST-1)",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 1.321,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 1.129,
+   "unit": "R⊕",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "One of seven Earth-sized planets of TRAPPIST-1, all in a tight resonant chain.",
+  "discovery": "2017 (transit)",
+  "references": [
+   "Agol et al. 2021, PSJ 2, 1",
+   "Gillon et al. 2017, Nature 542, 456"
+  ],
+  "source": "NASA Exoplanet Archive, compiled from published values",
+  "last_verified": null,
+  "parent": "trappist-1",
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "12.35 d"
+   },
+   {
+    "label": "Semi-major axis",
+    "value": null
+   },
+   {
+    "label": "Host star",
+    "value": "TRAPPIST-1"
+   }
+  ]
+ },
+ {
+  "id": "trappist-1h",
+  "designation": "TRAPPIST-1 h",
+  "name": "TRAPPIST-1 h",
+  "classification": "Exoplanet",
+  "group": "exoplanet",
+  "category": "known",
+  "ra_deg": 346.622,
+  "dec_deg": -5.04139,
+  "distance_ly": 40.54,
+  "distance_err_ly": [
+   0.02,
+   0.02
+  ],
+  "distance_note": "Same as host star (TRAPPIST-1)",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 0.326,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 0.755,
+   "unit": "R⊕",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "One of seven Earth-sized planets of TRAPPIST-1, all in a tight resonant chain.",
+  "discovery": "2017 (transit)",
+  "references": [
+   "Agol et al. 2021, PSJ 2, 1",
+   "Gillon et al. 2017, Nature 542, 456"
+  ],
+  "source": "NASA Exoplanet Archive, compiled from published values",
+  "last_verified": null,
+  "parent": "trappist-1",
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "18.77 d"
+   },
+   {
+    "label": "Semi-major axis",
+    "value": null
+   },
+   {
+    "label": "Host star",
+    "value": "TRAPPIST-1"
+   }
+  ]
+ },
+ {
+  "id": "kepler-186f",
+  "designation": "Kepler-186 f",
+  "name": "Kepler-186 f",
+  "classification": "Exoplanet",
+  "group": "exoplanet",
+  "category": "known",
+  "ra_deg": 298.65271,
+  "dec_deg": 43.955,
+  "distance_ly": 580,
+  "distance_err_ly": null,
+  "distance_note": "Same as host star (Kepler-186)",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": null,
+  "radius": {
+   "value": 1.17,
+   "unit": "R⊕",
+   "err": 0.08
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "First Earth-sized planet found in the habitable zone of another star. Mass unknown.",
+  "discovery": "2014 (transit)",
+  "references": [
+   "Quintana et al. 2014, Science 344, 277"
+  ],
+  "source": "NASA Exoplanet Archive, compiled from published values",
+  "last_verified": null,
+  "parent": "kepler-186",
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "129.9 d"
+   },
+   {
+    "label": "Semi-major axis",
+    "value": null
+   },
+   {
+    "label": "Host star",
+    "value": "Kepler-186"
+   }
+  ]
+ },
+ {
+  "id": "kepler-452b",
+  "designation": "Kepler-452 b",
+  "name": "Kepler-452 b",
+  "classification": "Exoplanet",
+  "group": "exoplanet",
+  "category": "known",
+  "ra_deg": 296.00371,
+  "dec_deg": 44.27756,
+  "distance_ly": 1402,
+  "distance_err_ly": null,
+  "distance_note": "Same as host star (Kepler-452)",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": null,
+  "radius": {
+   "value": 1.6,
+   "unit": "R⊕",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Super-Earth-sized planet in the habitable zone of a Sun-like star. Mass unknown; radius is approximate.",
+  "discovery": "2015 (transit)",
+  "references": [
+   "Jenkins et al. 2015, AJ 150, 56"
+  ],
+  "source": "NASA Exoplanet Archive, compiled from published values",
+  "last_verified": null,
+  "parent": "kepler-452",
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "384.8 d"
+   },
+   {
+    "label": "Semi-major axis",
+    "value": null
+   },
+   {
+    "label": "Host star",
+    "value": "Kepler-452"
+   }
+  ]
+ },
+ {
+  "id": "toi-700d",
+  "designation": "TOI-700 d",
+  "name": "TOI-700 d",
+  "classification": "Exoplanet",
+  "group": "exoplanet",
+  "category": "known",
+  "ra_deg": 97.09583,
+  "dec_deg": -65.57806,
+  "distance_ly": 101.5,
+  "distance_err_ly": [
+   0.1,
+   0.1
+  ],
+  "distance_note": "Same as host star (TOI-700)",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": null,
+  "radius": {
+   "value": 1.14,
+   "unit": "R⊕",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Earth-sized planet in the habitable zone of an M dwarf. Mass unknown.",
+  "discovery": "2020 (transit)",
+  "references": [
+   "Gilbert et al. 2020, AJ 160, 116"
+  ],
+  "source": "NASA Exoplanet Archive, compiled from published values",
+  "last_verified": null,
+  "parent": "toi-700",
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "37.4 d"
+   },
+   {
+    "label": "Semi-major axis",
+    "value": null
+   },
+   {
+    "label": "Host star",
+    "value": "TOI-700"
+   }
+  ]
+ },
+ {
+  "id": "toi-700e",
+  "designation": "TOI-700 e",
+  "name": "TOI-700 e",
+  "classification": "Exoplanet",
+  "group": "exoplanet",
+  "category": "known",
+  "ra_deg": 97.09583,
+  "dec_deg": -65.57806,
+  "distance_ly": 101.5,
+  "distance_err_ly": [
+   0.1,
+   0.1
+  ],
+  "distance_note": "Same as host star (TOI-700)",
+  "distance_au": null,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": null,
+  "radius": {
+   "value": 0.95,
+   "unit": "R⊕",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Slightly smaller than Earth; inside the optimistic habitable zone. Mass unknown.",
+  "discovery": "2023 (transit)",
+  "references": [
+   "Gilbert et al. 2023, ApJL"
+  ],
+  "source": "NASA Exoplanet Archive, compiled from published values",
+  "last_verified": null,
+  "parent": "toi-700",
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "27.8 d"
+   },
+   {
+    "label": "Semi-major axis",
+    "value": null
+   },
+   {
+    "label": "Host star",
+    "value": "TOI-700"
+   }
+  ]
+ }
+]

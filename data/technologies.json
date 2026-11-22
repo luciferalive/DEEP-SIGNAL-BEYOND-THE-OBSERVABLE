@@ -1,0 +1,18 @@
+{
+  "active": [
+    { "id": "solar-mk2", "name": "Efficient Solar Arrays Mk II", "branch": "Engineering", "description": "Multi-junction cells and better thermal management raise solar array output.", "costRP": 40, "costCredits": 600, "days": 6, "requires": [], "effects": [{ "type": "powerGenMult", "value": 0.2 }], "effectText": "+20% solar power generation", "limitation": "Panels still degrade with micrometeoroid damage." },
+    { "id": "battery-bank", "name": "Expanded Battery Bank", "branch": "Engineering", "description": "Additional lithium-sulfur modules for the station power bus.", "costRP": 70, "costCredits": 700, "days": 8, "requires": ["solar-mk2"], "effects": [{ "type": "batteryCap", "value": 300 }], "effectText": "+300 kWh battery capacity", "limitation": "More stored energy does not raise generation." },
+    { "id": "water-mk2", "name": "Closed-loop Water Recovery Mk II", "branch": "Engineering", "description": "Improved distillation and filtration recover more water from humidity and waste.", "costRP": 50, "costCredits": 500, "days": 8, "requires": [], "effects": [{ "type": "waterRecycle", "value": 0.05 }], "effectText": "Water recycling 85% → 90%", "limitation": "Requires a well-maintained life-support system." },
+    { "id": "hydroponics", "name": "Hydroponic Bay", "branch": "Astrobiology", "description": "A small crop bay supplements stored rations with fresh produce and improves morale.", "costRP": 100, "costCredits": 1500, "days": 14, "requires": ["water-mk2"], "effects": [{ "type": "foodProduction", "value": 3 }, { "type": "moraleBonus", "value": 4 }], "effectText": "+3 kg food per day, +4 morale target", "limitation": "Supplements, but does not replace, supply convoys." },
+    { "id": "adaptive-optics", "name": "Adaptive Optics Package", "branch": "Astronomy", "description": "Deformable mirror segments correct small wavefront errors.", "costRP": 60, "costCredits": 800, "days": 10, "requires": [], "effects": [{ "type": "accuracy", "kind": "optical", "value": 0.12 }], "effectText": "+0.12 optical accuracy", "limitation": "No effect on radio observations." },
+    { "id": "cryo-detector", "name": "Cryogenic Receiver Upgrade", "branch": "Astronomy", "description": "Lower receiver noise temperature for the radio dish.", "costRP": 60, "costCredits": 800, "days": 10, "requires": [], "effects": [{ "type": "accuracy", "kind": "radio", "value": 0.12 }], "effectText": "+0.12 radio accuracy", "limitation": "No effect on optical observations." },
+    { "id": "data-pipeline", "name": "Automated Data Pipeline", "branch": "Engineering", "description": "Automated calibration and reduction speed up scientific analysis.", "costRP": 80, "costCredits": 900, "days": 12, "requires": ["adaptive-optics"], "effects": [{ "type": "analysisSpeed", "value": 0.25 }], "effectText": "+25% analysis speed", "limitation": "Does not improve data quality." }
+  ],
+  "planned": [
+    { "branch": "Astronomy", "version": "0.4", "items": ["Stellar evolution", "Galactic structures", "Black hole physics", "Pulsar astronomy"] },
+    { "branch": "Physics", "version": "0.4", "items": ["General relativity", "Quantum mechanics", "Gravitational waves", "Dark matter research"] },
+    { "branch": "Astrobiology", "version": "0.4", "items": ["Biosignatures", "Exoplanet atmospheres", "Organic chemistry", "Extremophile biology"] },
+    { "branch": "Engineering", "version": "0.5", "items": ["Advanced propulsion", "Autonomous probes", "Quantum communication", "Experimental energy systems"] },
+    { "branch": "Speculative physics", "version": "0.8", "items": ["Wormhole theory", "Higher-dimensional models", "Multiverse hypotheses", "Experimental spacetime technology"] }
+  ]
+}

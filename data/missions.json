@@ -1,0 +1,48 @@
+{
+  "missions": [
+    { "id": "m01", "title": "First Light", "issuer": "Earth Mission Control", "fictional": true,
+      "briefing": "Meridian Station is operational. Before we commit larger resources we need proof that the optical train is performing to specification. Observe Proxima Centauri, the nearest star to the Sun, and complete the analysis of your data.",
+      "objectives": [
+        { "id": "o1", "type": "observe", "target": "proxima-centauri", "kind": "optical", "minQuality": 0.5, "text": "Observe Proxima Centauri with the optical telescope." },
+        { "id": "o2", "type": "analyse", "target": "proxima-centauri", "text": "Complete the scientific analysis of the Proxima Centauri data." }
+      ],
+      "rewards": { "credits": 500, "researchPoints": 20, "reputation": 2 }, "next": ["m02", "m05"] },
+    { "id": "m02", "title": "Nearest Neighbours", "issuer": "Earth Mission Control", "fictional": true,
+      "briefing": "The Alpha Centauri pair and Barnard's Star are the next nearest stellar systems. Characterise both so the planning office can prioritise a future probe programme.",
+      "objectives": [
+        { "id": "o1", "type": "observe", "target": "alpha-centauri-a", "kind": "optical", "minQuality": 0.5, "text": "Observe Alpha Centauri A." },
+        { "id": "o2", "type": "observe", "target": "barnards-star", "kind": "optical", "minQuality": 0.5, "text": "Observe Barnard's Star." },
+        { "id": "o3", "type": "analyse", "target": "alpha-centauri-a", "text": "Analyse the Alpha Centauri A data." },
+        { "id": "o4", "type": "analyse", "target": "barnards-star", "text": "Analyse the Barnard's Star data." }
+      ],
+      "rewards": { "credits": 800, "researchPoints": 30, "reputation": 2 }, "next": ["m03"] },
+    { "id": "m03", "title": "Radio Window", "issuer": "ESA Radio Astronomy Division", "fictional": true,
+      "briefing": "A collaboration request from the radio astronomy community: observe the Crab Nebula supernova remnant with your dish. It is a standard calibration source and its pulsar is a well-studied reference.",
+      "objectives": [
+        { "id": "o1", "type": "observe", "target": "crab-nebula", "kind": "radio", "minQuality": 0.45, "text": "Observe the Crab Nebula with the radio dish." },
+        { "id": "o2", "type": "analyse", "target": "crab-nebula", "text": "Analyse the Crab Nebula data." }
+      ],
+      "rewards": { "credits": 900, "researchPoints": 35, "reputation": 3 }, "next": ["m04", "m06"] },
+    { "id": "m04", "title": "TRAPPIST-1 Survey", "issuer": "Earth Mission Control", "fictional": true,
+      "briefing": "TRAPPIST-1 hosts seven Earth-sized planets and is faint, so a long exposure is needed. Collect at least twelve hours of high-quality optical data on the host star, analyse it, and send the result to Earth.",
+      "objectives": [
+        { "id": "o1", "type": "observe", "target": "trappist-1", "kind": "optical", "minQuality": 0.55, "minHours": 12, "text": "Observe TRAPPIST-1 for at least 12 hours with quality of 55% or better." },
+        { "id": "o2", "type": "analyse", "target": "trappist-1", "text": "Analyse the TRAPPIST-1 data." },
+        { "id": "o3", "type": "send", "target": "trappist-1", "text": "Send the TRAPPIST-1 result to Earth." }
+      ],
+      "rewards": { "credits": 1500, "researchPoints": 50, "reputation": 5 }, "next": [] },
+    { "id": "m05", "title": "Station Self-Sufficiency", "issuer": "Earth Mission Control", "fictional": true,
+      "briefing": "Supply convoys are expensive. Develop the Hydroponic Bay so the station can supplement its own food.",
+      "objectives": [
+        { "id": "o1", "type": "research", "tech": "hydroponics", "text": "Complete the Hydroponic Bay research." }
+      ],
+      "rewards": { "credits": 1200, "researchPoints": 25, "reputation": 2 }, "next": [] },
+    { "id": "m06", "title": "Listening to the Galactic Centre", "issuer": "Earth Mission Control", "fictional": true,
+      "briefing": "Sagittarius A*, the supermassive black hole at the centre of the Milky Way, is hidden from optical telescopes by dust. Radio waves get through. Observe it with your dish and analyse the result.",
+      "objectives": [
+        { "id": "o1", "type": "observe", "target": "sagittarius-a-star", "kind": "radio", "minQuality": 0.4, "text": "Observe Sagittarius A* with the radio dish." },
+        { "id": "o2", "type": "analyse", "target": "sagittarius-a-star", "text": "Analyse the Sagittarius A* data." }
+      ],
+      "rewards": { "credits": 2000, "researchPoints": 60, "reputation": 5 }, "next": [] }
+  ]
+}

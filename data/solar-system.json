@@ -1,0 +1,552 @@
+[
+ {
+  "id": "sun",
+  "designation": "Sun",
+  "name": "Sun",
+  "classification": "Star (G2V)",
+  "group": "solar",
+  "category": "known",
+  "ra_deg": null,
+  "dec_deg": null,
+  "distance_ly": null,
+  "distance_err_ly": null,
+  "distance_note": "Moving object: distance from Earth varies with orbital positions. Mean distance from the Sun is shown in AU.",
+  "distance_au": 0,
+  "redshift": null,
+  "spectral_type": "G2V",
+  "mass": {
+   "value": 1.0,
+   "unit": "M☉",
+   "err": null
+  },
+  "radius": {
+   "value": 1.0,
+   "unit": "R☉",
+   "err": null
+  },
+  "temperature_k": 5772,
+  "luminosity_lsun": 1.0,
+  "characteristics": "The Sun, the star at the centre of the Solar System. Effective temperature and nominal values follow IAU 2015 Resolution B3.",
+  "discovery": "Known since antiquity",
+  "references": [
+   "NASA Planetary Fact Sheets"
+  ],
+  "source": "NASA Solar System Dynamics / planetary fact sheets, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": [
+   {
+    "label": "Spectral type",
+    "value": "G2V"
+   },
+   {
+    "label": "Luminosity",
+    "value": "1 L☉ (nominal)"
+   }
+  ]
+ },
+ {
+  "id": "mercury",
+  "designation": "Mercury",
+  "name": "Mercury",
+  "classification": "Planet",
+  "group": "solar",
+  "category": "known",
+  "ra_deg": null,
+  "dec_deg": null,
+  "distance_ly": null,
+  "distance_err_ly": null,
+  "distance_note": "Moving object: distance from Earth varies with orbital positions. Mean distance from the Sun is shown in AU.",
+  "distance_au": 0.387,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 0.0553,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 2439.7,
+   "unit": "km",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Innermost planet; extreme day–night surface temperature range and almost no atmosphere.",
+  "discovery": "Known since antiquity",
+  "references": [
+   "NASA Planetary Fact Sheets"
+  ],
+  "source": "NASA Solar System Dynamics / planetary fact sheets, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "87.97 d"
+   }
+  ]
+ },
+ {
+  "id": "venus",
+  "designation": "Venus",
+  "name": "Venus",
+  "classification": "Planet",
+  "group": "solar",
+  "category": "known",
+  "ra_deg": null,
+  "dec_deg": null,
+  "distance_ly": null,
+  "distance_err_ly": null,
+  "distance_note": "Moving object: distance from Earth varies with orbital positions. Mean distance from the Sun is shown in AU.",
+  "distance_au": 0.723,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 0.815,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 6051.8,
+   "unit": "km",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Dense carbon-dioxide atmosphere; surface pressure about 92 bar.",
+  "discovery": "Known since antiquity",
+  "references": [
+   "NASA Planetary Fact Sheets"
+  ],
+  "source": "NASA Solar System Dynamics / planetary fact sheets, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "224.7 d"
+   }
+  ]
+ },
+ {
+  "id": "earth",
+  "designation": "Earth",
+  "name": "Earth",
+  "classification": "Planet",
+  "group": "solar",
+  "category": "known",
+  "ra_deg": null,
+  "dec_deg": null,
+  "distance_ly": null,
+  "distance_err_ly": null,
+  "distance_note": "Moving object: distance from Earth varies with orbital positions. Mean distance from the Sun is shown in AU.",
+  "distance_au": 1.0,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 1.0,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 6371.0,
+   "unit": "km",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Home of the Earth Mission Control organisations. Your station orbits the Sun at the Sun–Earth L2 point.",
+  "discovery": "Known since antiquity",
+  "references": [
+   "NASA Planetary Fact Sheets"
+  ],
+  "source": "NASA Solar System Dynamics / planetary fact sheets, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "365.25 d"
+   }
+  ]
+ },
+ {
+  "id": "moon",
+  "designation": "Moon",
+  "name": "Moon",
+  "classification": "Natural satellite of Earth",
+  "group": "solar",
+  "category": "known",
+  "ra_deg": null,
+  "dec_deg": null,
+  "distance_ly": null,
+  "distance_err_ly": null,
+  "distance_note": "Moving object: distance from Earth varies with orbital positions. Mean distance from the Sun is shown in AU.",
+  "distance_au": 1.0,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 0.0123,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 1737.4,
+   "unit": "km",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Earth’s only natural satellite.",
+  "discovery": "Known since antiquity",
+  "references": [
+   "NASA Planetary Fact Sheets"
+  ],
+  "source": "NASA Solar System Dynamics / planetary fact sheets, compiled from published values",
+  "last_verified": null,
+  "parent": "earth",
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "27.32 d"
+   }
+  ]
+ },
+ {
+  "id": "mars",
+  "designation": "Mars",
+  "name": "Mars",
+  "classification": "Planet",
+  "group": "solar",
+  "category": "known",
+  "ra_deg": null,
+  "dec_deg": null,
+  "distance_ly": null,
+  "distance_err_ly": null,
+  "distance_note": "Moving object: distance from Earth varies with orbital positions. Mean distance from the Sun is shown in AU.",
+  "distance_au": 1.524,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 0.107,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 3389.5,
+   "unit": "km",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Cold desert planet with a thin carbon-dioxide atmosphere.",
+  "discovery": "Known since antiquity",
+  "references": [
+   "NASA Planetary Fact Sheets"
+  ],
+  "source": "NASA Solar System Dynamics / planetary fact sheets, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "687.0 d"
+   }
+  ]
+ },
+ {
+  "id": "jupiter",
+  "designation": "Jupiter",
+  "name": "Jupiter",
+  "classification": "Planet",
+  "group": "solar",
+  "category": "known",
+  "ra_deg": null,
+  "dec_deg": null,
+  "distance_ly": null,
+  "distance_err_ly": null,
+  "distance_note": "Moving object: distance from Earth varies with orbital positions. Mean distance from the Sun is shown in AU.",
+  "distance_au": 5.203,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 317.8,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 69911,
+   "unit": "km",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Largest planet; hydrogen–helium gas giant.",
+  "discovery": "Known since antiquity",
+  "references": [
+   "NASA Planetary Fact Sheets"
+  ],
+  "source": "NASA Solar System Dynamics / planetary fact sheets, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "11.86 yr"
+   }
+  ]
+ },
+ {
+  "id": "europa",
+  "designation": "Europa",
+  "name": "Europa",
+  "classification": "Natural satellite of Jupiter",
+  "group": "solar",
+  "category": "known",
+  "ra_deg": null,
+  "dec_deg": null,
+  "distance_ly": null,
+  "distance_err_ly": null,
+  "distance_note": "Moving object: distance from Earth varies with orbital positions. Mean distance from the Sun is shown in AU.",
+  "distance_au": 5.203,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 0.00803,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 1560.8,
+   "unit": "km",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Ice-covered moon with strong evidence of a subsurface ocean.",
+  "discovery": "Galileo Galilei, 1610",
+  "references": [
+   "NASA Planetary Fact Sheets"
+  ],
+  "source": "NASA Solar System Dynamics / planetary fact sheets, compiled from published values",
+  "last_verified": null,
+  "parent": "jupiter",
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "3.551 d"
+   }
+  ]
+ },
+ {
+  "id": "saturn",
+  "designation": "Saturn",
+  "name": "Saturn",
+  "classification": "Planet",
+  "group": "solar",
+  "category": "known",
+  "ra_deg": null,
+  "dec_deg": null,
+  "distance_ly": null,
+  "distance_err_ly": null,
+  "distance_note": "Moving object: distance from Earth varies with orbital positions. Mean distance from the Sun is shown in AU.",
+  "distance_au": 9.537,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 95.16,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 58232,
+   "unit": "km",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Gas giant with the most extensive ring system.",
+  "discovery": "Known since antiquity",
+  "references": [
+   "NASA Planetary Fact Sheets"
+  ],
+  "source": "NASA Solar System Dynamics / planetary fact sheets, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "29.46 yr"
+   }
+  ]
+ },
+ {
+  "id": "titan",
+  "designation": "Titan",
+  "name": "Titan",
+  "classification": "Natural satellite of Saturn",
+  "group": "solar",
+  "category": "known",
+  "ra_deg": null,
+  "dec_deg": null,
+  "distance_ly": null,
+  "distance_err_ly": null,
+  "distance_note": "Moving object: distance from Earth varies with orbital positions. Mean distance from the Sun is shown in AU.",
+  "distance_au": 9.537,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 0.0225,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 2574.7,
+   "unit": "km",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Only moon with a dense atmosphere; methane–ethane lakes on its surface.",
+  "discovery": "Christiaan Huygens, 1655",
+  "references": [
+   "NASA Planetary Fact Sheets"
+  ],
+  "source": "NASA Solar System Dynamics / planetary fact sheets, compiled from published values",
+  "last_verified": null,
+  "parent": "saturn",
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "15.95 d"
+   }
+  ]
+ },
+ {
+  "id": "enceladus",
+  "designation": "Enceladus",
+  "name": "Enceladus",
+  "classification": "Natural satellite of Saturn",
+  "group": "solar",
+  "category": "known",
+  "ra_deg": null,
+  "dec_deg": null,
+  "distance_ly": null,
+  "distance_err_ly": null,
+  "distance_note": "Moving object: distance from Earth varies with orbital positions. Mean distance from the Sun is shown in AU.",
+  "distance_au": 9.537,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 1.81e-05,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 252.1,
+   "unit": "km",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Water-ice plumes erupt from its south polar region.",
+  "discovery": "William Herschel, 1789",
+  "references": [
+   "NASA Planetary Fact Sheets"
+  ],
+  "source": "NASA Solar System Dynamics / planetary fact sheets, compiled from published values",
+  "last_verified": null,
+  "parent": "saturn",
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "1.370 d"
+   }
+  ]
+ },
+ {
+  "id": "uranus",
+  "designation": "Uranus",
+  "name": "Uranus",
+  "classification": "Planet",
+  "group": "solar",
+  "category": "known",
+  "ra_deg": null,
+  "dec_deg": null,
+  "distance_ly": null,
+  "distance_err_ly": null,
+  "distance_note": "Moving object: distance from Earth varies with orbital positions. Mean distance from the Sun is shown in AU.",
+  "distance_au": 19.19,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 14.54,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 25362,
+   "unit": "km",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Ice giant with an axial tilt of about 98°.",
+  "discovery": "William Herschel, 1781",
+  "references": [
+   "NASA Planetary Fact Sheets"
+  ],
+  "source": "NASA Solar System Dynamics / planetary fact sheets, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "84.0 yr"
+   }
+  ]
+ },
+ {
+  "id": "neptune",
+  "designation": "Neptune",
+  "name": "Neptune",
+  "classification": "Planet",
+  "group": "solar",
+  "category": "known",
+  "ra_deg": null,
+  "dec_deg": null,
+  "distance_ly": null,
+  "distance_err_ly": null,
+  "distance_note": "Moving object: distance from Earth varies with orbital positions. Mean distance from the Sun is shown in AU.",
+  "distance_au": 30.07,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": {
+   "value": 17.15,
+   "unit": "M⊕",
+   "err": null
+  },
+  "radius": {
+   "value": 24622,
+   "unit": "km",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Outermost major planet; fastest winds measured in the Solar System.",
+  "discovery": "Le Verrier, Galle, d’Arrest, 1846",
+  "references": [
+   "NASA Planetary Fact Sheets"
+  ],
+  "source": "NASA Solar System Dynamics / planetary fact sheets, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": [
+   {
+    "label": "Orbital period",
+    "value": "164.8 yr"
+   }
+  ]
+ }
+]
