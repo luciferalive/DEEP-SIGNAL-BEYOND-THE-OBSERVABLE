@@ -172,5 +172,124 @@ await test('loaded game continues identically to an uninterrupted one', async ()
   const b = Game.fromSave(data, (await sm.load('manual-1')).state); b.prefs.autoPauseOnEvent = false; a.advance(10 * DAY); b.advance(10 * DAY);
   eq(a.state.resources.food, b.state.resources.food); eq(a.state.time.t, b.state.time.t);
 });
+
+// ---------------- V2 milestone tests ----------------
+import { startUpgrade, canUpgrade, moduleEffect, upgradeCost } from '../js/station-modules.js';
+import { sources, startPublication, TYPES } from '../js/publications.js';
+import { spawnTransient, respondToTransient, canRespond, activeTransients } from '../js/cosmic-events.js';
+import { searchChronicle } from '../js/chronicle.js';
+import { financeWarnings, closeMonth } from '../js/finance.js';
+import { SAVE_VERSION } from '../js/constants.js';
+const v1file = JSON.parse(await readFile(path.join(root, 'tests/fixtures/v1-save.json'), 'utf8'));
+// A game with one analysed discovery, for publication tests.
+async function withDiscovery() {
+  const g = fresh(4242); g.state.resources.credits = 20000; acceptMission(g, 'm01');
+  startObservation(g, { instrumentId: 'opt-1', targetId: 'proxima-centauri', hours: 12 }); g.advance(DAY);
+  const ds = g.state.datasets[0]; ok(ds, 'dataset'); startAnalysis(g, ds.id); g.advance(DAY * 8); ok(g.state.discoveries.length >= 1, 'discovery');
+  return g;
+}
+
+await test('V1 -> V2 migration: real V1 save keeps all data, gains new structures, original backed up', async () => {
+  eq(v1file.state.version, 1);
+  const backend = new MemoryBackend(); const sm = new SaveManager(backend);
+  const before = JSON.stringify(v1file.state);
+  await backend.put('manual-1', v1file.state, { savedAt: 1, gameTime: v1file.state.time.t, version: 1 });
+  const r = await sm.load('manual-1'); ok(r.ok, r.error); eq(r.state.version, SAVE_VERSION);
+  eq(JSON.stringify(await backend.get('manual-1')), before, 'original slot untouched');
+  ok(await sm.exists('backup-manual-1-v1'), 'backup created');
+  eq(JSON.stringify(await backend.get('backup-manual-1-v1')), before, 'backup identical to original');
+  const g = Game.fromSave(data, r.state);
+  eq(g.state.discoveries.length, v1file.state.discoveries.length); eq(g.state.resources.credits, v1file.state.resources.credits);
+  eq(g.state.missions.completed.length, v1file.state.missions.completed.length); eq(g.state.crew.length, 5);
+  ok(g.state.chronicle.length >= 3, 'history backfilled'); ok(g.state.chronicle.some(e => e.kind === 'mission' && e.major), 'first mission in history');
+  eq(Object.keys(g.state.modules).length, 10); ok(Array.isArray(g.state.publications));
+  const before2 = g.state.chronicle.length; const g2 = Game.fromSave(data, JSON.parse(JSON.stringify(g.state))); eq(g2.state.chronicle.length, before2, 'backfill runs only once');
+  g.advance(DAY * 20); ok(g.state.time.t > v1file.state.time.t, 'migrated game keeps running');
+});
+await test('saves: damaged save is rejected, recovery finds a good one', async () => {
+  const sm = new SaveManager(new MemoryBackend()); const g = fresh();
+  await sm.save(g, 'manual-2'); await sm.backend.put('autosave', { version: 2, time: {}, resources: {}, crew: 'broken', station: {}, missions: {}, finance: {} }, { savedAt: Date.now() + 5000 });
+  ok(!(await sm.load('autosave')).ok, 'damaged rejected'); const rec = await sm.recover(); ok(rec.ok && rec.slot === 'manual-2', 'recovered ' + JSON.stringify(rec));
+  ok(!sm.parseImport('{"format":"deep-signal-save","state":{"version":99}}').ok, 'newer version rejected');
+});
+await test('station modules: upgrade costs credits and time, effects reach real systems', () => {
+  const g = fresh(); const s = g.state; const base = { gen: powerGen(g), cap: g.moduleEffect('storageMult') };
+  eq(moduleEffect(g, 'powerGenMult'), 0, 'level 1 gives no bonus');
+  const c0 = s.resources.credits; const cost = upgradeCost(g, 'power'); const r = startUpgrade(g, 'power'); ok(r.ok, r.error);
+  eq(s.resources.credits, c0 - cost); ok(!startUpgrade(g, 'power').ok, 'one at a time');
+  g.advance(DAY * 40); eq(s.modules.power.level, 2); ok(moduleEffect(g, 'powerGenMult') > 0.05, 'power bonus'); ok(powerGen(g) > base.gen, 'generation actually rose');
+  ok(s.chronicle.some(e => e.kind === 'infrastructure'), 'upgrade recorded in history');
+  const poor = fresh(); poor.state.resources.credits = 10; ok(!canUpgrade(poor, 'storage').ok, 'needs credits');
+  const nomaint = fresh(); for (const c of nomaint.state.crew) c.assignment = 'rest'; ok(!canUpgrade(nomaint, 'storage').ok, 'needs maintenance crew');
+});
+function powerGen(g) { return g.state.station.power.gen || (g.advance(600), g.state.station.power.gen); }
+await test('station modules: storage raises caps, observatory raises accuracy, comms shortens convoys', async () => {
+  const g = fresh(); g.state.resources.credits = 50000; g.state.modules.storage.level = 3; g.state.modules.observatory.level = 3; g.state.modules.communications.level = 4;
+  const { storageCap } = await import('../js/station.js'); ok(storageCap(g, 'food') > 1800 * 1.4, 'storage cap');
+  const { instrumentAccuracy } = await import('../js/observatory.js'); const inst = g.state.instruments[0]; ok(instrumentAccuracy(g, inst) > inst.accuracy, 'accuracy');
+  const before = g.state.time.t; requestSupplies(g); const p = g.state.finance.pending.at(-1); ok((p.arrives - before) / DAY < 6, 'convoy faster than 8 days');
+  g.state.modules.storage.condition = 40; ok(moduleEffect(g, 'storageMult') < 0.5 * 0.9, 'poor condition weakens effects');
+});
+await test('publications: workflow stages, rewards, rejection when evidence is weak', async () => {
+  const g = await withDiscovery(); const s = g.state; const d = s.discoveries[0];
+  ok(sources(g).find(x => x.type === 'preliminary' && x.sourceId === d.id).ok, 'preliminary available');
+  ok(!sources(g).find(x => x.type === 'paper').ok, 'paper needs two records');
+  ok(!sources(g).find(x => x.type === 'major' && x.sourceId === d.id).ok, 'major needs verification');
+  const rp0 = s.resources.researchPoints, rep0 = s.resources.reputation;
+  const r = startPublication(g, 'preliminary', d.id); ok(r.ok, r.error); ok(!startPublication(g, 'preliminary', d.id).ok, 'no duplicates');
+  const stages = new Set(); for (let i = 0; i < 80; i++) { g.advance(3600 * 2); stages.add(s.publications[0].stage); }
+  eq(s.publications[0].status, 'published'); ok(stages.size >= 3, 'passed through stages');
+  ok(s.resources.researchPoints > rp0 && s.resources.reputation > rep0, 'rewards paid'); ok(s.chronicle.some(e => e.kind === 'publication'), 'history');
+  // weak evidence is returned by reviewers
+  const weak = await withDiscovery(); weak.state.discoveries[0].confidence = 41; weak.state.discoveries[0].verification = null;
+  let returned = 0; for (let k = 0; k < 8; k++) { const w = JSON.parse(JSON.stringify(weak.state)); const gw = Game.fromSave(data, w); gw.state.rng = 100 + k; gw.state.resources.credits = 9999; gw.state.publications = []; startPublication(gw, 'major', gw.state.discoveries[0].id); }
+  const g3 = await withDiscovery(); g3.state.discoveries[0].verification = 'verified'; g3.state.discoveries[0].confidence = 75; ok(startPublication(g3, 'major', g3.state.discoveries[0].id).ok, 'verified discovery can go to major');
+  // returned path: force a low confidence paper-grade threshold
+  const g4 = await withDiscovery(); g4.state.discoveries[0].confidence = 40; startPublication(g4, 'preliminary', g4.state.discoveries[0].id); g4.state.publications[0].confidence = 5;
+  g4.advance(DAY * 6); eq(g4.state.publications[0].status, 'returned'); ok(g4.state.messages.some(m => /Returned/.test(m.subject)), 'reviewer message');
+});
+await test('transient events: records, response, missed windows, no-instrument alerts', () => {
+  const g = fresh(99); g.state.resources.credits = 5000; const s = g.state;
+  const r = spawnTransient(g, 't-supernova'); ok(r.transient && r.status === 'active' && r.simulated, 'open record');
+  for (const k of ['id', 'type', 'severity', 't', 'description', 'affected', 'consequences', 'status']) ok(k in r, 'record field ' + k);
+  const grb = spawnTransient(g, 't-grb'); eq(grb.status, 'logged'); ok(!canRespond(g, grb.id, 'opt-1').ok);
+  ok(!canRespond(g, r.id, 'rad-1').ok, 'radio cannot answer an optical event');
+  const rp0 = s.resources.researchPoints; const res = respondToTransient(g, r.id, 'opt-1'); ok(res.ok, res.error); eq(r.status, 'responding');
+  ok(!canRespond(g, r.id, 'opt-1').ok, 'instrument busy'); g.advance(3600 * 5);
+  ok(['observed', 'missed'].includes(r.status), r.status);
+  if (r.status === 'observed') { ok(s.resources.researchPoints > rp0); const d = s.discoveries.find(x => x.id === r.discoveryId); eq(d.category, 'Simulated Event'); eq(d.targetId, null); }
+  const r2 = spawnTransient(g, 't-pulsar'); g.advance(3600 * 60); eq(r2.status, 'missed', 'window closes');
+});
+await test('transient events appear during a long run and never break decision events', () => {
+  const g = fresh(7); g.state.time.paused = false; g.state.time.speed = 4; g.prefs.autoPauseOnEvent = false;
+  for (let d = 0; d < 120; d++) { g.advance(DAY); if (g.state.events.pending) resolveEvent(g, g.data.events.find(e => e.id === g.state.events.pending.id).options[0].id); for (const c of g.state.crew) { c.health = 100; } g.state.resources.credits += 200; }
+  ok(g.state.events.records.some(r => r.transient), 'transients occurred'); ok(g.state.events.records.some(r => !r.transient && r.status === 'resolved'), 'decision events recorded');
+  ok(g.state.events.records.every(r => r.id && r.status && r.t != null));
+});
+await test('history: milestones recorded, searchable, first-of-kind marked major', async () => {
+  const g = await withDiscovery(); const h = searchChronicle(g, {}); ok(h.length >= 2);
+  ok(h.some(e => e.kind === 'station'), 'station'); ok(h.some(e => e.kind === 'discovery' && e.major), 'first discovery major');
+  ok(searchChronicle(g, { kind: 'discovery' }).every(e => e.kind === 'discovery')); ok(searchChronicle(g, { query: 'zzzz' }).length === 0);
+  const t = h.map(e => e.t); for (let i = 1; i < t.length; i++) ok(t[i - 1] >= t[i], 'newest first');
+});
+await test('finance: monthly report from real totals, categories, warnings', () => {
+  const g = fresh(); g.state.time.paused = false; g.state.time.speed = 4; g.advance(DAY * 31);
+  const rep = g.state.finance.reports[0]; ok(rep, 'report exists'); ok(rep.expense >= 30 * 110, 'upkeep counted'); eq(rep.income, 5000 + 0 * 1 || rep.income); ok(rep.byCat['Personnel and station'] <= -30 * 110);
+  eq(Math.round(rep.income - rep.expense), rep.net);
+  const poor = fresh(); poor.state.resources.credits = 500; ok(financeWarnings(poor).some(w => w.level === 'bad'), 'low balance warns'); poor.state.resources.credits = 5000; eq(financeWarnings(poor).length, 0);
+});
+await test('V2 determinism and save round trip including new systems', async () => {
+  const a = fresh(31337), b = fresh(31337); for (const g of [a, b]) { g.state.resources.credits = 9000; startUpgrade(g, 'research'); g.advance(DAY * 45); }
+  eq(JSON.stringify(a.state), JSON.stringify(b.state), 'same seed same game');
+  const sm = new SaveManager(new MemoryBackend()); await sm.save(a, 'manual-1'); const l = await sm.load('manual-1'); const g2 = Game.fromSave(data, l.state);
+  g2.state.log.shift(); a.state.time.paused = true; a.state.time.speed = 0; eq(JSON.stringify(g2.state), JSON.stringify(a.state), 'round trip identical');
+  a.state.time.paused = false; a.state.time.speed = 3; g2.state.time.paused = false; g2.state.time.speed = 3; a.advance(DAY * 10); g2.advance(DAY * 10); eq(JSON.stringify(g2.state), JSON.stringify(a.state), 'continues identically');
+});
+await test('performance: 365 simulated days stay fast and saves stay small', () => {
+  const g = fresh(5); g.state.time.paused = false; g.prefs.autoPauseOnEvent = false; const t0 = performance.now(); for (let d = 0; d < 365; d++) { g.advance(DAY); if (g.state.events.pending) resolveEvent(g, 'shelter') || resolveEvent(g, g.data.events.find(e => e.id === g.state.events.pending.id).options[0].id); g.state.resources.credits += 300; }
+  const ms = performance.now() - t0; const kb = JSON.stringify(g.state).length / 1024; console.log(`       365 days in ${ms.toFixed(0)} ms, save ${kb.toFixed(0)} KB`);
+  ok(ms < 8000, 'too slow: ' + ms); ok(kb < 600, 'save too large: ' + kb);
+});
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

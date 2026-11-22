@@ -2,6 +2,7 @@
 import { DAY } from './constants.js';
 import { getObject } from './astronomy-database.js';
 import { addCredits, spend, deliverSupplies } from './finance.js';
+import { record } from './chronicle.js';
 
 export function addMessage(game, msg) {
   const s = game.state;
@@ -71,12 +72,13 @@ export function submitReport(game, missionId) {
   if (!a || a.status !== 'report-ready') return { ok: false, error: 'This mission has no completed report to submit.' };
   const def = game.data.missionById[missionId] || (s.customMissions || []).find(c => c.id === missionId);
   const r = def.rewards;
-  if (r.credits) addCredits(game, r.credits, `Mission reward: ${def.title}`, 'income');
+  if (r.credits) addCredits(game, Math.round(r.credits * (1 + game.moduleEffect('rewardMult'))), `Mission reward: ${def.title}`, 'income');
   s.resources.researchPoints += r.researchPoints || 0; s.resources.reputation += r.reputation || 0;
   s.missions.active = s.missions.active.filter(m => m.id !== missionId);
   s.missions.completed.push({ id: missionId, acceptedAt: a.acceptedAt, completedAt: s.time.t });
   game.log(`Mission report submitted: ${def.title}. +${r.credits || 0} RC, +${r.researchPoints || 0} RP, +${r.reputation || 0} reputation.`, 'good');
   addMessage(game, { from: def.issuer || 'Earth Mission Control', subject: `Report received: ${def.title}`, body: 'Thank you. Your report has been received and archived. Rewards have been credited.', type: 'info' });
+  record(game, { kind: 'mission', title: `Mission completed: ${def.title}`, major: s.missions.completed.length === 1, text: s.missions.completed.length === 1 ? 'First mission completed.' : '', ref: missionId });
   for (const next of def.next || []) offerMission(game, next);
   return { ok: true };
 }
@@ -102,9 +104,10 @@ export function requestSupplies(game) {
   if (!spend(game, SUPPLY_COST, 'Emergency supply request')) return { ok: false, error: `An emergency convoy costs ${SUPPLY_COST} RC.` };
   s.finance.lastSupplyRequestDay = day;
   s.finance.pending = s.finance.pending || [];
-  s.finance.pending.push({ arrives: s.time.t + 8 * DAY, goods: { oxygen: 120, water: 500, food: 350 }, label: 'Emergency supply convoy' });
-  game.log('Emergency supply convoy requested. Arrival in 8 days.', 'info');
-  addMessage(game, { from: 'Earth Logistics Office', subject: 'Request received', body: 'Emergency convoy approved. Estimated arrival: 8 days.', type: 'info' });
+  const delay = Math.max(3, 8 - game.moduleEffect('supplyDelayDays'));
+  s.finance.pending.push({ arrives: s.time.t + delay * DAY, goods: { oxygen: 120, water: 500, food: 350 }, label: 'Emergency supply convoy' });
+  game.log(`Emergency supply convoy requested. Arrival in ${delay.toFixed(1)} days.`, 'info');
+  addMessage(game, { from: 'Earth Logistics Office', subject: 'Request received', body: 'Emergency convoy approved. Estimated arrival: ' + delay.toFixed(1) + ' days.', type: 'info' });
   return { ok: true };
 }
 

@@ -11,4 +11,7 @@ export * as archive from './archive.js';
 export * as anomalies from './anomalies.js';
 export * as comms from './comms.js';
 export * as finance from './finance.js';
+export * as station from './station.js';
+export * as publications from './publications.js';
+export * as history from './history.js';
 export * as settings from './settings.js';

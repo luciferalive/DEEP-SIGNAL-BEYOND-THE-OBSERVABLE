@@ -1,3 +1,4 @@
+import { record } from './chronicle.js';
 // Anomalies: unusual features in raw data. In 0.1 they are all instrumental artefacts or noise; real anomalies come later.
 import { getObject } from './astronomy-database.js';
 import { pick } from './rng.js';
@@ -29,6 +30,7 @@ export function resolveAnomaly(game, anomalyId, quality) {
   if (quality >= 0.5) {
     a.status = 'resolved'; a.resolvedAt = game.state.time.t; a.resolution = `Not reproduced in a follow-up observation. Most likely instrumental: ${a.truth}`;
     game.log(`Anomaly "${a.title}" resolved as an instrumental artefact.`, 'info');
+    record(game, { kind: 'anomaly', title: `Anomaly resolved: ${a.title}`, text: 'Instrumental artefact.', ref: a.id });
   } else game.log('Follow-up data quality was too low to resolve the anomaly.', 'warn');
 }
 export const unresolvedCount = game => game.state.anomalies.filter(a => a.status === 'unresolved').length;

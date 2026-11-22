@@ -9,18 +9,21 @@ import { serviceSystem } from './station.js';
 import { startObservation, serviceInstrument } from './observatory.js';
 import { startAnalysis, startTech } from './research-engine.js';
 import { acceptMission, declineMission, submitReport, createSurvey, requestSupplies, sendDiscovery, requestVerification, respondToFunding } from './mission-control.js';
-import { resolveEvent } from './cosmic-events.js';
+import { resolveEvent, respondToTransient, activeTransients } from './cosmic-events.js';
+import { startUpgrade, serviceModule } from './station-modules.js';
+import { startPublication } from './publications.js';
+import { setReserve } from './finance.js';
 import { refuel, repairSystem } from './spacecraft.js';
 import * as V from './views/index.js';
 
-const NAV = [['command', 'Command Centre'], ['explorer', 'Universe Explorer'], ['observatory', 'Observatory'], ['lab', 'Research Laboratory'], ['spacecraft', 'Spacecraft'], ['missions', 'Mission Control'], ['crew', 'Crew Management'], ['tech', 'Technology Tree'], ['events', 'Cosmic Events'], ['archive', 'Discovery Archive'], ['anomalies', 'Anomaly Investigation'], ['comms', 'Communications'], ['finance', 'Financial Management'], ['settings', 'Settings']];
-const VIEWS = { command: V.command, explorer: V.explorer, observatory: V.observatory, lab: V.lab, spacecraft: V.spacecraft, missions: V.missions, crew: V.crew, tech: V.tech, events: V.events, archive: V.archive, anomalies: V.anomalies, comms: V.comms, finance: V.finance, settings: V.settings };
+const NAV = [['command', 'Command Centre'], ['explorer', 'Universe Explorer'], ['observatory', 'Observatory'], ['lab', 'Research Laboratory'], ['spacecraft', 'Spacecraft'], ['missions', 'Mission Control'], ['crew', 'Crew Management'], ['tech', 'Technology Tree'], ['events', 'Cosmic Events'], ['archive', 'Discovery Archive'], ['anomalies', 'Anomaly Investigation'], ['comms', 'Communications'], ['finance', 'Financial Management'], ['station', 'Station Infrastructure'], ['publications', 'Publications'], ['history', 'Civilization History'], ['settings', 'Settings']];
+const VIEWS = { command: V.command, explorer: V.explorer, observatory: V.observatory, lab: V.lab, spacecraft: V.spacecraft, missions: V.missions, crew: V.crew, tech: V.tech, events: V.events, archive: V.archive, anomalies: V.anomalies, comms: V.comms, finance: V.finance, station: V.station, publications: V.publications, history: V.history, settings: V.settings };
 const $ = s => document.querySelector(s);
 
 export class UI {
   constructor({ data, saves, clock }) {
     this.data = data; this.saves = saves; this.clock = clock; this.game = null; this.view = 'command'; this.saveList = []; this.open = new Set(); this.dirty = true; this.lastRender = 0; this.lastAutosave = 0; this.unsub = null; this.modalOpen = false;
-    this.s = { query: '', group: 'all', bookmarksOnly: false, object: null, mapMode: 'sky', obsTarget: 'proxima-centauri', obsInstrument: 'opt-1', obsHours: 6, missionTab: 'active', archiveQuery: '', archiveType: 'all', sendDisc: '', verDisc: '', reportSel: '' };
+    this.s = { query: '', group: 'all', bookmarksOnly: false, object: null, mapMode: 'sky', obsTarget: 'proxima-centauri', obsInstrument: 'opt-1', obsHours: 6, missionTab: 'active', archiveQuery: '', archiveType: 'all', sendDisc: '', verDisc: '', reportSel: '', pubSel: '', histQuery: '', histKind: 'all', histMajor: false, respInst: {} };
     this.prefs = { autoPauseOnEvent: true, autosaveSeconds: 60, uiScale: 1, ...prefsStore.load() };
   }
   isOpen(k) { return this.open.has(k); }
@@ -63,8 +66,8 @@ export class UI {
     set('clk-date', formatDate(s.time.t)); set('clk-time', formatClock(s.time.t) + (s.time.paused ? ' · PAUSED' : ''));
     set('top-res', `${Math.round(s.resources.credits).toLocaleString('en-US')} RC`);
     document.querySelectorAll('.speed button').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.id === (s.time.paused ? 0 : s.time.speed))));
-    const unread = s.messages.filter(m => !m.read).length, offers = s.missions.offered.length, an = s.anomalies.filter(a => a.status === 'unresolved').length, ev = s.events.pending ? 1 : 0;
-    const pips = { comms: [unread, false], missions: [offers, false], anomalies: [an, false], events: [ev, true] };
+    const unread = s.messages.filter(m => !m.read).length, offers = s.missions.offered.length, an = s.anomalies.filter(a => a.status === 'unresolved').length, ev = (s.events.pending ? 1 : 0) + activeTransients(this.game).filter(r => r.respondable).length;
+    const pips = { comms: [unread, false], missions: [offers, false], anomalies: [an, false], events: [ev, !!s.events.pending] };
     document.querySelectorAll('.nav-item').forEach(n => { const id = n.dataset.id; n.setAttribute('aria-current', id === this.view ? 'page' : 'false'); const p = n.querySelector('.pip'); const v = pips[id]; if (v && v[0]) { p.hidden = false; p.textContent = v[0]; p.classList.toggle('warn', v[1]); } else p.hidden = true; });
   }
   watchAlerts() { const p = this.game.state.events.pending; const id = p ? p.id + p.t : null; if (id && id !== this.alerted) { this.alerted = id; this.toast('A cosmic event needs your decision. See Cosmic Events.', 'warn'); } if (!id) this.alerted = null; }
@@ -91,7 +94,7 @@ export class UI {
       const h = e => { const m = e.target.closest('[data-modal]'); if (m) done(m.dataset.modal === 'yes'); }; const k = e => { if (e.key === 'Escape') done(false); };
       o.addEventListener('click', h); document.addEventListener('keydown', k); }); }
   showTitle() {
-    this.clock.stop(); const latest = [...this.saveList].sort((a, b) => b.meta.savedAt - a.meta.savedAt)[0];
+    this.clock.stop(); const latest = [...this.saveList].filter(x => x.meta && !x.slot.startsWith('backup-')).sort((a, b) => b.meta.savedAt - a.meta.savedAt)[0];
     this.modal(`<h2 style="letter-spacing:.14em">DEEP SIGNAL</h2><div class="kicker" style="margin-bottom:1rem">BEYOND THE OBSERVABLE · v${GAME_VERSION}</div>
       <p class="muted">The year is 2189. You command Meridian Station, a deep-space observatory beyond Earth's orbit. Observe real objects, analyse your data and decide what counts as a discovery.</p>
       <p class="faint" style="font-size:.78rem">Real astronomical data and fictional content are always labelled separately. Missing values read DATA UNKNOWN.</p>
@@ -99,7 +102,7 @@ export class UI {
       ${this.game ? `<div class="actions"><button class="btn" data-act="title-close">Back to game</button></div>` : ''}`);
   }
   // ---------- save helpers ----------
-  async loadState(state, label) { try { this.attach(Game.fromSave(this.data, state, this.prefs)); this.toast(`${label} loaded. The simulation is paused.`, 'good'); } catch (e) { this.toast('Load failed: ' + e.message, 'bad'); } }
+  async loadState(state, label) { await this.refreshSaves(); try { this.attach(Game.fromSave(this.data, state, this.prefs)); this.toast(`${label} loaded. The simulation is paused.`, 'good'); } catch (e) { this.toast('Load failed: ' + e.message, 'bad'); } }
   async saveSlot(slot) {
     let r = await this.saves.save(this.game, slot);
     if (r.needsConfirm) { if (!await this.confirm('Overwrite this save?', `Slot "${slot}" already holds a game. Saving replaces it permanently.`, 'Overwrite', true)) return; r = await this.saves.save(this.game, slot, { overwrite: true }); }
@@ -117,7 +120,7 @@ export class UI {
     root.addEventListener('click', e => { const el = e.target.closest('[data-act]'); if (!el || el.disabled || el.tagName === 'SELECT' || el.tagName === 'OPTION') return; if (el.tagName === 'INPUT' && el.type === 'file') return; if (el.tagName === 'INPUT' && el.type === 'checkbox') return; this.act(el.dataset.act, el); });
     root.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches?.('[role="button"][data-act]')) { e.preventDefault(); this.act(e.target.dataset.act, e.target); } });
     root.addEventListener('change', e => { const el = e.target; if (el.matches('select[data-act], input[type=checkbox][data-act], input[type=file][data-act]')) this.act(el.dataset.act, el); });
-    root.addEventListener('input', e => { const el = e.target; if (el.dataset?.input === 'explorer-query') { this.s.query = el.value; this.liveSearch(); } if (el.dataset?.input === 'archive-query') { this.s.archiveQuery = el.value; this.liveSearch(); } });
+    root.addEventListener('input', e => { const el = e.target; if (el.dataset?.input === 'explorer-query') { this.s.query = el.value; this.liveSearch(); } if (el.dataset?.input === 'history-query') { this.s.histQuery = el.value; this.liveSearch(); } if (el.dataset?.input === 'archive-query') { this.s.archiveQuery = el.value; this.liveSearch(); } });
     root.addEventListener('mouseover', e => this.tip(e)); root.addEventListener('mousemove', e => this.tip(e)); root.addEventListener('mouseleave', () => { $('#tooltip').hidden = true; });
   }
   liveSearch() { clearTimeout(this.st); this.st = setTimeout(() => { this.render(true); }, 180); }
@@ -130,7 +133,7 @@ export class UI {
   async act(a, el) {
     const g = this.game; const id = el.dataset.id, v = el.dataset.val; const s = this.s;
     if (a === 'title-new') { if (this.game && !await this.confirm('Start a new game?', 'Your current progress is not saved by this. Save it first if you want to keep it.', 'New game', true)) return; return this.newGame(); }
-    if (a === 'title-continue') { const r = await this.saves.load(id); return r.ok ? this.loadState(r.state, 'Save') : this.toast(r.error, 'bad'); }
+    if (a === 'title-continue') { const r = await this.saves.load(id); if (r.ok) return this.loadState(r.state, 'Save'); this.toast(r.error + ' Looking for another save…', 'warn'); const rec = await this.saves.recover(); return rec.ok ? this.loadState(rec.state, `Recovered save (${rec.slot})`) : this.toast(rec.error, 'bad'); }
     if (a === 'title-close') return this.hideOverlay();
     if (a === 'import-file') { const f = el.files[0]; el.value = ''; return this.importFile(f); }
     if (!g) return;
@@ -180,6 +183,15 @@ export class UI {
       case 'funding-decline': return this.res(respondToFunding(g, +id || id, false));
       case 'event-choose': return this.res(resolveEvent(g, id));
       // archive
+      case 'module-upgrade': return this.res(startUpgrade(g, id), 'Upgrade started.');
+      case 'module-service': return this.res(serviceModule(g, id), 'Module serviced.');
+      case 'pub-select': s.pubSel = el.value; return this.render(true);
+      case 'pub-start': { const [type, ...rest] = id.split('|'); return this.res(startPublication(g, type, rest.join('|')), 'Publication started.'); }
+      case 'resp-select': s.respInst[id] = el.value; return this.render(true);
+      case 'event-respond': return this.res(respondToTransient(g, id, s.respInst[id] || g.state.instruments.find(i => i.kind === g.state.events.records.find(r => r.id === id)?.kind)?.id), 'Response under way.');
+      case 'set-reserve': return this.res(setReserve(g, +$('#reserve-in').value), 'Reserve updated.');
+      case 'history-kind': s.histKind = el.value; return this.render(true);
+      case 'history-major': s.histMajor = el.checked; return this.render(true);
       case 'archive-type': s.archiveType = el.value; return this.render(true);
       // settings
       case 'pref-autopause': this.setPref('autoPauseOnEvent', el.checked); return;

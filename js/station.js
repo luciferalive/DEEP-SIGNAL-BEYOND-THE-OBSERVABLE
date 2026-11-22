@@ -1,20 +1,23 @@
 // Station systems: power budget, life support, condition decay and maintenance.
 import { BASE, DAY, HOUR } from './constants.js';
 import { workRates } from './crew-management.js';
+import { totalExtraKw } from './station-modules.js';
+export const storageCap = (game, key) => BASE[key + 'Cap'] * (1 + game.moduleEffect('storageMult'));
 
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
-export const batteryCap = game => BASE.batteryKwh + game.techEffect('batteryCap');
+export const batteryCap = game => BASE.batteryKwh + game.techEffect('batteryCap') + game.moduleEffect('batteryCap');
 
 export function powerBudget(game) {
   const s = game.state; const sys = s.station.systems;
   const stormFactor = s.events.solarFactor ?? 1;
-  const gen = BASE.solarKw * (sys.power.condition / 100) * (1 + game.techEffect('powerGenMult')) * stormFactor;
+  const gen = BASE.solarKw * (sys.power.condition / 100) * (1 + game.techEffect('powerGenMult') + game.moduleEffect('powerGenMult')) * stormFactor;
   const loads = { ...BASE.loadsKw };
   loads.lab = s.analyses.some(a => a.status === 'active') || s.tech.active ? BASE.loadsKw.lab : 1;
   let instruments = 0;
   for (const inst of s.instruments) instruments += game.isInstrumentBusy(inst) ? inst.powerKw : inst.standbyKw;
   const ship = 1.0;
-  const load = loads.lifeSupport + loads.thermal + loads.comms + loads.computing + loads.lab + instruments + ship;
+  loads.modules = totalExtraKw(game);
+  const load = loads.lifeSupport + loads.thermal + loads.comms + loads.computing + loads.lab + instruments + ship + loads.modules;
   return { gen, load, instruments, loads, net: gen - load };
 }
 
@@ -33,9 +36,9 @@ export function stationTick(game, dt) {
   // Life support
   const eff = lifeSupportEfficiency(game);
   const leak = 0.5 * (1 - s.station.systems.lifeSupport.condition / 100) + 0.05;
-  res.oxygen = clamp(res.oxygen - (n * BASE.oxygenPerCrewDay * (1 - BASE.oxygenRecycle * eff) + leak) * days, 0, BASE.oxygenCap);
-  res.water = clamp(res.water - n * BASE.waterPerCrewDay * (1 - (BASE.waterRecycle + game.techEffect('waterRecycle')) * eff) * days, 0, BASE.waterCap);
-  res.food = clamp(res.food - n * BASE.foodPerCrewDay * days + game.techEffect('foodProduction') * (s.station.systems.lifeSupport.condition / 100) * days, 0, BASE.foodCap);
+  res.oxygen = clamp(res.oxygen - (n * BASE.oxygenPerCrewDay * (1 - BASE.oxygenRecycle * eff) + leak) * days, 0, storageCap(game, 'oxygen'));
+  res.water = clamp(res.water - n * BASE.waterPerCrewDay * (1 - (BASE.waterRecycle + game.techEffect('waterRecycle')) * eff) * days, 0, storageCap(game, 'water'));
+  res.food = clamp(res.food - n * BASE.foodPerCrewDay * days + game.techEffect('foodProduction') * (s.station.systems.lifeSupport.condition / 100) * days, 0, storageCap(game, 'food'));
   // Decay and maintenance
   const rates = workRates(game);
   for (const [id, sys] of Object.entries(s.station.systems)) {
@@ -43,9 +46,9 @@ export function stationTick(game, dt) {
   }
   for (const inst of s.instruments) if (game.isInstrumentBusy(inst)) inst.condition = clamp(inst.condition - 0.03 * (dt / HOUR), 0, 100); else inst.condition = clamp(inst.condition - 0.01 * days, 0, 100);
   // Maintenance crew repairs the most damaged item first
-  const work = rates.maintenance * 0.12 * days; // condition points per day per skill-point-ish
+  const work = rates.maintenance * 0.12 * days * (1 + game.moduleEffect('maintenanceMult')); // condition points per day per skill-point-ish
   if (work > 0) {
-    const items = [...Object.values(s.station.systems), ...s.instruments].filter(x => x.condition < 100).sort((a, b) => a.condition - b.condition);
+    const items = [...Object.values(s.station.systems), ...s.instruments, ...Object.values(s.modules)].filter(x => x.condition < 100).sort((a, b) => a.condition - b.condition);
     if (items[0]) items[0].condition = clamp(items[0].condition + work * 4, 0, 100);
   }
   s.station.condition = Object.values(s.station.systems).reduce((a, x) => a + x.condition, 0) / Object.keys(s.station.systems).length;

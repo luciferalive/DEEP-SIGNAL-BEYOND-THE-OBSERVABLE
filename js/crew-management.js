@@ -17,7 +17,7 @@ export function setAssignment(game, crewId, assignment) {
 export function workRates(game) {
   const r = { operations: 0, research: 0, maintenance: 0, medical: 0, bestOperator: 0 };
   for (const c of game.state.crew) {
-    if (!isAvailable(c)) continue; const e = efficiency(c); const k = c.skills;
+    if (!isAvailable(c)) continue; const e = efficiency(c) * (1 + game.moduleEffect('crewEfficiency')); const k = c.skills;
     if (c.assignment === 'operations') { r.operations += 1; r.bestOperator = Math.max(r.bestOperator, ((k.astrophysics + k.computing) / 2) * e); }
     if (c.assignment === 'research') r.research += ((k.astrophysics + k.computing + k.planetary) / 3) * e;
     if (c.assignment === 'maintenance') r.maintenance += k.engineering * e;
@@ -31,7 +31,7 @@ export function crewTick(game, dt) {
   const oxygenDays = res.oxygen / Math.max(0.01, s.crew.length * 0.84 * 0.5);
   const foodDays = res.food / Math.max(0.01, s.crew.length * 1.8);
   const medics = workRates(game).medical;
-  const techBonus = game.techEffect('moraleBonus');
+  const techBonus = game.techEffect('moraleBonus') + game.moduleEffect('moraleBonus');
   for (const c of s.crew) {
     const working = c.assignment !== 'rest';
     c.fatigue = clamp(c.fatigue + (working ? 4 : -12) * days, 0, 100);
@@ -40,7 +40,7 @@ export function crewTick(game, dt) {
     if (foodDays < 14) target -= 12; if (oxygenDays < 14) target -= 25;
     c.morale = clamp(c.morale + clamp(target - c.morale, -6, 6) * days * 0.5, 0, 100);
     // Health: slow recovery with medical support, loss when supplies run out.
-    let dh = 0.8 + Math.min(2.5, medics * 0.15);
+    let dh = 0.8 + Math.min(2.5, medics * 0.15) + game.moduleEffect('healthRecovery');
     if (res.oxygen <= 0) dh = -25; else if (res.food <= 0) dh = -6; else if (res.water <= 0) dh = -10;
     if (s.station.systems.lifeSupport.condition < 25) dh -= 2;
     c.health = clamp(c.health + dh * days, res.oxygen <= 0 ? 0 : 5, 100); // crew are incapacitated, never lost, while any oxygen remains

@@ -1,0 +1,107 @@
+{
+ "maxLevel": 4,
+ "costGrowth": 1.8,
+ "modules": [
+  {
+   "id": "command",
+   "name": "Command",
+   "description": "Coordinates the whole station. Higher levels improve every crew member's working efficiency.",
+   "perLevel": {
+    "crewEfficiency": 0.03
+   },
+   "kwPerLevel": 0.5,
+   "baseCost": 400
+  },
+  {
+   "id": "observatory",
+   "name": "Observatory",
+   "description": "Optics, pointing and detector bays. Higher levels improve instrument accuracy.",
+   "perLevel": {
+    "accuracy": 0.02
+   },
+   "kwPerLevel": 0.8,
+   "baseCost": 500
+  },
+  {
+   "id": "research",
+   "name": "Research",
+   "description": "Laboratory space and computing. Higher levels speed up analysis and technology research.",
+   "perLevel": {
+    "analysisSpeed": 0.12
+   },
+   "kwPerLevel": 0.8,
+   "baseCost": 500
+  },
+  {
+   "id": "engineering",
+   "name": "Engineering",
+   "description": "Workshops and spares. Higher levels make maintenance repairs faster.",
+   "perLevel": {
+    "maintenanceMult": 0.25
+   },
+   "kwPerLevel": 0.6,
+   "baseCost": 450
+  },
+  {
+   "id": "communications",
+   "name": "Communications",
+   "description": "Antennas and relays. Higher levels shorten Earth supply convoy transit.",
+   "perLevel": {
+    "supplyDelayDays": 1
+   },
+   "kwPerLevel": 0.5,
+   "baseCost": 450
+  },
+  {
+   "id": "medical",
+   "name": "Medical",
+   "description": "Clinic and diagnostics. Higher levels speed crew health recovery.",
+   "perLevel": {
+    "healthRecovery": 0.6
+   },
+   "kwPerLevel": 0.4,
+   "baseCost": 400
+  },
+  {
+   "id": "quarters",
+   "name": "Crew Quarters",
+   "description": "Living space. Higher levels raise crew morale.",
+   "perLevel": {
+    "moraleBonus": 2
+   },
+   "kwPerLevel": 0.4,
+   "baseCost": 400
+  },
+  {
+   "id": "power",
+   "name": "Power Generation",
+   "description": "Solar array extensions and storage. Higher levels raise output and battery capacity.",
+   "perLevel": {
+    "powerGenMult": 0.12,
+    "batteryCap": 100
+   },
+   "kwPerLevel": 0,
+   "baseCost": 600
+  },
+  {
+   "id": "storage",
+   "name": "Storage",
+   "description": "Tanks and holds. Higher levels raise oxygen, water and food storage limits.",
+   "perLevel": {
+    "storageMult": 0.25
+   },
+   "kwPerLevel": 0.3,
+   "baseCost": 450
+  },
+  {
+   "id": "missionOps",
+   "name": "Mission Operations",
+   "description": "Planning and contract office. Higher levels raise mission credit rewards.",
+   "perLevel": {
+    "rewardMult": 0.05
+   },
+   "kwPerLevel": 0.4,
+   "baseCost": 500
+  }
+ ]
+}

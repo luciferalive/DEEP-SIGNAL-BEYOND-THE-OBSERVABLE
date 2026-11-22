@@ -9,7 +9,7 @@ import { formatDuration } from './time-engine.js';
 export const EXPOSURE_HOURS = [2, 6, 12, 24];
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
-export const instrumentAccuracy = (game, inst) => inst.accuracy + game.techEffect('accuracy', inst.kind);
+export const instrumentAccuracy = (game, inst) => inst.accuracy + game.techEffect('accuracy', inst.kind) + game.moduleEffect('accuracy');
 export const observationCost = (inst, hours) => Math.round(inst.operatingCostPerHour * hours);
 
 // Can this instrument observe this object? Returns {ok, reason, maxDistance}.
@@ -36,7 +36,7 @@ export function estimateQuality(game, inst, obj, hours) {
   return clamp(instrumentAccuracy(game, inst) * rangeFactor * durFactor * opFactor * cond / 0.75, 0, 0.97);
 }
 
-export const isInstrumentBusy = (game, inst) => game.state.observations.some(o => o.status === 'running' && o.instrumentId === inst.id);
+export const isInstrumentBusy = (game, inst) => game.state.observations.some(o => o.status === 'running' && o.instrumentId === inst.id) || (game.state.events.responses || []).some(r => r.instrumentId === inst.id);
 
 export function startObservation(game, { instrumentId, targetId, hours, anomalyId = null }) {
   const s = game.state;

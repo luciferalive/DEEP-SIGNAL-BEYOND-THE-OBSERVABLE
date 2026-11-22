@@ -42,11 +42,22 @@ export class SaveManager {
   }
   async load(slot) {
     const raw = await this.backend.get(slot); if (!raw) return { ok: false, error: 'That slot is empty.' };
+    // Never migrate in place without a safety copy: keep the original under backup-<slot>-v<version>.
+    if (typeof raw.version === 'number' && raw.version < SAVE_VERSION && !slot.startsWith('backup-')) {
+      const bslot = `backup-${slot}-v${raw.version}`;
+      if (!(await this.exists(bslot))) await this.backend.put(bslot, raw, { ...metaOf(raw, bslot), backupOf: slot });
+    }
     return this.prepare(raw);
   }
   prepare(raw) {
     const problems = validateState(raw); if (problems.length) return { ok: false, error: problems.join(' ') };
     try { return { ok: true, state: migrate(JSON.parse(JSON.stringify(raw))) }; } catch (e) { return { ok: false, error: `Could not migrate this save: ${e.message}` }; }
+  }
+  // Recovery: the newest save that still validates and migrates (used when the chosen save is damaged).
+  async recover() {
+    const rows = (await this.list()).filter(r => r.meta).sort((a, b) => b.meta.savedAt - a.meta.savedAt);
+    for (const r of rows) { const raw = await this.backend.get(r.slot); const res = raw ? this.prepare(raw) : null; if (res?.ok) return { ok: true, slot: r.slot, state: res.state }; }
+    return { ok: false, error: 'No readable save was found.' };
   }
   remove(slot) { return this.backend.delete(slot); }
   exportJson(game) { return JSON.stringify({ format: 'deep-signal-save', saveVersion: SAVE_VERSION, gameVersion: GAME_VERSION, exportedAt: new Date().toISOString(), state: game.state }, null, 1); }

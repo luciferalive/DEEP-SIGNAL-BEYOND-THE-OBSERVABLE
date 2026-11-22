@@ -4,12 +4,13 @@ import { getObject } from './astronomy-database.js';
 import { workRates } from './crew-management.js';
 import { spend } from './finance.js';
 import { recordDiscovery } from './discovery-archive.js';
+import { record } from './chronicle.js';
 
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const REQUIRED_WORK = { solar: 30, star: 40, nebula: 44, galaxy: 56, compact: 56, exoplanet: 40 };
 const RP_BASE = { solar: 4, star: 8, nebula: 10, galaxy: 14, compact: 16, exoplanet: 12 };
 
-export const analysisRate = game => (workRates(game).research / 4) * (1 + game.techEffect('analysisSpeed'));
+export const analysisRate = game => (workRates(game).research / 4) * (1 + game.techEffect('analysisSpeed') + game.moduleEffect('analysisSpeed'));
 
 export function startAnalysis(game, datasetId) {
   const s = game.state; const ds = s.datasets.find(d => d.id === datasetId);
@@ -33,7 +34,7 @@ export function researchTick(game, dt) {
   if (s.analyses.length > 80) s.analyses.length = 80;
   const t = s.tech.active;
   if (t) {
-    const speed = clamp(workRates(game).research / 8, 0, 2);
+    const speed = clamp(workRates(game).research / 8, 0, 2) * (1 + game.moduleEffect('analysisSpeed'));
     t.progress += (dt / DAY) * speed;
     if (t.progress >= t.days) completeTech(game, t);
   }
@@ -73,5 +74,6 @@ function completeTech(game, t) {
   const s = game.state; const tech = game.data.techById[t.id];
   s.tech.researched[t.id] = s.time.t; s.tech.active = null;
   game.log(`Research complete: ${tech.name}. ${tech.effectText}.`, 'good');
+  record(game, { kind: 'technology', title: `Technology: ${tech.name}`, text: tech.effectText, major: true, ref: t.id });
   game.addMessage({ from: 'Meridian Station Laboratory', subject: `Research complete: ${tech.name}`, body: `${tech.description} Effect: ${tech.effectText}. Limitation: ${tech.limitation}`, type: 'info', fictional: false });
 }

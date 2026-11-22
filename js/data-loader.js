@@ -5,10 +5,10 @@ const ASTRO_FILES = ['solar-system', 'stars', 'exoplanets', 'black-holes', 'gala
 
 export async function loadAllData(readJson) {
   const astro = await Promise.all(ASTRO_FILES.map(name => readJson(`data/${name}.json`)));
-  const [instruments, technologies, missions, events] = await Promise.all(['instruments', 'technologies', 'missions', 'events'].map(n => readJson(`data/${n}.json`)));
+  const [instruments, technologies, missions, events, modules] = await Promise.all(['instruments', 'technologies', 'missions', 'events', 'modules'].map(n => readJson(`data/${n}.json`)));
   return {
     db: buildDatabase(astro.flat()),
-    instruments, technologies, missions: missions.missions, events: events.events,
+    instruments, technologies, missions: missions.missions, events: events.events, transients: events.transients, modules,
     techById: Object.fromEntries(technologies.active.map(t => [t.id, t])),
     missionById: Object.fromEntries(missions.missions.map(m => [m.id, m]))
   };

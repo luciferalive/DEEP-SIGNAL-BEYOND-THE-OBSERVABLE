@@ -1,7 +1,7 @@
 // Shared constants. All simulation time is in game seconds since 2189-01-01 00:00 UTC.
-export const SAVE_VERSION = 1;
+export const SAVE_VERSION = 2;
 export const GAME_NAME = 'DEEP SIGNAL: BEYOND THE OBSERVABLE';
-export const GAME_VERSION = '0.1.0';
+export const GAME_VERSION = '0.2.0';
 export const EPOCH_MS = Date.UTC(2189, 0, 1);
 export const DAY = 86400;
 export const HOUR = 3600;

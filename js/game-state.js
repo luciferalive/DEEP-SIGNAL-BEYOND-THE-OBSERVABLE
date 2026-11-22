@@ -24,8 +24,9 @@ export function createNewGame(seed = Date.now() % 2147483647) {
     missions: { active: [], completed: [], declined: [], offered: [] },
     messages: [],
     tech: { researched: {}, active: null },
-    events: { pending: null, history: [], pauseObsUntil: 0 },
-    finance: { ledger: [], lastGrantDay: 0, nextResupplyDay: BASE.resupplyFirstDay, lastSupplyRequestDay: -999 },
+    events: { pending: null, history: [], pauseObsUntil: 0, records: [], responses: [] },
+    finance: { ledger: [], lastGrantDay: 0, nextResupplyDay: BASE.resupplyFirstDay, lastSupplyRequestDay: -999, reports: [], period: { income: 0, expense: 0, byCat: {} }, reserve: 600 },
+    chronicle: [], publications: [], modules: {},
     bookmarks: [], tracked: [], destinations: [],
     history: { oxygen: [], water: [], food: [], power: [], credits: [] },
     log: [],
@@ -39,14 +40,25 @@ export function validateState(s) {
   if (!s || typeof s !== 'object') return ['Save is not an object.'];
   if (typeof s.version !== 'number') problems.push('Missing save version.');
   for (const key of ['time', 'resources', 'crew', 'station', 'missions', 'finance']) if (!s[key]) problems.push(`Missing "${key}".`);
+  if (s.version < 1) problems.push('Invalid save version.');
+  for (const key of ['crew', 'discoveries', 'observations', 'datasets', 'messages']) if (s[key] !== undefined && !Array.isArray(s[key])) problems.push(`"${key}" is damaged.`);
   if (s.version > SAVE_VERSION) problems.push(`Save version ${s.version} is newer than this game supports (${SAVE_VERSION}).`);
   return problems;
 }
 
 // Future versions add migration steps here. Never drop data silently.
+const STEPS = {
+  // 1 -> 2: structured event records, civilization history, publications, station modules, monthly reports.
+  1: s => {
+    s.events.records = s.events.records || []; s.events.responses = s.events.responses || [];
+    s.chronicle = s.chronicle || []; s.publications = s.publications || []; s.modules = s.modules || {};
+    s.finance.reports = s.finance.reports || []; s.finance.period = s.finance.period || { income: 0, expense: 0, byCat: {} }; if (s.finance.reserve == null) s.finance.reserve = 600;
+    for (const d of s.discoveries || []) if (!d.category) d.category = 'Known Universe';
+  }
+};
 export function migrate(state) {
   const s = state;
-  while (s.version < SAVE_VERSION) { s.version += 1; }
+  while (s.version < SAVE_VERSION) { STEPS[s.version]?.(s); s.version += 1; }
   s.gameVersion = GAME_VERSION;
   for (const [k, v] of Object.entries({ bookmarks: [], tracked: [], destinations: [], anomalies: [], flags: {} })) if (!s[k]) s[k] = v;
   return s;

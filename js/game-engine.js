@@ -11,6 +11,9 @@ import { eventsTick } from './cosmic-events.js';
 import { shipTick } from './spacecraft.js';
 import { dailyFinance } from './finance.js';
 import { formatDateTime } from './time-engine.js';
+import { moduleEffect, initialModules, modulesTick } from './station-modules.js';
+import { publicationsTick } from './publications.js';
+import { record, backfill } from './chronicle.js';
 
 const DEFAULT_PREFS = { autoPauseOnEvent: true, autosaveSeconds: 60, uiScale: 1 };
 
@@ -18,12 +21,15 @@ export class Game {
   constructor(data, state, prefs = {}) {
     this.data = data; this.state = state; this.prefs = { ...DEFAULT_PREFS, ...prefs };
     this.listeners = new Set(); this.lastHistory = -1;
+    for (const [id, m] of Object.entries(initialModules(data))) if (!this.state.modules[id]) this.state.modules[id] = m;
     for (const inst of this.state.instruments) if (!inst.name) Object.assign(inst, data.instruments.active.find(i => i.id === inst.id));
   }
   static create(data, { seed, prefs } = {}) {
     const state = createNewGame(seed);
     state.instruments = data.instruments.active.filter(i => i.owned).map(i => ({ ...JSON.parse(JSON.stringify(i)), condition: 100 }));
     const g = new Game(data, state, prefs);
+    g.state.flags.chronicleBackfilled = true;
+    record(g, { kind: 'station', title: 'Meridian Station established', text: 'The programme begins at Sun–Earth L2 (simulated setting).', major: true });
     g.log('Meridian Station is operational. Simulation paused. Press Play to begin.', 'info');
     g.addMessage({ from: 'Earth Mission Control', subject: 'Welcome to Meridian Station', body: 'Commander, the programme is yours. Keep your crew healthy, your systems powered and your instruments pointed at the sky. Your first assignment follows. (Simulated future communication.)', type: 'info' });
     offerMission(g, 'm01');
@@ -34,6 +40,7 @@ export class Game {
     const state = migrate(JSON.parse(JSON.stringify(saved)));
     state.time.paused = true; state.time.speed = 0;
     const g = new Game(data, state, prefs);
+    backfill(g);
     g.log('Game loaded. Simulation paused.', 'info');
     return g;
   }
@@ -46,6 +53,7 @@ export class Game {
     if (s.log.length > 250) s.log.length = 250;
   }
   isInstrumentBusy(inst) { return isInstrumentBusy(this, inst); }
+  moduleEffect(key) { return moduleEffect(this, key); }
   techEffect(type, kind) {
     let sum = 0;
     for (const id of Object.keys(this.state.tech.researched)) for (const e of this.data.techById[id]?.effects || []) if (e.type === type && (!kind || !e.kind || e.kind === kind)) sum += e.value;
@@ -59,7 +67,7 @@ export class Game {
 
   step(dt = TICK) {
     const s = this.state; s.time.t += dt;
-    stationTick(this, dt); crewTick(this, dt); observatoryTick(this); researchTick(this, dt); shipTick(this, dt);
+    stationTick(this, dt); crewTick(this, dt); observatoryTick(this); researchTick(this, dt); shipTick(this, dt); modulesTick(this, dt); publicationsTick(this, dt);
     eventsTick(this); missionControlTick(this);
     const day = Math.floor(s.time.t / DAY);
     if (s.finance.lastUpkeepDay === undefined) s.finance.lastUpkeepDay = Math.floor((s.time.t - dt) / DAY);

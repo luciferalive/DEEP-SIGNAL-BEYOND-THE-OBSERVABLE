@@ -1,40 +1,419 @@
 {
-  "events": [
-    { "id": "solar-particle-event", "title": "Solar particle event", "weight": 3, "severity": "warning",
-      "text": "A coronal mass ejection has produced an energetic particle storm. Radiation levels in the station will rise for about 12 hours.",
-      "options": [
-        { "id": "shelter", "label": "Order the crew into the storm shelter", "hint": "Pauses observations for 12 hours. Slight morale loss.", "effects": [{ "type": "pauseObservations", "hours": 12 }, { "type": "morale", "value": -2 }, { "type": "log", "text": "Crew sheltered through the solar particle event. No injuries." }] },
-        { "id": "continue", "label": "Continue operations", "hint": "Risk of crew radiation exposure and detector damage.", "effects": [{ "type": "crewHealthAll", "value": -8 }, { "type": "instrumentCondition", "value": -6 }, { "type": "log", "text": "Operations continued through the storm. Crew received elevated radiation doses." }] }
-      ] },
-    { "id": "micrometeoroid", "title": "Micrometeoroid impact", "weight": 2, "severity": "warning",
-      "text": "A small particle struck the solar array. Output has dropped and one panel string is damaged.",
-      "options": [
-        { "id": "eva", "label": "Send an engineering EVA to repair it (150 RC)", "hint": "Restores most of the damage.", "effects": [{ "type": "credits", "value": -150 }, { "type": "systemCondition", "system": "power", "value": -4 }, { "type": "log", "text": "EVA repair completed. Array output restored." }] },
-        { "id": "defer", "label": "Defer repairs", "hint": "Solar array condition drops further.", "effects": [{ "type": "systemCondition", "system": "power", "value": -12 }, { "type": "log", "text": "Array damage left unrepaired." }] }
-      ] },
-    { "id": "coolant-fault", "title": "Thermal loop fault", "weight": 2, "severity": "warning",
-      "text": "A coolant pump in the primary thermal loop is showing irregular pressure. The thermal system needs attention.",
-      "options": [
-        { "id": "spares", "label": "Replace the pump from spares (200 RC)", "hint": "Restores thermal system condition.", "effects": [{ "type": "credits", "value": -200 }, { "type": "systemCondition", "system": "thermal", "value": 15 }, { "type": "log", "text": "Thermal pump replaced." }] },
-        { "id": "backup", "label": "Switch to the backup loop", "hint": "Free, but the thermal system loses condition.", "effects": [{ "type": "systemCondition", "system": "thermal", "value": -15 }, { "type": "log", "text": "Station running on the backup thermal loop." }] }
-      ] },
-    { "id": "detector-drift", "title": "Detector calibration drift", "weight": 3, "severity": "info",
-      "text": "The flight team notes slow drift in the detector calibration of one instrument. Data quality will degrade until recalibrated.",
-      "options": [
-        { "id": "recalibrate", "label": "Recalibrate now (100 RC, instrument offline for 6 h)", "hint": "Restores condition.", "effects": [{ "type": "credits", "value": -100 }, { "type": "pauseObservations", "hours": 6 }, { "type": "instrumentCondition", "value": 8 }, { "type": "log", "text": "Instrument recalibrated." }] },
-        { "id": "ignore", "label": "Ignore it for now", "hint": "Instrument condition drops.", "effects": [{ "type": "instrumentCondition", "value": -8 }, { "type": "log", "text": "Calibration drift ignored." }] }
-      ] },
-    { "id": "crew-illness", "title": "Crew illness", "weight": 2, "severity": "warning",
-      "text": "A crew member has come down with a fever. The flight surgeon recommends treatment and rest.",
-      "options": [
-        { "id": "treat", "label": "Full treatment and bed rest (80 RC)", "hint": "Smaller health loss.", "effects": [{ "type": "credits", "value": -80 }, { "type": "crewHealthOne", "value": -10 }, { "type": "log", "text": "Crew member treated and rested." }] },
-        { "id": "work", "label": "Let them keep working", "hint": "Larger health loss and morale cost.", "effects": [{ "type": "crewHealthOne", "value": -28 }, { "type": "morale", "value": -3 }, { "type": "log", "text": "Crew member kept working while ill." }] }
-      ] },
-    { "id": "equipment-ageing", "title": "Equipment wear", "weight": 2, "severity": "info",
-      "text": "Routine inspection reports increased wear on the life-support compressors.",
-      "options": [
-        { "id": "service", "label": "Schedule a service (120 RC)", "hint": "Improves life-support condition.", "effects": [{ "type": "credits", "value": -120 }, { "type": "systemCondition", "system": "lifeSupport", "value": 10 }, { "type": "log", "text": "Life-support compressors serviced." }] },
-        { "id": "later", "label": "Postpone", "hint": "Life-support condition drops.", "effects": [{ "type": "systemCondition", "system": "lifeSupport", "value": -10 }, { "type": "log", "text": "Compressor service postponed." }] }
-      ] }
-  ]
+ "events": [
+  {
+   "id": "solar-particle-event",
+   "title": "Solar particle event",
+   "weight": 3,
+   "severity": "warning",
+   "text": "A coronal mass ejection has produced an energetic particle storm. Radiation levels in the station will rise for about 12 hours.",
+   "options": [
+    {
+     "id": "shelter",
+     "label": "Order the crew into the storm shelter",
+     "hint": "Pauses observations for 12 hours. Slight morale loss.",
+     "effects": [
+      {
+       "type": "pauseObservations",
+       "hours": 12
+      },
+      {
+       "type": "morale",
+       "value": -2
+      },
+      {
+       "type": "log",
+       "text": "Crew sheltered through the solar particle event. No injuries."
+      }
+     ]
+    },
+    {
+     "id": "continue",
+     "label": "Continue operations",
+     "hint": "Risk of crew radiation exposure and detector damage.",
+     "effects": [
+      {
+       "type": "crewHealthAll",
+       "value": -8
+      },
+      {
+       "type": "instrumentCondition",
+       "value": -6
+      },
+      {
+       "type": "log",
+       "text": "Operations continued through the storm. Crew received elevated radiation doses."
+      }
+     ]
+    }
+   ],
+   "category": "stellar",
+   "affected": [
+    "crew",
+    "instruments",
+    "power"
+   ]
+  },
+  {
+   "id": "micrometeoroid",
+   "title": "Micrometeoroid impact",
+   "weight": 2,
+   "severity": "warning",
+   "text": "A small particle struck the solar array. Output has dropped and one panel string is damaged.",
+   "options": [
+    {
+     "id": "eva",
+     "label": "Send an engineering EVA to repair it (150 RC)",
+     "hint": "Restores most of the damage.",
+     "effects": [
+      {
+       "type": "credits",
+       "value": -150
+      },
+      {
+       "type": "systemCondition",
+       "system": "power",
+       "value": -4
+      },
+      {
+       "type": "log",
+       "text": "EVA repair completed. Array output restored."
+      }
+     ]
+    },
+    {
+     "id": "defer",
+     "label": "Defer repairs",
+     "hint": "Solar array condition drops further.",
+     "effects": [
+      {
+       "type": "systemCondition",
+       "system": "power",
+       "value": -12
+      },
+      {
+       "type": "log",
+       "text": "Array damage left unrepaired."
+      }
+     ]
+    }
+   ],
+   "category": "operational",
+   "affected": [
+    "power"
+   ]
+  },
+  {
+   "id": "coolant-fault",
+   "title": "Thermal loop fault",
+   "weight": 2,
+   "severity": "warning",
+   "text": "A coolant pump in the primary thermal loop is showing irregular pressure. The thermal system needs attention.",
+   "options": [
+    {
+     "id": "spares",
+     "label": "Replace the pump from spares (200 RC)",
+     "hint": "Restores thermal system condition.",
+     "effects": [
+      {
+       "type": "credits",
+       "value": -200
+      },
+      {
+       "type": "systemCondition",
+       "system": "thermal",
+       "value": 15
+      },
+      {
+       "type": "log",
+       "text": "Thermal pump replaced."
+      }
+     ]
+    },
+    {
+     "id": "backup",
+     "label": "Switch to the backup loop",
+     "hint": "Free, but the thermal system loses condition.",
+     "effects": [
+      {
+       "type": "systemCondition",
+       "system": "thermal",
+       "value": -15
+      },
+      {
+       "type": "log",
+       "text": "Station running on the backup thermal loop."
+      }
+     ]
+    }
+   ],
+   "category": "operational",
+   "affected": [
+    "thermal"
+   ]
+  },
+  {
+   "id": "detector-drift",
+   "title": "Detector calibration drift",
+   "weight": 3,
+   "severity": "info",
+   "text": "The flight team notes slow drift in the detector calibration of one instrument. Data quality will degrade until recalibrated.",
+   "options": [
+    {
+     "id": "recalibrate",
+     "label": "Recalibrate now (100 RC, instrument offline for 6 h)",
+     "hint": "Restores condition.",
+     "effects": [
+      {
+       "type": "credits",
+       "value": -100
+      },
+      {
+       "type": "pauseObservations",
+       "hours": 6
+      },
+      {
+       "type": "instrumentCondition",
+       "value": 8
+      },
+      {
+       "type": "log",
+       "text": "Instrument recalibrated."
+      }
+     ]
+    },
+    {
+     "id": "ignore",
+     "label": "Ignore it for now",
+     "hint": "Instrument condition drops.",
+     "effects": [
+      {
+       "type": "instrumentCondition",
+       "value": -8
+      },
+      {
+       "type": "log",
+       "text": "Calibration drift ignored."
+      }
+     ]
+    }
+   ],
+   "category": "operational",
+   "affected": [
+    "instruments"
+   ]
+  },
+  {
+   "id": "crew-illness",
+   "title": "Crew illness",
+   "weight": 2,
+   "severity": "warning",
+   "text": "A crew member has come down with a fever. The flight surgeon recommends treatment and rest.",
+   "options": [
+    {
+     "id": "treat",
+     "label": "Full treatment and bed rest (80 RC)",
+     "hint": "Smaller health loss.",
+     "effects": [
+      {
+       "type": "credits",
+       "value": -80
+      },
+      {
+       "type": "crewHealthOne",
+       "value": -10
+      },
+      {
+       "type": "log",
+       "text": "Crew member treated and rested."
+      }
+     ]
+    },
+    {
+     "id": "work",
+     "label": "Let them keep working",
+     "hint": "Larger health loss and morale cost.",
+     "effects": [
+      {
+       "type": "crewHealthOne",
+       "value": -28
+      },
+      {
+       "type": "morale",
+       "value": -3
+      },
+      {
+       "type": "log",
+       "text": "Crew member kept working while ill."
+      }
+     ]
+    }
+   ],
+   "category": "operational",
+   "affected": [
+    "crew"
+   ]
+  },
+  {
+   "id": "equipment-ageing",
+   "title": "Equipment wear",
+   "weight": 2,
+   "severity": "info",
+   "text": "Routine inspection reports increased wear on the life-support compressors.",
+   "options": [
+    {
+     "id": "service",
+     "label": "Schedule a service (120 RC)",
+     "hint": "Improves life-support condition.",
+     "effects": [
+      {
+       "type": "credits",
+       "value": -120
+      },
+      {
+       "type": "systemCondition",
+       "system": "lifeSupport",
+       "value": 10
+      },
+      {
+       "type": "log",
+       "text": "Life-support compressors serviced."
+      }
+     ]
+    },
+    {
+     "id": "later",
+     "label": "Postpone",
+     "hint": "Life-support condition drops.",
+     "effects": [
+      {
+       "type": "systemCondition",
+       "system": "lifeSupport",
+       "value": -10
+      },
+      {
+       "type": "log",
+       "text": "Compressor service postponed."
+      }
+     ]
+    }
+   ],
+   "category": "operational",
+   "affected": [
+    "station"
+   ]
+  }
+ ],
+ "transients": [
+  {
+   "id": "t-flare",
+   "title": "Solar flare",
+   "category": "stellar",
+   "type": "Solar flare",
+   "severity": "info",
+   "kind": "optical",
+   "windowHours": 18,
+   "rp": 6,
+   "rep": 0.2,
+   "weight": 3,
+   "solarFactor": 0.96,
+   "text": "Simulated event: the station's solar monitors report a flare. Optical follow-up could characterise it.",
+   "affected": [
+    "power"
+   ]
+  },
+  {
+   "id": "t-variable",
+   "title": "Stellar variability candidate",
+   "category": "stellar",
+   "type": "Stellar variability",
+   "severity": "info",
+   "kind": "optical",
+   "windowHours": 36,
+   "rp": 8,
+   "rep": 0.3,
+   "weight": 3,
+   "text": "Simulated event: an automated survey flags a star in a monitored field as varying in brightness. Follow-up photometry is requested.",
+   "affected": [
+    "observatory"
+   ]
+  },
+  {
+   "id": "t-cme",
+   "title": "Coronal mass ejection",
+   "category": "stellar",
+   "type": "Coronal mass ejection",
+   "severity": "warning",
+   "kind": "optical",
+   "windowHours": 24,
+   "rp": 7,
+   "rep": 0.2,
+   "weight": 2,
+   "solarFactor": 0.92,
+   "text": "Simulated event: a coronal mass ejection is leaving the Sun. Solar array output dips while the cloud passes.",
+   "affected": [
+    "power",
+    "observatory"
+   ]
+  },
+  {
+   "id": "t-pulsar",
+   "title": "Pulsar timing opportunity",
+   "category": "galactic",
+   "type": "Pulsar observation",
+   "severity": "info",
+   "kind": "radio",
+   "windowHours": 48,
+   "rp": 10,
+   "rep": 0.4,
+   "weight": 2,
+   "text": "Simulated event: a pulsar in a catalogued timing programme is due for a radio timing measurement.",
+   "affected": [
+    "observatory"
+   ]
+  },
+  {
+   "id": "t-supernova",
+   "title": "Supernova candidate alert",
+   "category": "galactic",
+   "type": "Supernova detection",
+   "severity": "notice",
+   "kind": "optical",
+   "windowHours": 72,
+   "rp": 16,
+   "rep": 0.8,
+   "weight": 1,
+   "text": "Simulated event: a survey network reports a new transient in a distant galaxy. Early optical data is valuable.",
+   "affected": [
+    "observatory"
+   ]
+  },
+  {
+   "id": "t-grb",
+   "title": "Gamma-ray burst alert",
+   "category": "galactic",
+   "type": "Gamma-ray burst",
+   "severity": "notice",
+   "kind": "gamma",
+   "windowHours": 12,
+   "rp": 18,
+   "rep": 0.8,
+   "weight": 1,
+   "text": "Simulated event: an alert network reports a gamma-ray burst. Meridian Station has no gamma-ray instrument, so it can only log the alert.",
+   "affected": []
+  },
+  {
+   "id": "t-gw",
+   "title": "Gravitational-wave alert",
+   "category": "galactic",
+   "type": "Gravitational-wave event",
+   "severity": "notice",
+   "kind": "gravitational",
+   "windowHours": 24,
+   "rp": 18,
+   "rep": 0.8,
+   "weight": 1,
+   "text": "Simulated event: a gravitational-wave network issues a candidate alert. Meridian Station has no gravitational-wave instrument, so it can only log the alert.",
+   "affected": []
+  }
+ ]
 }

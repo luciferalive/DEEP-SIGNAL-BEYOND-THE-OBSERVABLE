@@ -1,3 +1,4 @@
+import { record } from './chronicle.js';
 // The permanent scientific record. Every completed analysis creates an entry with a timestamp and evidence.
 const label = c => (c >= 75 ? 'High' : c >= 55 ? 'Moderate' : 'Low');
 
@@ -12,6 +13,7 @@ export function recordDiscovery(game, { ds, obj, first, rp }) {
     summary: `${ds.hours} h ${inst?.kind || ''} observation of ${obj.name} analysed (data quality ${(ds.quality * 100) | 0}%${ds.partial ? ', incomplete' : ''}). Results are consistent with the catalogue characterisation of this ${obj.classification.toLowerCase()}. Catalogue values: see Universe Explorer.`
   };
   s.discoveries.unshift(d);
+  record(game, { kind: 'discovery', title: d.title, major: s.discoveries.length === 1, text: s.discoveries.length === 1 ? 'First discovery archived.' : `${d.confidenceLabel} confidence.`, ref: d.id });
   game.log(`Analysis complete: ${obj.name} (${d.confidenceLabel} confidence, +${rp} research points).`, 'good');
   return d;
 }
