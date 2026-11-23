@@ -2,6 +2,7 @@ import { esc, num, badge, panel, head, empty, select, btn } from '../ui-componen
 import { formatDateTime, formatDate } from '../time-engine.js';
 import { SUPPLY_COST } from '../mission-control.js';
 import { DAY } from '../constants.js';
+import { endpoints, STATES } from '../comms-network.js';
 
 export const title = 'Communications';
 export function render(ui) {
@@ -12,7 +13,7 @@ export function render(ui) {
     ${m.type === 'mission-offer' ? (m.status === 'open' && s.missions.offered.includes(m.missionId) ? `<div class="row">${btn('Accept mission', 'mission-accept', { id: m.missionId, cls: 'small primary' })}${btn('Decline', 'mission-decline', { id: m.missionId, cls: 'small' })}</div>` : badge(m.status)) : ''}
     ${m.type === 'funding-offer' ? (m.status === 'open' ? `<div class="row"><span class="mono amber">${num(m.credits)} RC</span>${btn('Accept', 'funding-accept', { id: m.id, cls: 'small primary' })}${btn('Decline', 'funding-decline', { id: m.id, cls: 'small' })}</div>` : badge(m.status)) : ''}</div></details>`).join('');
   const reports = s.missions.active.filter(a => a.status === 'report-ready');
-  return `${head('12 · Earth link', 'Communications', 'Transmissions from Earth Mission Control and its partners, plus your own requests and reports. Messages from agencies are simulated future communications.')}
+  return `${head('Earth link', 'Communications', 'Transmissions from Earth Mission Control and its partners, plus your own requests and reports. Messages from agencies are simulated future communications.')}
   <div class="grid cols-main"><section class="panel"><h3>Inbox <span class="tag">${s.messages.filter(m => !m.read).length} unread ${btn('Mark all read', 'read-all', { cls: 'small' })}</span></h3>${msgs || empty('No messages.')}</section>
   <div class="stack">
     ${panel('Send to Earth', `<div class="stack">
@@ -20,6 +21,8 @@ export function render(ui) {
       <div class="row">${select('ver-disc', unver.length ? unver.map(d => [d.id, d.title]) : [['', 'Nothing to verify', true]], ui.s.verDisc || unver[0]?.id || '')}${btn('Request verification', 'verify-selected', { cls: 'small', disabled: !unver.length })}</div>
       <div class="row">${select('report-sel', reports.length ? reports.map(a => [a.id, g.data.missionById[a.id]?.title || s.customMissions?.find(c => c.id === a.id)?.title]) : [['', 'No reports ready', true]], ui.s.reportSel || reports[0]?.id || '')}${btn('Submit mission report', 'report-selected', { cls: 'small primary', disabled: !reports.length })}</div></div>`)}
     ${panel('Request resources', `<p class="muted" style="font-size:.84rem">Ask Earth for an emergency convoy: oxygen 120 kg, water 500 L, food 350 kg. It arrives in 8 days. Limited to one request every 20 days.</p>${btn(`Request convoy (${SUPPLY_COST} RC)`, 'request-supplies', { cls: 'small', disabled: wait > 0 })}${wait > 0 ? `<span class="faint" style="font-size:.78rem"> available in ${wait} days</span>` : ''}`)}
+    ${panel('Network status', `<div class="list">${endpoints(g).map(e => `<div class="item"><span>${esc(e.name)} <span class="faint">· ${e.kind}</span></span><span class="row">${badge(e.state, e.state === 'connected' ? 'ok' : ['interrupted', 'offline'].includes(e.state) ? 'bad' : 'warn')}<span class="faint mono" style="font-size:.72rem">${e.delayMin != null ? (e.delayMin < 1 ? '<1' : e.delayMin.toFixed(0)) + ' min' : ''}</span></span></div>`).join('')}</div>`)}
+    ${panel('Transmission history', s.comms.history.length ? `<div class="list" style="max-height:16rem;overflow:auto">${s.comms.history.slice(0, 30).map(h => `<div class="item" style="display:block"><div class="row between"><span style="font-size:.82rem">${esc(h.from)} → ${esc(h.to)} ${badge(h.kind)}</span><span class="faint mono" style="font-size:.7rem">${formatDateTime(h.t)}</span></div><div class="faint" style="font-size:.78rem">${esc(h.text)}${h.delayMin >= 1 ? ' · delay ' + h.delayMin + ' min' : ''}</div></div>`).join('')}</div>` : empty('No transmissions yet.'))}
     ${panel('In transit', pending.length ? `<div class="list">${pending.map(p => `<div class="item"><span>${esc(p.label)}</span><span class="faint mono" style="font-size:.74rem">arrives ${formatDate(p.arrives)}</span></div>`).join('')}</div>` : empty('Nothing in transit.'))}
   </div></div>`;
 }

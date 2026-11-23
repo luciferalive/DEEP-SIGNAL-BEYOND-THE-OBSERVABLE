@@ -2,6 +2,7 @@ export * as command from './command-centre.js';
 export * as explorer from './universe-explorer.js';
 export * as observatory from './observatory.js';
 export * as lab from './lab.js';
+export * as expeditions from './expeditions.js';
 export * as spacecraft from './spacecraft.js';
 export * as missions from './missions.js';
 export * as crew from './crew.js';

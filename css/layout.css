@@ -44,3 +44,4 @@
   .brand span { display: none; }
 }
 .nav-item .pip[hidden] { display: none; }
+.nav-group { font-size: .6rem; letter-spacing: .24em; text-transform: uppercase; color: var(--faint, #5b6b80); padding: .9rem .9rem .3rem; }

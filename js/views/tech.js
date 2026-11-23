@@ -5,7 +5,7 @@ export const title = 'Technology Tree';
 export function render(ui) {
   const g = ui.game, s = g.state; const t = g.data.technologies;
   const branches = [...new Set(t.active.map(x => x.branch))];
-  return `${head('08 · Development', 'Technology Tree', 'Spend research points and credits to unlock technologies. Each one changes how the station performs; limitations are listed. Only technologies that work in this version are shown as researchable.')}
+  return `${head('Development', 'Technology Tree', 'Spend research points and credits to unlock technologies. Each one changes how the station performs; limitations are listed. Only technologies that work in this version are shown as researchable.')}
   <div class="row" style="margin-bottom:1rem"><span class="mono">${s.resources.researchPoints} RP</span><span class="mono amber">${Math.round(s.resources.credits).toLocaleString('en-US')} RC</span>${s.tech.active ? badge(`Researching: ${g.data.techById[s.tech.active.id].name}`, 'warn') : badge('Laboratory free', 'ok')}</div>
   ${branches.map(b => `<h3 style="margin:1.2rem 0 .6rem">${esc(b)}</h3><div class="grid cols-3">${t.active.filter(x => x.branch === b).map(x => {
     const done = !!s.tech.researched[x.id]; const act = s.tech.active?.id === x.id; const c = canStartTech(g, x.id);

@@ -4,7 +4,7 @@ import { defOf, capacityText, upgradeCost, upgradeDays, powerKw, canUpgrade } fr
 export const title = 'Station Infrastructure';
 export function render(ui) {
   const g = ui.game, s = g.state, max = g.data.modules.maxLevel;
-  return `${head('14 · Infrastructure', 'Station Infrastructure', 'Ten modules shape what the station can do. Upgrades cost credits, need a maintenance engineer and take days. Condition wears slowly and weakens a module’s bonus until it is serviced.')}
+  return `${head('Infrastructure', 'Station Infrastructure', 'Ten modules shape what the station can do. Upgrades cost credits, need a maintenance engineer and take days. Condition wears slowly and weakens a module’s bonus until it is serviced.')}
   <div class="grid cols-3">${g.data.modules.modules.map(d => { const m = s.modules[d.id]; const can = canUpgrade(g, d.id); const cost = upgradeCost(g, d.id);
     return panel(d.name, `<div class="row" style="margin-bottom:.4rem">${badge('Level ' + m.level + ' / ' + max, m.level >= max ? 'ok' : 'known')}${m.upgrade ? badge('upgrading', 'warn') : ''}</div>
     <p class="muted" style="font-size:.84rem">${esc(d.description)}</p>

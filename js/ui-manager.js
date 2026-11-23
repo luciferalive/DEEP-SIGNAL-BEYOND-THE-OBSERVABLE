@@ -11,19 +11,23 @@ import { startAnalysis, startTech } from './research-engine.js';
 import { acceptMission, declineMission, submitReport, createSurvey, requestSupplies, sendDiscovery, requestVerification, respondToFunding } from './mission-control.js';
 import { resolveEvent, respondToTransient, activeTransients } from './cosmic-events.js';
 import { startUpgrade, serviceModule } from './station-modules.js';
+import { createExpedition, abortExpedition } from './expeditions.js';
+import { orderShip, installEquipment, removeEquipment, serviceShip } from './spacecraft.js';
+import { hire, startTraining, setShift } from './crew-management.js';
 import { startPublication } from './publications.js';
 import { setReserve } from './finance.js';
 import { refuel, repairSystem } from './spacecraft.js';
 import * as V from './views/index.js';
 
-const NAV = [['command', 'Command Centre'], ['explorer', 'Universe Explorer'], ['observatory', 'Observatory'], ['lab', 'Research Laboratory'], ['spacecraft', 'Spacecraft'], ['missions', 'Mission Control'], ['crew', 'Crew Management'], ['tech', 'Technology Tree'], ['events', 'Cosmic Events'], ['archive', 'Discovery Archive'], ['anomalies', 'Anomaly Investigation'], ['comms', 'Communications'], ['finance', 'Financial Management'], ['station', 'Station Infrastructure'], ['publications', 'Publications'], ['history', 'Civilization History'], ['settings', 'Settings']];
-const VIEWS = { command: V.command, explorer: V.explorer, observatory: V.observatory, lab: V.lab, spacecraft: V.spacecraft, missions: V.missions, crew: V.crew, tech: V.tech, events: V.events, archive: V.archive, anomalies: V.anomalies, comms: V.comms, finance: V.finance, station: V.station, publications: V.publications, history: V.history, settings: V.settings };
+const NAV_GROUPS = { command: 'Station', explorer: 'Science', observatory: 'Science', lab: 'Science', spacecraft: 'Fleet', expeditions: 'Fleet', missions: 'Earth', crew: 'Station', tech: 'Science', events: 'Universe', archive: 'Science', anomalies: 'Universe', comms: 'Earth', finance: 'Earth', station: 'Station', publications: 'Science', history: 'Universe', settings: 'System' };
+const NAV = [['command', 'Command Centre'], ['crew', 'Crew Management'], ['station', 'Station Infrastructure'], ['explorer', 'Universe Explorer'], ['observatory', 'Observatory'], ['lab', 'Research Laboratory'], ['tech', 'Technology Tree'], ['archive', 'Discovery Archive'], ['publications', 'Publications'], ['spacecraft', 'Spacecraft'], ['expeditions', 'Expeditions'], ['missions', 'Mission Control'], ['comms', 'Communications'], ['finance', 'Financial Management'], ['events', 'Cosmic Events'], ['anomalies', 'Anomaly Investigation'], ['history', 'Civilization History'], ['settings', 'Settings']];
+const VIEWS = { command: V.command, explorer: V.explorer, observatory: V.observatory, lab: V.lab, spacecraft: V.spacecraft, expeditions: V.expeditions, missions: V.missions, crew: V.crew, tech: V.tech, events: V.events, archive: V.archive, anomalies: V.anomalies, comms: V.comms, finance: V.finance, station: V.station, publications: V.publications, history: V.history, settings: V.settings };
 const $ = s => document.querySelector(s);
 
 export class UI {
   constructor({ data, saves, clock }) {
     this.data = data; this.saves = saves; this.clock = clock; this.game = null; this.view = 'command'; this.saveList = []; this.open = new Set(); this.dirty = true; this.lastRender = 0; this.lastAutosave = 0; this.unsub = null; this.modalOpen = false;
-    this.s = { query: '', group: 'all', bookmarksOnly: false, object: null, mapMode: 'sky', obsTarget: 'proxima-centauri', obsInstrument: 'opt-1', obsHours: 6, missionTab: 'active', archiveQuery: '', archiveType: 'all', sendDisc: '', verDisc: '', reportSel: '', pubSel: '', histQuery: '', histKind: 'all', histMajor: false, respInst: {} };
+    this.s = { query: '', group: 'all', bookmarksOnly: false, object: null, mapMode: 'sky', obsTarget: 'proxima-centauri', obsInstrument: 'opt-1', obsHours: 6, missionTab: 'active', archiveQuery: '', archiveType: 'all', sendDisc: '', verDisc: '', reportSel: '', pubSel: '', histQuery: '', histKind: 'all', histMajor: false, respInst: {}, plan: null, expTab: 'plan', orderClass: '' };
     this.prefs = { autoPauseOnEvent: true, autosaveSeconds: 60, uiScale: 1, ...prefsStore.load() };
   }
   isOpen(k) { return this.open.has(k); }
@@ -43,7 +47,7 @@ export class UI {
   newGame() { this.attach(Game.create(this.data, { prefs: this.prefs })); this.toast('New game started. The simulation is paused. Press Play.', 'good'); }
   // ---------- shell ----------
   shell() {
-    $('#nav').innerHTML = NAV.map(([id, name], i) => `<button class="nav-item" data-act="goto" data-id="${id}"><i>${String(i + 1).padStart(2, '0')}</i><span>${name}</span><span class="pip" hidden></span></button>`).join('');
+    let lastGroup = ''; $('#nav').innerHTML = NAV.map(([id, name], i) => { const grp = NAV_GROUPS[id]; const h = grp !== lastGroup ? `<div class="nav-group">${grp}</div>` : ''; lastGroup = grp; return `${h}<button class="nav-item" data-act="goto" data-id="${id}"><i>${String(i + 1).padStart(2, '0')}</i><span>${name}</span><span class="pip" hidden></span></button>`; }).join('');
     $('#topbar').innerHTML = `<button class="btn small menu-btn" data-act="menu" aria-label="Open navigation menu">☰ Menu</button><div class="brand"><b>DEEP SIGNAL</b><span>Beyond the observable</span></div>
       <div class="top-clock"><span id="clk-date"></span><small id="clk-time"></small></div>
       <div class="speed" role="group" aria-label="Simulation speed">${SPEEDS.map((sp, i) => `<button data-act="speed" data-id="${i}" aria-label="${sp.label}" title="${sp.label}">${i === 0 ? '❚❚' : sp.label}</button>`).join('')}</div>
@@ -183,6 +187,19 @@ export class UI {
       case 'funding-decline': return this.res(respondToFunding(g, +id || id, false));
       case 'event-choose': return this.res(resolveEvent(g, id));
       // archive
+      case 'exp-tab': s.expTab = id; return this.render(true);
+      case 'plan-set': { const k = el.dataset.key, p = s.plan || (s.plan = V.expeditions.defaultPlan(g)); const val = ['days', 'prep'].includes(k) ? +el.value : el.value; p[k] = val; if (k === 'type') { const t = g.data.typeById[val]; p.targetId = ''; p.shipId = ''; p.crewIds = []; p.equipment = []; p.days = t.days[0]; } if (k === 'shipId') { p.crewIds = []; p.equipment = []; } return this.render(true); }
+      case 'plan-toggle': { const arr = s.plan[el.dataset.key], i = arr.indexOf(id); i < 0 ? arr.push(id) : arr.splice(i, 1); return this.render(true); }
+      case 'exp-create': { const r = createExpedition(g, s.plan); if (r.ok) { s.plan = null; s.expTab = 'active'; } return this.res(r, 'Preparation begun. Follow it under In progress.'); }
+      case 'exp-abort': { if (!await this.confirm('Abort this mission?', 'Aborting before launch refunds 70% of the cost. Later it costs reputation and the vessel must return.', 'Abort', true)) return; return this.res(abortExpedition(g, id), 'Mission aborted.'); }
+      case 'order-class': s.orderClass = el.value; return this.render(true);
+      case 'order-ship': return this.res(orderShip(g, s.orderClass || g.data.spacecraft.classes.find(c => !c.unlock).id, $('#order-name')?.value), 'Vessel ordered.');
+      case 'equip-install': return this.res(installEquipment(g, id, $('#eq-' + id)?.value), 'Equipment installed.');
+      case 'equip-remove': return this.res(removeEquipment(g, id, v));
+      case 'ship-service': return this.res(serviceShip(g, id), 'Overhaul complete.');
+      case 'crew-hire': return this.res(hire(g, el.value || $('#hire-spec').value), 'New crew member joined.');
+      case 'crew-train': return this.res(startTraining(g, id, $('#train-' + id).value), 'Training started.');
+      case 'shift-policy': return this.res(setShift(g, el.value));
       case 'module-upgrade': return this.res(startUpgrade(g, id), 'Upgrade started.');
       case 'module-service': return this.res(serviceModule(g, id), 'Module serviced.');
       case 'pub-select': s.pubSel = el.value; return this.render(true);

@@ -10,7 +10,7 @@ export function render(ui) {
   const nextGrant = s.finance.lastGrantDay + BASE.grantEveryDays; const grant = Math.round(BASE.monthlyGrant * (1 + 0.04 * s.resources.reputation));
   const recent = s.finance.ledger.filter(l => l.t > s.time.t - 30 * DAY); const inc = recent.filter(l => l.amount > 0).reduce((a, l) => a + l.amount, 0); const exp = recent.filter(l => l.amount < 0).reduce((a, l) => a - l.amount, 0);
   const runway = BASE.upkeepPerDay > 0 ? s.resources.credits / BASE.upkeepPerDay : Infinity;
-  return `${head('13 · Funding', 'Financial Management', 'Research credits (RC) pay for running the station, observations, repairs and research. Grants and mission rewards bring money in.')}
+  return `${head('Funding', 'Financial Management', 'Research credits (RC) pay for running the station, observations, repairs and research. Grants and mission rewards bring money in.')}
   ${financeWarnings(g).map(w => `<div class="alert" role="alert" style="margin-bottom:.6rem"><h3 style="margin:0">${w.level === 'bad' ? 'Financial warning' : 'Notice'}</h3><p style="margin:0">${esc(w.text)}</p></div>`).join('')}
   <div class="panel" style="margin-bottom:1rem"><div class="grid cols-4">
     ${tile('Balance', `<span class="amber">${num(s.resources.credits)} RC</span>`, `${runway < 30 ? '<span class="warn">' : ''}${num(runway)} days of upkeep${runway < 30 ? '</span>' : ''}`)}

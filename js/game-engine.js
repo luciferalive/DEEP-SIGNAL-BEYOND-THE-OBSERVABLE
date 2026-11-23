@@ -13,6 +13,8 @@ import { dailyFinance } from './finance.js';
 import { formatDateTime } from './time-engine.js';
 import { moduleEffect, initialModules, modulesTick } from './station-modules.js';
 import { publicationsTick } from './publications.js';
+import { runDue } from './scheduler.js';
+import { expeditionsTick } from './expeditions.js';
 import { record, backfill } from './chronicle.js';
 
 const DEFAULT_PREFS = { autoPauseOnEvent: true, autosaveSeconds: 60, uiScale: 1 };
@@ -28,7 +30,7 @@ export class Game {
     const state = createNewGame(seed);
     state.instruments = data.instruments.active.filter(i => i.owned).map(i => ({ ...JSON.parse(JSON.stringify(i)), condition: 100 }));
     const g = new Game(data, state, prefs);
-    g.state.flags.chronicleBackfilled = true;
+    g.state.flags.chronicleBackfilled = true; g.state.comms.history.push({ t: 0, from: 'Earth', to: 'Station', kind: 'directive', text: 'Programme established.', delayMin: 0 });
     record(g, { kind: 'station', title: 'Meridian Station established', text: 'The programme begins at Sun–Earth L2 (simulated setting).', major: true });
     g.log('Meridian Station is operational. Simulation paused. Press Play to begin.', 'info');
     g.addMessage({ from: 'Earth Mission Control', subject: 'Welcome to Meridian Station', body: 'Commander, the programme is yours. Keep your crew healthy, your systems powered and your instruments pointed at the sky. Your first assignment follows. (Simulated future communication.)', type: 'info' });
@@ -54,6 +56,7 @@ export class Game {
   }
   isInstrumentBusy(inst) { return isInstrumentBusy(this, inst); }
   moduleEffect(key) { return moduleEffect(this, key); }
+  unlocked(key) { for (const id of Object.keys(this.state.tech.researched)) for (const e of this.data.techById[id]?.effects || []) if (e.type === 'unlock' && e.key === key) return true; return false; }
   techEffect(type, kind) {
     let sum = 0;
     for (const id of Object.keys(this.state.tech.researched)) for (const e of this.data.techById[id]?.effects || []) if (e.type === type && (!kind || !e.kind || e.kind === kind)) sum += e.value;
@@ -62,13 +65,13 @@ export class Game {
   // Time controls
   setSpeed(index) { const t = this.state.time; t.speed = index; t.paused = index === 0; this.emit('time'); }
   pause() { this.state.time.paused = true; this.emit('time'); }
-  play() { const t = this.state.time; if (t.speed === 0) t.speed = 3; t.paused = false; this.emit('time'); }
+  play() { const t = this.state.time; if (t.speed === 0) t.speed = 1; t.paused = false; this.emit('time'); }
   togglePause() { this.state.time.paused ? this.play() : this.pause(); }
 
   step(dt = TICK) {
-    const s = this.state; s.time.t += dt;
+    const s = this.state; s.time.t += dt; runDue(this);
     stationTick(this, dt); crewTick(this, dt); observatoryTick(this); researchTick(this, dt); shipTick(this, dt); modulesTick(this, dt); publicationsTick(this, dt);
-    eventsTick(this); missionControlTick(this);
+    eventsTick(this); missionControlTick(this); expeditionsTick(this);
     const day = Math.floor(s.time.t / DAY);
     if (s.finance.lastUpkeepDay === undefined) s.finance.lastUpkeepDay = Math.floor((s.time.t - dt) / DAY);
     while (s.finance.lastUpkeepDay < day) { s.finance.lastUpkeepDay += 1; dailyFinance(this); }

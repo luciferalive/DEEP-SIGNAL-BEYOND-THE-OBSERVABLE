@@ -29,7 +29,7 @@ export class IndexedDbBackend {
 }
 
 export const SLOTS = ['autosave', 'manual-1', 'manual-2', 'manual-3'];
-const metaOf = (state, label) => ({ savedAt: Date.now(), gameTime: state.time.t, version: state.version, gameVersion: GAME_VERSION, label, station: state.station.name, credits: Math.round(state.resources.credits), crew: state.crew.length, discoveries: state.discoveries.length, missions: state.missions.completed.length });
+const metaOf = (state, label) => ({ savedAt: Date.now(), gameTime: state.time?.t ?? 0, version: state.version, gameVersion: GAME_VERSION, label, station: state.station?.name ?? '?', credits: Math.round(state.resources?.credits ?? 0), crew: state.crew?.length ?? 0, discoveries: state.discoveries?.length ?? 0, missions: state.missions?.completed?.length ?? 0 });
 
 export class SaveManager {
   constructor(backend) { this.backend = backend; }

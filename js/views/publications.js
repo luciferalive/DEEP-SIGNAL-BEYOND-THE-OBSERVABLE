@@ -10,7 +10,7 @@ export function render(ui) {
   const sel = open.find(x => key(x) === st.pubSel) || open[0];
   const blocked = all.filter(x => !x.ok && x.reason !== 'Already written.');
   const active = s.publications.filter(p => p.status === 'active'), done = s.publications.filter(p => p.status !== 'active');
-  return `${head('15 · Publication', 'Scientific Publications', 'Turn evidence into published work. Each paper passes four stages, and peer review can return it if the evidence is too weak. Published work raises reputation and pays research points and credits.')}
+  return `${head('Publication', 'Scientific Publications', 'Turn evidence into published work. Each paper passes four stages, and peer review can return it if the evidence is too weak. Published work raises reputation and pays research points and credits.')}
   <div class="grid cols-2">
     ${panel('Start a publication', open.length ? `<div class="stack"><label class="field">Source ${select('pub-sel', open.map(x => [key(x), `${TYPES[x.type].label} · ${x.label}`]), sel ? key(sel) : '', { act: 'pub-select' })}</label>
       ${sel ? `<dl class="kv"><dt>Evidence confidence</dt><dd class="mono">${sel.confidence}%</dd><dt>Cost</dt><dd class="mono">${TYPES[sel.type].cost} RC</dd><dt>Duration</dt><dd class="mono">about ${TYPES[sel.type].days.reduce((a, b) => a + b, 0)} days with full research staffing</dd><dt>Review threshold</dt><dd class="mono">${TYPES[sel.type].threshold}</dd><dt>Reward</dt><dd class="mono">+${TYPES[sel.type].reward.rp} RP · +${TYPES[sel.type].reward.rep} reputation${TYPES[sel.type].reward.credits ? ' · +' + TYPES[sel.type].reward.credits + ' RC' : ''}</dd></dl>

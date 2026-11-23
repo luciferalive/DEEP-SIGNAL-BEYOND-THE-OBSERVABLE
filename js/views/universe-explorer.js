@@ -51,7 +51,7 @@ export function render(ui) {
   const list = search(db, { query: st.query, group: st.group, bookmarks: st.bookmarksOnly ? g.state.bookmarks : null });
   const sel = st.object ? getObject(db, st.object) : null;
   const tracked = g.state.tracked.map(id => getObject(db, id)).filter(Boolean);
-  return `${head('02 · Astronomy', 'Universe Explorer', 'A database of real astronomical objects. Values come from published catalogues; anything not known is marked DATA UNKNOWN. Nothing here is fictional.')}
+  return `${head('Astronomy', 'Universe Explorer', 'A database of real astronomical objects. Values come from published catalogues; anything not known is marked DATA UNKNOWN. Nothing here is fictional.')}
   <div class="panel" style="margin-bottom:1rem"><div class="row between"><div class="panel-title" style="margin:0">Map</div>${tabs([['sky', 'Sky map'], ['solar', 'Solar System']], st.mapMode, 'map-mode')}</div>${st.mapMode === 'solar' ? orrery(ui, db.list) : skyMap(ui, db.list)}</div>
   <div class="grid cols-side">
     <section class="panel"><div class="stack">

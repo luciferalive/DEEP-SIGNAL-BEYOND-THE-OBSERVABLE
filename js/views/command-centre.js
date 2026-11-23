@@ -18,7 +18,7 @@ export function render(ui) {
   const objectives = active.flatMap(p => p.objectives.filter(o => !o.done).map(o => `<li>${esc(o.text)} <span class="faint">(${esc(p.def.title)})</span></li>`));
   const analyses = s.analyses.filter(a => a.status === 'active'); const raw = s.datasets.filter(d => d.status === 'raw');
   const running = s.observations.filter(o => o.status === 'running');
-  return `${head('01 · Operations', 'Command Centre', `Station overview for ${esc(s.station.name)}. Every figure here updates as the simulation advances.`)}
+  return `${head('Operations', 'Command Centre', `Station overview for ${esc(s.station.name)}. Every figure here updates as the simulation advances.`)}
   <div class="panel" style="margin-bottom:1rem"><div class="grid cols-4">
     ${tile('Date and time', `<span class="mono">${formatDate(s.time.t)}</span>`, `${formatClock(s.time.t)} · mission day ${dayNumber(s.time.t)}`)}
     ${tile('Location', `<span style="font-size:.95rem;font-family:var(--sans)">${esc(s.location.split(' (')[0])}</span>`, esc((s.location.match(/\((.*)\)/) || [])[1] || ''))}

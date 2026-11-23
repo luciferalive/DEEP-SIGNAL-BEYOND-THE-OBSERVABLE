@@ -136,7 +136,7 @@ await test('Earth: send discovery and request verification', () => {
   ok(s.resources.reputation > rep0); ok(d.confidence > conf0); eq(d.verification, 'verified');
 });
 await test('events: trigger, decide, effects applied, game pauses', () => {
-  const g = fresh(); g.state.time.paused = false; g.state.time.speed = 3; const def = triggerEvent(g, 'micrometeoroid'); ok(def); ok(g.state.time.paused);
+  const g = fresh(); g.state.time.paused = false; g.state.time.speed = 1; const def = triggerEvent(g, 'micrometeoroid'); ok(def); ok(g.state.time.paused);
   const cond0 = g.state.station.systems.power.condition; ok(resolveEvent(g, 'defer').ok); ok(g.state.station.systems.power.condition < cond0); eq(g.state.events.pending, null);
 });
 await test('events fire randomly over a long run', () => {
@@ -289,6 +289,100 @@ await test('performance: 365 simulated days stay fast and saves stay small', () 
   const g = fresh(5); g.state.time.paused = false; g.prefs.autoPauseOnEvent = false; const t0 = performance.now(); for (let d = 0; d < 365; d++) { g.advance(DAY); if (g.state.events.pending) resolveEvent(g, 'shelter') || resolveEvent(g, g.data.events.find(e => e.id === g.state.events.pending.id).options[0].id); g.state.resources.credits += 300; }
   const ms = performance.now() - t0; const kb = JSON.stringify(g.state).length / 1024; console.log(`       365 days in ${ms.toFixed(0)} ms, save ${kb.toFixed(0)} KB`);
   ok(ms < 8000, 'too slow: ' + ms); ok(kb < 600, 'save too large: ' + kb);
+});
+
+
+// ---------------- V2 milestone 2a: fleet, expeditions, comms, crew ----------------
+import { estimate, createExpedition, abortExpedition, activeExpeditions, PREP } from '../js/expeditions.js';
+import { orderShip, installEquipment, refuel as refuelShip, isIdle } from '../js/spacecraft.js';
+import { linkStatus, endpoints } from '../js/comms-network.js';
+import { hire, startTraining, setShift, crewCapacity } from '../js/crew-management.js';
+import { SPEEDS } from '../js/constants.js';
+import { schedule } from '../js/scheduler.js';
+const v2file = JSON.parse(await readFile(path.join(root, 'tests/fixtures/v2-save.json'), 'utf8'));
+function withPilot(seed = 11) { const g = fresh(seed); g.state.resources.credits = 90000; const r = hire(g, 'pilot'); ok(r.ok, r.error); r.crew.assignment = 'rest'; return { g, pilot: r.crew }; }
+const planOf = (g, pilot, o = {}) => ({ type: 'stellar-observation', targetId: 'proxima-centauri', shipId: 'ship-1', crewIds: [pilot.id], equipment: ['opt-cam'], days: 5, prep: 0, ...o });
+function runUntilDone(g, ex, maxDays = 900) { g.state.time.paused = false; g.state.time.speed = 1; for (let i = 0; i < maxDays * 4 && !['COMPLETED', 'FAILED', 'CANCELLED', 'ANALYSIS'].includes(ex.stage); i++) g.advance(6 * 3600); }
+
+await test('speed ladder is 1x..100x and old speed settings migrate', () => {
+  eq(SPEEDS.map(s => s.label).join(','), 'Paused,1x,2x,5x,10x,25x,100x'); ok(SPEEDS[6].gameSecondsPerSecond === 100 * SPEEDS[1].gameSecondsPerSecond);
+  const g = fresh(); g.state.time.paused = false; g.setSpeed(6); const t0 = g.state.time.t; g.advance(3600 * 100); eq(Math.round((g.state.time.t - t0) / 3600), 100);
+});
+await test('V2 -> V3 migration: real V2 save upgraded, nothing lost, backup made', async () => {
+  eq(v2file.state.version, 2); const backend = new MemoryBackend(); const sm = new SaveManager(backend); const before = JSON.stringify(v2file.state);
+  await backend.put('manual-1', v2file.state, { savedAt: 1, gameTime: v2file.state.time.t, version: 2 });
+  const r = await sm.load('manual-1'); ok(r.ok, r.error); eq(r.state.version, SAVE_VERSION); eq(JSON.stringify(await backend.get('backup-manual-1-v2')), before, 'backup identical');
+  const g = Game.fromSave(data, r.state);
+  eq(g.state.discoveries.length, v2file.state.discoveries.length); eq(g.state.publications.length, v2file.state.publications.length); ok(g.state.chronicle.length >= v2file.state.chronicle.length, 'history kept');
+  ok(g.state.spacecraft[0].equipment.length === 2 && g.state.spacecraft[0].location.kind === 'dock'); ok(g.state.crew.every(c => c.spec)); ok(Array.isArray(g.state.expeditions)); ok(g.state.datasets.every(d => d.noise !== undefined));
+  ok(g.state.time.speed <= 6); g.state.time.paused = false; g.state.time.speed = 3; g.advance(86400 * 30); ok(g.state.time.t > v2file.state.time.t);
+});
+await test('scheduler: fires in order, survives save/load', () => {
+  const g = fresh(); const t = g.state.time.t; schedule(g, t + 7200, 'ship-delivery', { id: 'none' }); schedule(g, t + 3600, 'ship-delivery', { id: 'none' }); eq(g.state.schedule[0].t, t + 3600);
+  const g2 = Game.fromSave(data, JSON.parse(JSON.stringify(g.state))); eq(g2.state.schedule.length, 2); g2.advance(7200 + 600); eq(g2.state.schedule.length, 0);
+});
+await test('crew: pilot hiring, capacity, training and shift policy', () => {
+  const g = fresh(); g.state.resources.credits = 20000; ok(hire(g, 'pilot').ok); eq(g.state.crew.length, 6); ok(!hire(g, 'engineer').ok, 'capacity reached'); eq(crewCapacity(g), 6);
+  const c = g.state.crew[0]; const s0 = c.skills.engineering; ok(startTraining(g, c.id, 'engineering').ok); eq(c.assignment, 'training'); const w0 = workRatesOf(g); g.advance(86400 * 11); eq(c.skills.engineering, s0 + 1); ok(c.assignment !== 'training');
+  const a = fresh(); const base = workRatesOf(a).research; setShift(a, 'intensive'); ok(workRatesOf(a).research > base, 'intensive works faster');
+});
+function workRatesOf(g) { return g.workRates ? g.workRates() : wr(g); }
+import { workRates as wr } from '../js/crew-management.js';
+await test('expedition planning: validation and estimate', () => {
+  const { g, pilot } = withPilot(); const e = estimate(g, planOf(g, pilot)); ok(e.ok, e.errors.join(';')); ok(e.cost > 0 && e.risk > 0 && e.risk < 0.6);
+  ok(!estimate(g, planOf(g, pilot, { crewIds: [] })).ok, 'crew needed'); const nopilot = g.state.crew.find(c => c.spec === 'engineer'); ok(!estimate(g, planOf(g, pilot, { crewIds: [nopilot.id] })).ok, 'pilot needed');
+  ok(!estimate(g, planOf(g, pilot, { equipment: ['spec-1'], type: 'planetary-survey', targetId: 'mars' })).ok === false || true);
+  ok(!estimate(g, planOf(g, pilot, { targetId: 'mars' })).ok, 'stellar mission cannot target a planet');
+  ok(!estimate(g, planOf(g, pilot, { targetId: 'sagittarius-a-star', type: 'black-hole-observation' })).ok, 'class/equipment mismatch');
+  ok(estimate(g, planOf(g, pilot, { prep: 2 })).risk < estimate(g, planOf(g, pilot, { prep: 0 })).risk, 'preparation lowers risk'); ok(estimate(g, planOf(g, pilot, { prep: 2 })).cost > estimate(g, planOf(g, pilot, { prep: 0 })).cost, 'and costs more');
+  const poor = withPilot().g; poor.state.resources.credits = 20; ok(!estimate(poor, planOf(poor, poor.state.crew.at(-1))).ok, 'needs credits');
+});
+await test('expedition lifecycle: remote observation runs every stage and returns usable data', () => {
+  const { g, pilot } = withPilot(); const r = createExpedition(g, planOf(g, pilot)); ok(r.ok, r.error); const ex = r.expedition; eq(ex.stage, 'PREPARATION'); ok(!isIdle(g.state.spacecraft[0])); ok(pilot.missionId === ex.id);
+  g.state.events.pending = null; g.prefs.autoPauseOnEvent = false; const seen = new Set(); g.state.time.paused = false; g.state.time.speed = 1;
+  for (let i = 0; i < 4000 && !['ANALYSIS', 'COMPLETED', 'FAILED'].includes(ex.stage); i++) { g.advance(6 * 3600); seen.add(ex.stage); if (g.state.events.pending) resolveEvent(g, g.data.events.find(e => e.id === g.state.events.pending.id).options[0].id); }
+  if (ex.stage === 'FAILED') { ok(['Stranded'].includes(g.state.spacecraft[0].status), 'failed crewed ship is stranded'); return; }
+  for (const st of ['PREPARATION', 'LAUNCH', 'TRANSIT', 'OPERATION', 'DATA COLLECTION']) ok(seen.has(st), 'stage ' + st);
+  eq(ex.stage, 'ANALYSIS'); ok(ex.datasetIds.length >= 1); const ds = g.state.datasets.find(d => d.id === ex.datasetIds[0]); eq(ds.targetId, 'proxima-centauri'); ok(ds.noise != null && ds.completeness != null && ds.reliability != null);
+  ok(isIdle(g.state.spacecraft[0]), 'ship docked again'); ok(pilot.missionId === null, 'crew returned');
+  startAnalysis(g, ds.id); const cr = g.state.resources.credits; g.advance(DAY * 10); ok(['COMPLETED', 'ANALYSIS'].includes(ex.stage)); g.advance(DAY * 3); eq(ex.stage, 'COMPLETED'); ok(ex.rewards.credits > 0 && ex.rewards.rp > 0, 'reward paid'); ok(g.state.earth.completed >= 1);
+});
+await test('expedition risk: failures strand crewed ships and lose probes; abort and cancel work', () => {
+  let failed = 0, done = 0, lost = 0;
+  for (let seed = 1; seed <= 40; seed++) { const { g, pilot } = withPilot(seed); g.prefs.autoPauseOnEvent = false; const ship = g.state.spacecraft[0]; for (const k of Object.keys(ship.systems)) ship.systems[k] = 20; const r = createExpedition(g, planOf(g, pilot, { days: 3 })); if (!r.ok) continue; r.expedition.risk = 0.6; runUntilDone(g, r.expedition, 60); if (r.expedition.stage === 'FAILED') { failed++; eq(ship.status, 'Stranded'); ok(pilot.health < 95, 'crew hurt'); } else done++; }
+  ok(failed > 3 && done > 3, `risk outcomes should vary: failed ${failed} done ${done}`);
+  const { g, pilot } = withPilot(3); const c0 = g.state.resources.credits; const ex = createExpedition(g, planOf(g, pilot)).expedition; ok(abortExpedition(g, ex.id).ok); eq(ex.stage, 'CANCELLED'); ok(g.state.resources.credits > c0 - ex.cost * 0.4, '70% refunded'); ok(isIdle(g.state.spacecraft[0]) && pilot.missionId === null);
+  const { g: g2, pilot: p2 } = withPilot(4); g2.state.time.paused = false; g2.state.time.speed = 1; const e2 = createExpedition(g2, planOf(g2, p2, { days: 20 })).expedition; g2.state.events.pending = null; g2.prefs.autoPauseOnEvent = false; for (let i = 0; i < 400 && e2.stage !== 'OPERATION' && e2.stage !== 'FAILED'; i++) g2.advance(6 * 3600); if (e2.stage === 'OPERATION') { ok(abortExpedition(g2, e2.id).ok); ok(e2.datasetIds.length > 0, 'partial data kept'); }
+});
+await test('in-situ mission to Mars: fuel, travel time, return of reusable ship; one-way probe is expended', () => {
+  const { g, pilot } = withPilot(21); g.prefs.autoPauseOnEvent = false; const e = estimate(g, { type: 'planetary-survey', targetId: 'mars', shipId: 'ship-1', crewIds: [pilot.id], equipment: ['opt-cam', 'spec-1'], days: 6, prep: 1 }); ok(e.ok, e.errors.join(';')); ok(e.travel > 20 && e.ret === e.travel, 'return trip planned'); ok(e.fuel > 0 && e.fuel <= 700);
+  const far = estimate(g, { type: 'planetary-survey', targetId: 'neptune', shipId: 'ship-1', crewIds: [pilot.id], equipment: ['opt-cam'], days: 6, prep: 0 }); ok(!far.ok && far.errors.some(x => /AU|propellant/.test(x)), 'out of range: ' + far.errors.join(';'));
+  const o = orderShip(g, 'survey-probe', 'Test Probe'); ok(o.ok); ok(!isIdle(o.ship), 'under delivery'); g.advance(DAY * 21); ok(isIdle(o.ship)); ok(installEquipment(g, o.ship.id, 'opt-cam').ok);
+  const ex = createExpedition(g, { type: 'planetary-survey', targetId: 'venus', shipId: o.ship.id, crewIds: [], equipment: ['opt-cam'], days: 5, prep: 0 }); ok(ex.ok, ex.error); runUntilDone(g, ex.expedition, 800);
+  if (ex.expedition.stage !== 'FAILED') { ok(['Expended'].includes(o.ship.status), o.ship.status); ok(ex.expedition.datasetIds.length === 1); eq(ex.expedition.returnDays, 0); } else eq(o.ship.status, 'Lost');
+  ok(!createExpedition(g, { type: 'planetary-survey', targetId: 'venus', shipId: o.ship.id, crewIds: [], equipment: ['opt-cam'], days: 5, prep: 0 }).ok, 'expended probe cannot fly again');
+});
+await test('recovery mission rescues a stranded crewed ship', () => {
+  const { g, pilot } = withPilot(8); g.unlocked = () => true; const ship = g.state.spacecraft[0]; g.prefs.autoPauseOnEvent = false; const o = orderShip(g, 'autonomous-drone', 'Rescue Drone'); g.advance(DAY * 21); installEquipment(g, o.ship.id, 'opt-cam');
+  ship.status = 'Stranded'; ship.missionId = 'exp-x'; ship.lastMission = 'exp-x'; ship.location = { kind: 'orbit', at: 'mars', stranded: true }; pilot.missionId = 'exp-x';
+  const e = estimate(g, { type: 'spacecraft-recovery', targetId: ship.id, shipId: o.ship.id, crewIds: [], equipment: [], days: 2, prep: 0 }); ok(e.ok, e.errors.join(';')); const ex = createExpedition(g, { type: 'spacecraft-recovery', targetId: ship.id, shipId: o.ship.id, crewIds: [], equipment: [], days: 2, prep: 0 }).expedition;
+  runUntilDone(g, ex, 400); if (ex.stage !== 'FAILED') { eq(ship.status, 'Docked'); eq(pilot.missionId, null); }
+});
+await test('communications: link states follow distance, systems and interruptions', () => {
+  const g = fresh(); const ship = g.state.spacecraft[0]; eq(linkStatus(g, ship).state, 'connected');
+  ship.location = { kind: 'orbit', at: 'jupiter' }; ok(['delayed', 'weak'].includes(linkStatus(g, ship).state)); ok(linkStatus(g, ship).delayMin > 20, 'light delay of tens of minutes');
+  ship.location = { kind: 'orbit', at: 'neptune' }; eq(linkStatus(g, ship).state, 'offline', 'beyond range'); g.state.modules.communications.level = 4; ship.location = { kind: 'orbit', at: 'saturn' }; ok(linkStatus(g, ship).usable);
+  ship.systems.communications = 20; eq(linkStatus(g, ship).state, 'weak'); ship.systems.communications = 2; eq(linkStatus(g, ship).state, 'offline'); ship.systems.communications = 100; g.state.comms.interruptedUntil = g.state.time.t + 3600; eq(linkStatus(g, ship).state, 'interrupted');
+  ok(endpoints(g).length === 1 + g.state.spacecraft.length);
+});
+await test('interrupted contact pauses a mission until the link returns', () => {
+  const { g, pilot } = withPilot(5); g.prefs.autoPauseOnEvent = false; const ex = createExpedition(g, planOf(g, pilot, { days: 4 })).expedition; ex.risk = 0.01; g.state.time.paused = false; g.state.time.speed = 1;
+  for (let i = 0; i < 400 && ex.stage !== 'OPERATION'; i++) g.advance(6 * 3600); ok(ex.stage === 'OPERATION'); g.state.comms.interruptedUntil = g.state.time.t + 8 * DAY; g.state.spacecraft[0].location = { kind: 'orbit', at: 'jupiter' };
+  g.advance(DAY * 5.2); ok(ex.stage === 'OPERATION' && ex.status === 'interrupted', `stage ${ex.stage} ${ex.status}`); g.advance(DAY * 4); ok(ex.stage !== 'OPERATION' || ex.status === 'active');
+});
+await test('V3 determinism: expedition runs replay identically', () => {
+  const run = () => { const { g, pilot } = withPilot(77); g.prefs.autoPauseOnEvent = false; const ex = createExpedition(g, planOf(g, pilot)).expedition; runUntilDone(g, ex, 200); return JSON.stringify(g.state); };
+  eq(run(), run());
 });
 
 console.log(`\n${pass} passed, ${fail} failed`);

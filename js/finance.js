@@ -28,7 +28,7 @@ export function spend(game, cost, label) {
   addCredits(game, -cost, label, 'expense');
   return true;
 }
-export const dailyUpkeep = game => BASE.upkeepPerDay;
+export const dailyUpkeep = game => BASE.upkeepPerDay + Math.max(0, game.state.crew.length - 5) * 25 + game.state.spacecraft.filter(x => !['Lost', 'Expended'].includes(x.status)).length * 8 - 8;
 
 // Called once per game day.
 export function dailyFinance(game) {

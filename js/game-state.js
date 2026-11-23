@@ -1,6 +1,7 @@
 // Creating, validating and migrating the saved game state.
 import { SAVE_VERSION, BASE, GAME_VERSION } from './constants.js';
 
+const SPEC = { 'crew-1': 'astrophysicist', 'crew-2': 'engineer', 'crew-3': 'astrobiologist', 'crew-4': 'data', 'crew-5': 'medical' };
 const CREW = [
   { name: 'Cmdr. Amara Okafor', role: 'Station Commander', specialization: 'Astrophysics', experience: 14, assignment: 'operations', skills: { astrophysics: 8, astrobiology: 3, engineering: 4, robotics: 3, computing: 6, planetary: 5, medical: 2 } },
   { name: 'Dr. Mateo Ruiz', role: 'Chief Engineer', specialization: 'Engineering', experience: 11, assignment: 'maintenance', skills: { astrophysics: 3, astrobiology: 1, engineering: 9, robotics: 6, computing: 5, planetary: 2, medical: 2 } },
@@ -10,15 +11,15 @@ const CREW = [
 ];
 
 export function createNewGame(seed = Date.now() % 2147483647) {
-  const crew = CREW.map((c, i) => ({ id: `crew-${i + 1}`, ...c, skills: { ...c.skills }, health: 100, morale: 78, fatigue: 5 }));
+  const crew = CREW.map((c, i) => ({ id: `crew-${i + 1}`, ...c, skills: { ...c.skills }, health: 100, morale: 78, fatigue: 5, spec: SPEC[`crew-${i + 1}`], xp: {}, missionId: null, training: null }));
   return {
     version: SAVE_VERSION, gameVersion: GAME_VERSION, seed, rng: seed | 0, uid: 1,
     time: { t: 8 * 3600, speed: 0, paused: true, lastDay: 0 },
     location: 'Sun–Earth L2 (1.5 million km from Earth)',
-    station: { name: 'Meridian Station', systems: { power: { condition: 100 }, lifeSupport: { condition: 100 }, thermal: { condition: 100 }, comms: { condition: 100 }, lab: { condition: 100 } }, condition: 100, battery: 480, brownout: false, power: { gen: 0, load: 0 } },
+    station: { shift: 'normal', name: 'Meridian Station', systems: { power: { condition: 100 }, lifeSupport: { condition: 100 }, thermal: { condition: 100 }, comms: { condition: 100 }, lab: { condition: 100 } }, condition: 100, battery: 480, brownout: false, power: { gen: 0, load: 0 } },
     resources: { oxygen: 640, water: 3000, food: 1350, credits: 2000, researchPoints: 10, reputation: 0 },
     crew,
-    spacecraft: [{ id: 'ship-1', name: 'ESV Calliope', type: 'Research vessel', status: 'Docked', propulsion: 'Chemical bipropellant', fuel: 700, fuelCap: 800, systems: { propulsion: 100, power: 100, navigation: 100, communications: 100, lifeSupport: 100, radiation: 100, computing: 100 }, notes: 'Small short-range research vessel. Cannot yet leave the Earth–Moon–L2 neighbourhood.' }],
+    spacecraft: [{ id: 'ship-1', name: 'ESV Calliope', class: 'science-vessel', type: 'Science vessel', status: 'Docked', propulsion: 'Chemical bipropellant', fuel: 700, fuelCap: 800, energy: 100, systems: { propulsion: 100, power: 100, navigation: 100, communications: 100, lifeSupport: 100, radiation: 100, computing: 100 }, equipment: ['opt-cam', 'spec-1'], crewIds: [], cargo: { used: 0, cap: 200 }, location: { kind: 'dock', at: 'station' }, missionId: null, commsDownUntil: 0, maintenance: { hours: 0, dueAt: 60 * 86400 }, hullCondition: 100, notes: 'Short-range crewed research vessel. Needs a pilot to fly.' }],
     instruments: [],
     observations: [], datasets: [], analyses: [], discoveries: [], anomalies: [],
     missions: { active: [], completed: [], declined: [], offered: [] },
@@ -27,6 +28,7 @@ export function createNewGame(seed = Date.now() % 2147483647) {
     events: { pending: null, history: [], pauseObsUntil: 0, records: [], responses: [] },
     finance: { ledger: [], lastGrantDay: 0, nextResupplyDay: BASE.resupplyFirstDay, lastSupplyRequestDay: -999, reports: [], period: { income: 0, expense: 0, byCat: {} }, reserve: 600 },
     chronicle: [], publications: [], modules: {},
+    schedule: [], expeditions: [], comms: { interruptedUntil: 0, history: [] }, earth: { completed: 0, failed: 0, aborted: 0 },
     bookmarks: [], tracked: [], destinations: [],
     history: { oxygen: [], water: [], food: [], power: [], credits: [] },
     log: [],
@@ -47,7 +49,16 @@ export function validateState(s) {
 }
 
 // Future versions add migration steps here. Never drop data silently.
+const SPEC_BY_NAME = { astrophysics: 'astrophysicist', engineering: 'engineer', 'planetary science': 'astrobiologist', 'computer science': 'data', 'medical science': 'medical' };
 const STEPS = {
+  // 2 -> 3: speed ladder, spacecraft classes, scheduler, expeditions, communications, crew specialisations and experience.
+  2: s => {
+    const OLD = [0, 1, 1, 1, 3, 5]; s.time.speed = OLD[s.time.speed] ?? 0; if (s.time.speed === 0) s.time.paused = true;
+    s.schedule = s.schedule || []; s.expeditions = s.expeditions || []; s.comms = s.comms || { interruptedUntil: 0, history: [] }; s.earth = s.earth || { completed: s.missions.completed.length, failed: 0, aborted: 0 }; s.station.shift = s.station.shift || 'normal';
+    for (const c of s.crew) { c.spec = c.spec || SPEC_BY_NAME[(c.specialization || '').toLowerCase()] || 'astrophysicist'; c.xp = c.xp || {}; if (c.missionId === undefined) c.missionId = null; if (c.training === undefined) c.training = null; }
+    s.spacecraft.forEach((sh, i) => { Object.assign(sh, { class: sh.class || 'science-vessel', type: sh.class ? sh.type : 'Science vessel', equipment: sh.equipment || ['opt-cam', 'spec-1'], crewIds: sh.crewIds || [], cargo: sh.cargo || { used: 0, cap: 200 }, location: sh.location || { kind: 'dock', at: 'station' }, missionId: sh.missionId ?? null, commsDownUntil: sh.commsDownUntil || 0, maintenance: sh.maintenance || { hours: 0, dueAt: s.time.t + 60 * 86400 }, hullCondition: sh.hullCondition ?? 100, energy: sh.energy ?? 100 }); });
+    for (const d of s.datasets || []) if (d.noise === undefined) { d.noise = Math.round((1 - d.quality) * 60) / 100; d.completeness = d.partial ? 0.55 : Math.min(0.99, 0.8 + d.quality * 0.2); d.reliability = Math.round(d.quality * 0.95 * 100) / 100; d.value = d.quality; d.derived = true; }
+  },
   // 1 -> 2: structured event records, civilization history, publications, station modules, monthly reports.
   1: s => {
     s.events.records = s.events.records || []; s.events.responses = s.events.responses || [];

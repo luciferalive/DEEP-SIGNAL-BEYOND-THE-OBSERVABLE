@@ -11,7 +11,7 @@ export function eventBanner(ui) {
 export function render(ui) {
   const g = ui.game, s = g.state; const open = activeTransients(g); const recs = s.events.records;
   const sevTone = { warning: 'warn', notice: 'known', info: '' };
-  return `${head('09 · Space weather, alerts and incidents', 'Cosmic Events', 'Every event is logged as a structured record. Station incidents need a decision (the simulation pauses unless you turn that off in Settings). Science alerts are time-limited opportunities you can answer with a matching instrument. All events here are simulated game events, not real observations.')}
+  return `${head('Space weather, alerts and incidents', 'Cosmic Events', 'Every event is logged as a structured record. Station incidents need a decision (the simulation pauses unless you turn that off in Settings). Science alerts are time-limited opportunities you can answer with a matching instrument. All events here are simulated game events, not real observations.')}
   ${eventBanner(ui)}
   <div class="grid cols-2">
     ${panel('Open science opportunities', open.length ? `<div class="stack">${open.map(r => { const insts = s.instruments.filter(i => i.kind === r.kind); const pick = ui.s.respInst[r.id] || insts[0]?.id; const c = pick ? canRespond(g, r.id, pick) : { ok: false, error: 'No instrument.' };

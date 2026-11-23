@@ -1,0 +1,323 @@
+{
+ "types": [
+  {
+   "id": "stellar-observation",
+   "name": "Stellar observation",
+   "mode": "remote",
+   "groups": [
+    "star"
+   ],
+   "classes": [
+    "orbital-observatory",
+    "science-vessel",
+    "research-spacecraft"
+   ],
+   "kinds": [
+    "optical",
+    "spectral",
+    "infrared"
+   ],
+   "days": [
+    3,
+    30
+   ],
+   "riskBase": 0.02,
+   "reward": 1.0,
+   "skill": "astrophysics",
+   "desc": "Long-baseline observation of a star from space."
+  },
+  {
+   "id": "exoplanet-exploration",
+   "name": "Exoplanet exploration",
+   "mode": "remote",
+   "groups": [
+    "exoplanet"
+   ],
+   "classes": [
+    "orbital-observatory",
+    "research-spacecraft"
+   ],
+   "kinds": [
+    "spectral",
+    "infrared"
+   ],
+   "days": [
+    10,
+    60
+   ],
+   "riskBase": 0.03,
+   "reward": 1.6,
+   "skill": "astrobiology",
+   "desc": "Transit and atmosphere spectroscopy of a planet around another star."
+  },
+  {
+   "id": "planetary-survey",
+   "name": "Planetary survey",
+   "mode": "insitu",
+   "groups": [
+    "solar"
+   ],
+   "classes": [
+    "survey-probe",
+    "deep-probe",
+    "science-vessel",
+    "research-spacecraft",
+    "autonomous-drone",
+    "planetary-lander",
+    "atmospheric-probe"
+   ],
+   "kinds": [
+    "optical",
+    "planetary",
+    "spectral",
+    "infrared"
+   ],
+   "days": [
+    5,
+    40
+   ],
+   "riskBase": 0.06,
+   "reward": 1.2,
+   "skill": "planetary",
+   "desc": "Orbit or flyby survey of a planet or moon."
+  },
+  {
+   "id": "asteroid-investigation",
+   "name": "Asteroid investigation",
+   "mode": "insitu",
+   "groups": [
+    "smallbody"
+   ],
+   "classes": [
+    "survey-probe",
+    "deep-probe",
+    "science-vessel",
+    "research-spacecraft",
+    "autonomous-drone",
+    "planetary-lander"
+   ],
+   "kinds": [
+    "optical",
+    "planetary",
+    "spectral"
+   ],
+   "days": [
+    3,
+    30
+   ],
+   "riskBase": 0.07,
+   "reward": 1.1,
+   "skill": "planetary",
+   "desc": "Rendezvous with an asteroid or comet."
+  },
+  {
+   "id": "nebula-research",
+   "name": "Nebula research",
+   "mode": "remote",
+   "groups": [
+    "nebula"
+   ],
+   "classes": [
+    "orbital-observatory",
+    "science-vessel",
+    "research-spacecraft"
+   ],
+   "kinds": [
+    "optical",
+    "infrared",
+    "spectral",
+    "radio"
+   ],
+   "days": [
+    4,
+    40
+   ],
+   "riskBase": 0.02,
+   "reward": 1.1,
+   "skill": "astrophysics",
+   "desc": "Imaging and spectroscopy of gas and dust clouds."
+  },
+  {
+   "id": "black-hole-observation",
+   "name": "Black hole observation",
+   "mode": "remote",
+   "groups": [
+    "compact"
+   ],
+   "classes": [
+    "orbital-observatory",
+    "research-spacecraft"
+   ],
+   "kinds": [
+    "highenergy",
+    "radio",
+    "infrared"
+   ],
+   "days": [
+    5,
+    60
+   ],
+   "riskBase": 0.03,
+   "reward": 1.5,
+   "skill": "astrophysics",
+   "desc": "X-ray, radio and infrared monitoring of compact objects."
+  },
+  {
+   "id": "radio-signal-investigation",
+   "name": "Radio signal investigation",
+   "mode": "remote",
+   "groups": [
+    "star",
+    "compact",
+    "galaxy",
+    "cluster"
+   ],
+   "classes": [
+    "orbital-observatory",
+    "research-spacecraft",
+    "science-vessel"
+   ],
+   "kinds": [
+    "radio"
+   ],
+   "days": [
+    5,
+    45
+   ],
+   "riskBase": 0.03,
+   "reward": 1.2,
+   "skill": "computing",
+   "desc": "Long radio integration on a target to characterise its emission."
+  },
+  {
+   "id": "gravitational-wave-research",
+   "name": "Gravitational-wave research",
+   "mode": "remote",
+   "groups": [
+    "compact"
+   ],
+   "classes": [
+    "orbital-observatory"
+   ],
+   "kinds": [
+    "gravitational"
+   ],
+   "days": [
+    10,
+    90
+   ],
+   "riskBase": 0.03,
+   "reward": 2.0,
+   "skill": "astrophysics",
+   "desc": "Interferometer run focused on a candidate source."
+  },
+  {
+   "id": "deep-space-exploration",
+   "name": "Deep-space exploration",
+   "mode": "insitu",
+   "groups": [
+    "solar"
+   ],
+   "classes": [
+    "deep-probe",
+    "research-spacecraft"
+   ],
+   "kinds": [
+    "optical",
+    "planetary",
+    "spectral",
+    "infrared"
+   ],
+   "days": [
+    10,
+    90
+   ],
+   "riskBase": 0.09,
+   "reward": 1.8,
+   "skill": "planetary",
+   "minAu": 15,
+   "desc": "Outer Solar System mission beyond 15 AU."
+  },
+  {
+   "id": "spacecraft-recovery",
+   "name": "Spacecraft recovery",
+   "mode": "recovery",
+   "groups": [],
+   "classes": [
+    "science-vessel",
+    "research-spacecraft",
+    "autonomous-drone"
+   ],
+   "kinds": [],
+   "days": [
+    1,
+    5
+   ],
+   "riskBase": 0.08,
+   "reward": 0.5,
+   "skill": "engineering",
+   "desc": "Retrieve a stranded vessel and its crew."
+  },
+  {
+   "id": "anomaly-investigation",
+   "name": "Anomaly investigation",
+   "mode": "remote",
+   "groups": [
+    "star",
+    "nebula",
+    "compact",
+    "galaxy",
+    "cluster",
+    "solar",
+    "smallbody"
+   ],
+   "classes": [
+    "orbital-observatory",
+    "science-vessel",
+    "research-spacecraft"
+   ],
+   "kinds": [
+    "optical",
+    "spectral",
+    "infrared",
+    "radio",
+    "highenergy"
+   ],
+   "days": [
+    5,
+    45
+   ],
+   "riskBase": 0.04,
+   "reward": 1.3,
+   "skill": "astrophysics",
+   "desc": "Dedicated follow-up on a flagged anomaly (adds evidence to it)."
+  },
+  {
+   "id": "emergency",
+   "name": "Emergency mission",
+   "mode": "insitu",
+   "groups": [
+    "solar"
+   ],
+   "classes": [
+    "survey-probe",
+    "deep-probe",
+    "science-vessel",
+    "research-spacecraft",
+    "autonomous-drone"
+   ],
+   "kinds": [
+    "optical",
+    "planetary"
+   ],
+   "days": [
+    2,
+    15
+   ],
+   "riskBase": 0.1,
+   "reward": 2.2,
+   "skill": "engineering",
+   "desc": "Urgent mission requested by Earth, with a short deadline."
+  }
+ ]
+}

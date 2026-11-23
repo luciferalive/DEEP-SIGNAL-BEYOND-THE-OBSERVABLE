@@ -10,7 +10,7 @@ export function render(ui) {
   const active = s.analyses.filter(a => a.status === 'active'); const raw = s.datasets.filter(d => d.status === 'raw'); const done = s.analyses.filter(a => a.status === 'done').slice(0, 6);
   const staff = s.crew.filter(c => c.assignment === 'research' && c.health >= 25);
   const tech = s.tech.active;
-  return `${head('04 · Science', 'Research Laboratory', 'Analyse observation data into scientific results and earn research points to spend in the Technology Tree.')}
+  return `${head('Science', 'Research Laboratory', 'Analyse observation data into scientific results and earn research points to spend in the Technology Tree.')}
   <div class="panel" style="margin-bottom:1rem"><div class="grid cols-4">
     ${tile('Research points', `${num(s.resources.researchPoints)} RP`, 'Spent on technologies')}
     ${tile('Laboratory staff', String(staff.length), staff.length ? esc(staff.map(c => c.name.split(' ').slice(-1)[0]).join(', ')) : '<span class="warn">Assign crew to Research</span>')}

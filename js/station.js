@@ -27,7 +27,7 @@ export function lifeSupportEfficiency(game) {
 }
 
 export function stationTick(game, dt) {
-  const s = game.state; const days = dt / DAY; const res = s.resources; const n = s.crew.length;
+  const s = game.state; const days = dt / DAY; const res = s.resources; const n = Math.max(1, s.crew.filter(c => !c.missionId).length);
   const p = powerBudget(game); s.station.power = { gen: p.gen, load: p.load };
   // Battery
   const cap = batteryCap(game);
