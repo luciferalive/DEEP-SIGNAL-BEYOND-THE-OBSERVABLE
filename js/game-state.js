@@ -51,6 +51,17 @@ export function validateState(s) {
 // Future versions add migration steps here. Never drop data silently.
 const SPEC_BY_NAME = { astrophysics: 'astrophysicist', engineering: 'engineer', 'planetary science': 'astrobiologist', 'computer science': 'data', 'medical science': 'medical' };
 const STEPS = {
+  // 3 -> 4: staged anomaly investigation, instrument data fields. V1-V3 anomalies were all instrument artefacts, so they keep that cause.
+  3: s => {
+    for (const a of s.anomalies || []) {
+      if (a.evidence === undefined) {
+        a.evidence = []; a.hypothesis = null; a.pending = null; a.cause = a.cause || 'instrument-error'; a.category = a.category || 'Known Universe';
+        if (a.status === 'resolved') { a.classification = 'instrument-error'; a.stage = 'CLASSIFICATION'; a.truthRevealed = true; a.reviewed = 'upheld'; a.confirmed = true; } else { a.classification = null; a.stage = 'DETECTION'; }
+      }
+    }
+    for (const d of s.datasets || []) if (d.noise === undefined) { d.noise = Math.round((1 - d.quality) * 60) / 100; d.completeness = d.partial ? 0.55 : Math.min(0.99, 0.8 + d.quality * 0.2); d.reliability = Math.round(d.quality * 0.9 * 100) / 100; d.value = d.quality; }
+    s.earth = s.earth || {}; s.earth.contracts = s.earth.contracts || []; s.budget = s.budget || null;
+  },
   // 2 -> 3: speed ladder, spacecraft classes, scheduler, expeditions, communications, crew specialisations and experience.
   2: s => {
     const OLD = [0, 1, 1, 1, 3, 5]; s.time.speed = OLD[s.time.speed] ?? 0; if (s.time.speed === 0) s.time.paused = true;

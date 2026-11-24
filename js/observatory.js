@@ -6,6 +6,7 @@ import { spend } from './finance.js';
 import { createAnomaly, resolveAnomaly } from './anomaly-engine.js';
 import { formatDuration } from './time-engine.js';
 
+const GROUPS_VALUE = { solar: 0.7, smallbody: 0.8, star: 0.9, cluster: 1, nebula: 1, galaxy: 1.1, compact: 1.2 };
 export const EXPOSURE_HOURS = [2, 6, 12, 24];
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
@@ -33,7 +34,8 @@ export function estimateQuality(game, inst, obj, hours) {
   const opSkill = workRates(game).bestOperator || 3;
   const opFactor = 0.85 + 0.03 * opSkill;
   const cond = 0.6 + 0.4 * (inst.condition / 100);
-  return clamp(instrumentAccuracy(game, inst) * rangeFactor * durFactor * opFactor * cond / 0.75, 0, 0.97);
+  const env = game.state.events?.pauseObsUntil > game.state.time.t ? 0.8 : 1; // solar storms and similar degrade data
+  return clamp(instrumentAccuracy(game, inst) * rangeFactor * durFactor * opFactor * cond * env * (1 + game.techEffect('dataYield')) / 0.75, 0, 0.97);
 }
 
 export const isInstrumentBusy = (game, inst) => game.state.observations.some(o => o.status === 'running' && o.instrumentId === inst.id) || (game.state.events.responses || []).some(r => r.instrumentId === inst.id);
@@ -54,6 +56,7 @@ export function startObservation(game, { instrumentId, targetId, hours, anomalyI
   const cost = observationCost(inst, hours);
   if (!spend(game, cost, `Observation: ${obj.name} (${inst.name}, ${hours} h)`)) return { ok: false, error: `Not enough research credits. This observation costs ${cost} RC.` };
   const o = { id: `obs-${s.uid++}`, instrumentId, targetId, hours, start: s.time.t, end: s.time.t + hours * HOUR, status: 'running', anomalyId, interrupted: false };
+  if (anomalyId) { const an = s.anomalies.find(x => x.id === anomalyId); if (an) { an.pending = { method: 'observation', until: o.end }; an.stage = 'INVESTIGATION'; } }
   s.observations.unshift(o);
   game.log(`${inst.name} began a ${hours} h observation of ${obj.name}.`, 'info');
   return { ok: true, observation: o };
@@ -79,16 +82,27 @@ function completeObservation(game, o) {
   let q = clamp(estimateQuality(game, inst, obj, o.hours) + noise - (o.interrupted ? 0.3 : 0), 0, 0.97);
   q = Math.round(q * 100) / 100;
   o.quality = q; s.stats.observations += 1;
-  if (q < 0.3) { o.status = 'failed'; game.log(`Observation of ${obj.name} failed: signal too weak (quality ${(q * 100) | 0}%).`, 'bad'); if (o.anomalyId) game.log('The anomaly could not be re-observed with this exposure.', 'warn'); return; }
+  if (q < 0.3) { o.status = 'failed'; game.log(`Observation of ${obj.name} failed: signal too weak (quality ${(q * 100) | 0}%).`, 'bad'); if (o.anomalyId) { resolveAnomaly(game, o.anomalyId, q); } return; }
   o.status = 'complete';
   const partial = q < 0.5;
-  const ds = { id: `ds-${s.uid++}`, obsId: o.id, targetId: o.targetId, instrumentId: o.instrumentId, kind: inst.kind, quality: q, hours: o.hours, t: s.time.t, partial, sizeGB: Math.round(o.hours * 0.8 * 10) / 10, status: 'raw' };
+  const ds = { id: `ds-${s.uid++}`, obsId: o.id, targetId: o.targetId, instrumentId: o.instrumentId, kind: inst.kind, quality: q, hours: o.hours, t: s.time.t, partial, sizeGB: Math.round(o.hours * 0.8 * 10) / 10, status: 'raw',
+    noise: Math.round((1 - q) * 60) / 100, completeness: partial ? 0.55 : Math.min(0.99, 0.8 + q * 0.2), reliability: Math.round(q * (o.interrupted ? 0.6 : 0.95) * 100) / 100, value: Math.round(q * ((GROUPS_VALUE[obj.group]) || 1) * 100) / 100 };
   s.datasets.unshift(ds); o.datasetId = ds.id;
   game.log(`${partial ? 'Incomplete' : 'Complete'} observation of ${obj.name}: ${ds.sizeGB} GB, quality ${(q * 100) | 0}%.`, partial ? 'warn' : 'good');
   if (o.anomalyId) { resolveAnomaly(game, o.anomalyId, q); return; }
   if (!partial && game.rand() < 0.07) createAnomaly(game, ds);
 }
 
+// Buying an instrument unlocked by technology. The catalog entry is copied into the save.
+export function buyInstrument(game, id) {
+  const s = game.state; const cat = game.data.instruments.active.find(i => i.id === id);
+  if (!cat) return { ok: false, error: 'Unknown instrument.' };
+  if (s.instruments.some(i => i.id === id)) return { ok: false, error: 'Already owned.' };
+  if (cat.unlock && !game.unlocked(cat.unlock)) return { ok: false, error: 'Research the required technology first.' };
+  if (!spend(game, cat.purchaseCost, `Purchase: ${cat.name}`)) return { ok: false, error: `Needs ${cat.purchaseCost} RC.` };
+  s.instruments.push({ ...JSON.parse(JSON.stringify(cat)), owned: true, condition: 100 });
+  game.log(`${cat.name} installed and calibrated.`, 'good'); return { ok: true };
+}
 export const SERVICE_COST = 80;
 export function serviceInstrument(game, instrumentId) {
   const inst = game.state.instruments.find(i => i.id === instrumentId); if (!inst) return { ok: false, error: 'Unknown instrument.' };

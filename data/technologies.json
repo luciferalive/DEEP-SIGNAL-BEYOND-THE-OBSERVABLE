@@ -1,18 +1,1152 @@
 {
-  "active": [
-    { "id": "solar-mk2", "name": "Efficient Solar Arrays Mk II", "branch": "Engineering", "description": "Multi-junction cells and better thermal management raise solar array output.", "costRP": 40, "costCredits": 600, "days": 6, "requires": [], "effects": [{ "type": "powerGenMult", "value": 0.2 }], "effectText": "+20% solar power generation", "limitation": "Panels still degrade with micrometeoroid damage." },
-    { "id": "battery-bank", "name": "Expanded Battery Bank", "branch": "Engineering", "description": "Additional lithium-sulfur modules for the station power bus.", "costRP": 70, "costCredits": 700, "days": 8, "requires": ["solar-mk2"], "effects": [{ "type": "batteryCap", "value": 300 }], "effectText": "+300 kWh battery capacity", "limitation": "More stored energy does not raise generation." },
-    { "id": "water-mk2", "name": "Closed-loop Water Recovery Mk II", "branch": "Engineering", "description": "Improved distillation and filtration recover more water from humidity and waste.", "costRP": 50, "costCredits": 500, "days": 8, "requires": [], "effects": [{ "type": "waterRecycle", "value": 0.05 }], "effectText": "Water recycling 85% → 90%", "limitation": "Requires a well-maintained life-support system." },
-    { "id": "hydroponics", "name": "Hydroponic Bay", "branch": "Astrobiology", "description": "A small crop bay supplements stored rations with fresh produce and improves morale.", "costRP": 100, "costCredits": 1500, "days": 14, "requires": ["water-mk2"], "effects": [{ "type": "foodProduction", "value": 3 }, { "type": "moraleBonus", "value": 4 }], "effectText": "+3 kg food per day, +4 morale target", "limitation": "Supplements, but does not replace, supply convoys." },
-    { "id": "adaptive-optics", "name": "Adaptive Optics Package", "branch": "Astronomy", "description": "Deformable mirror segments correct small wavefront errors.", "costRP": 60, "costCredits": 800, "days": 10, "requires": [], "effects": [{ "type": "accuracy", "kind": "optical", "value": 0.12 }], "effectText": "+0.12 optical accuracy", "limitation": "No effect on radio observations." },
-    { "id": "cryo-detector", "name": "Cryogenic Receiver Upgrade", "branch": "Astronomy", "description": "Lower receiver noise temperature for the radio dish.", "costRP": 60, "costCredits": 800, "days": 10, "requires": [], "effects": [{ "type": "accuracy", "kind": "radio", "value": 0.12 }], "effectText": "+0.12 radio accuracy", "limitation": "No effect on optical observations." },
-    { "id": "data-pipeline", "name": "Automated Data Pipeline", "branch": "Engineering", "description": "Automated calibration and reduction speed up scientific analysis.", "costRP": 80, "costCredits": 900, "days": 12, "requires": ["adaptive-optics"], "effects": [{ "type": "analysisSpeed", "value": 0.25 }], "effectText": "+25% analysis speed", "limitation": "Does not improve data quality." }
-  ],
-  "planned": [
-    { "branch": "Astronomy", "version": "0.4", "items": ["Stellar evolution", "Galactic structures", "Black hole physics", "Pulsar astronomy"] },
-    { "branch": "Physics", "version": "0.4", "items": ["General relativity", "Quantum mechanics", "Gravitational waves", "Dark matter research"] },
-    { "branch": "Astrobiology", "version": "0.4", "items": ["Biosignatures", "Exoplanet atmospheres", "Organic chemistry", "Extremophile biology"] },
-    { "branch": "Engineering", "version": "0.5", "items": ["Advanced propulsion", "Autonomous probes", "Quantum communication", "Experimental energy systems"] },
-    { "branch": "Speculative physics", "version": "0.8", "items": ["Wormhole theory", "Higher-dimensional models", "Multiverse hypotheses", "Experimental spacetime technology"] }
-  ]
+ "active": [
+  {
+   "id": "solar-mk2",
+   "name": "Efficient Solar Arrays Mk II",
+   "branch": "Energy",
+   "description": "Multi-junction cells and better thermal management raise solar array output.",
+   "costRP": 40,
+   "costCredits": 600,
+   "days": 6,
+   "requires": [],
+   "effects": [
+    {
+     "type": "powerGenMult",
+     "value": 0.2
+    }
+   ],
+   "effectText": "+20% solar power generation",
+   "limitation": "Panels still degrade with micrometeoroid damage.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "battery-bank",
+   "name": "Expanded Battery Bank",
+   "branch": "Energy",
+   "description": "Additional lithium-sulfur modules for the station power bus.",
+   "costRP": 70,
+   "costCredits": 700,
+   "days": 8,
+   "requires": [
+    "solar-mk2"
+   ],
+   "effects": [
+    {
+     "type": "batteryCap",
+     "value": 300
+    }
+   ],
+   "effectText": "+300 kWh battery capacity",
+   "limitation": "More stored energy does not raise generation.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "water-mk2",
+   "name": "Closed-loop Water Recovery Mk II",
+   "branch": "Engineering",
+   "description": "Improved distillation and filtration recover more water from humidity and waste.",
+   "costRP": 50,
+   "costCredits": 500,
+   "days": 8,
+   "requires": [],
+   "effects": [
+    {
+     "type": "waterRecycle",
+     "value": 0.05
+    }
+   ],
+   "effectText": "Water recycling 85% \u2192 90%",
+   "limitation": "Requires a well-maintained life-support system.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "hydroponics",
+   "name": "Hydroponic Bay",
+   "branch": "Astrobiology",
+   "description": "A small crop bay supplements stored rations with fresh produce and improves morale.",
+   "costRP": 100,
+   "costCredits": 1500,
+   "days": 14,
+   "requires": [
+    "water-mk2"
+   ],
+   "effects": [
+    {
+     "type": "foodProduction",
+     "value": 3
+    },
+    {
+     "type": "moraleBonus",
+     "value": 4
+    }
+   ],
+   "effectText": "+3 kg food per day, +4 morale target",
+   "limitation": "Supplements, but does not replace, supply convoys.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "adaptive-optics",
+   "name": "Adaptive Optics Package",
+   "branch": "Astronomy",
+   "description": "Deformable mirror segments correct small wavefront errors.",
+   "costRP": 60,
+   "costCredits": 800,
+   "days": 10,
+   "requires": [],
+   "effects": [
+    {
+     "type": "accuracy",
+     "kind": "optical",
+     "value": 0.12
+    }
+   ],
+   "effectText": "+0.12 optical accuracy",
+   "limitation": "No effect on radio observations.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "cryo-detector",
+   "name": "Cryogenic Receiver Upgrade",
+   "branch": "Astronomy",
+   "description": "Lower receiver noise temperature for the radio dish.",
+   "costRP": 60,
+   "costCredits": 800,
+   "days": 10,
+   "requires": [],
+   "effects": [
+    {
+     "type": "accuracy",
+     "kind": "radio",
+     "value": 0.12
+    }
+   ],
+   "effectText": "+0.12 radio accuracy",
+   "limitation": "No effect on optical observations.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "data-pipeline",
+   "name": "Automated Data Pipeline",
+   "branch": "Robotics",
+   "description": "Automated calibration and reduction speed up scientific analysis.",
+   "costRP": 80,
+   "costCredits": 900,
+   "days": 12,
+   "requires": [
+    "adaptive-optics"
+   ],
+   "effects": [
+    {
+     "type": "analysisSpeed",
+     "value": 0.25
+    }
+   ],
+   "effectText": "+25% analysis speed",
+   "limitation": "Does not improve data quality.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "stellar-classification",
+   "name": "Stellar classification",
+   "branch": "Astronomy",
+   "description": "Systematic spectral typing of stars. Unlocks a spectrometer suite for the observatory.",
+   "costRP": 40,
+   "costCredits": 400,
+   "days": 5,
+   "requires": [
+    "adaptive-optics"
+   ],
+   "effects": [
+    {
+     "type": "accuracy",
+     "kind": "optical",
+     "value": 0.03
+    },
+    {
+     "type": "unlock",
+     "key": "instrument:spec"
+    }
+   ],
+   "effectText": "Unlocks the spectrometer suite; +3% optical accuracy",
+   "limitation": "Classification rests on catalogued spectral standards.",
+   "status": "established",
+   "data": {
+    "optical": 1
+   },
+   "category": "Stellar classification"
+  },
+  {
+   "id": "infrared-astronomy",
+   "name": "Infrared astronomy",
+   "branch": "Astronomy",
+   "description": "Cooled detectors for dust-penetrating observations.",
+   "costRP": 70,
+   "costCredits": 900,
+   "days": 8,
+   "requires": [
+    "cryo-detector"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "instrument:ir"
+    },
+    {
+     "type": "unlock",
+     "key": "equipment:ir"
+    }
+   ],
+   "effectText": "Unlocks the infrared telescope and infrared imager",
+   "limitation": "Needs cryogenic cooling, so it is expensive to run.",
+   "status": "established",
+   "data": {
+    "optical": 1
+   },
+   "category": ""
+  },
+  {
+   "id": "galactic-structure",
+   "name": "Galactic structure",
+   "branch": "Astronomy",
+   "description": "Maps of spiral arms, bars and halos from stellar surveys.",
+   "costRP": 90,
+   "costCredits": 700,
+   "days": 10,
+   "requires": [
+    "stellar-classification"
+   ],
+   "effects": [
+    {
+     "type": "dataYield",
+     "value": 0.03
+    }
+   ],
+   "effectText": "+3% data yield from all sources",
+   "limitation": "Models are only as good as the surveyed volume.",
+   "status": "established",
+   "data": {
+    "spectral": 1
+   },
+   "category": "Galactic structure"
+  },
+  {
+   "id": "exoplanet-science",
+   "name": "Exoplanet science",
+   "branch": "Astronomy",
+   "description": "Transit and radial-velocity methods for planets around other stars.",
+   "costRP": 100,
+   "costCredits": 900,
+   "days": 10,
+   "requires": [
+    "stellar-classification"
+   ],
+   "effects": [
+    {
+     "type": "dataYield",
+     "value": 0.04
+    }
+   ],
+   "effectText": "+4% data yield; supports exoplanet missions",
+   "limitation": "Planets can only be studied through host-star light.",
+   "status": "established",
+   "data": {
+    "spectral": 1
+   },
+   "category": "Exoplanets"
+  },
+  {
+   "id": "cosmology",
+   "name": "Cosmology",
+   "branch": "Astronomy",
+   "description": "Expansion history and large-scale structure.",
+   "costRP": 160,
+   "costCredits": 1400,
+   "days": 14,
+   "requires": [
+    "galactic-structure"
+   ],
+   "effects": [
+    {
+     "type": "dataYield",
+     "value": 0.04
+    },
+    {
+     "type": "analysisSpeed",
+     "value": 0.05
+    }
+   ],
+   "effectText": "+4% data yield, +5% analysis speed",
+   "limitation": "Large-scale conclusions carry large uncertainties.",
+   "status": "established",
+   "data": {
+    "optical": 2
+   },
+   "category": "Cosmology"
+  },
+  {
+   "id": "dark-matter-research",
+   "name": "Dark matter research",
+   "branch": "Astronomy",
+   "description": "Rotation curves, lensing and structure constraints.",
+   "costRP": 200,
+   "costCredits": 1800,
+   "days": 16,
+   "requires": [
+    "cosmology"
+   ],
+   "effects": [
+    {
+     "type": "analysisSpeed",
+     "value": 0.05
+    },
+    {
+     "type": "unlock",
+     "key": "theory:dark-matter"
+    }
+   ],
+   "effectText": "+5% analysis speed; opens theory research",
+   "limitation": "The nature of dark matter is an open scientific question.",
+   "status": "hypothesis",
+   "data": {
+    "optical": 2
+   },
+   "category": "Dark matter research"
+  },
+  {
+   "id": "relativity",
+   "name": "Relativity",
+   "branch": "Physics",
+   "description": "General and special relativity applied to observations.",
+   "costRP": 60,
+   "costCredits": 600,
+   "days": 7,
+   "requires": [],
+   "effects": [
+    {
+     "type": "analysisSpeed",
+     "value": 0.03
+    }
+   ],
+   "effectText": "+3% analysis speed",
+   "limitation": "Well tested but the strong-field regime is less constrained.",
+   "status": "established",
+   "data": {},
+   "category": "Relativity"
+  },
+  {
+   "id": "quantum-mechanics",
+   "name": "Quantum mechanics",
+   "branch": "Physics",
+   "description": "Quantum sensors and detectors.",
+   "costRP": 80,
+   "costCredits": 700,
+   "days": 8,
+   "requires": [
+    "relativity"
+   ],
+   "effects": [
+    {
+     "type": "accuracy",
+     "kind": "radio",
+     "value": 0.02
+    },
+    {
+     "type": "dataYield",
+     "value": 0.02
+    }
+   ],
+   "effectText": "+2% radio accuracy, +2% data yield",
+   "limitation": "Applications to instruments, not new cosmology.",
+   "status": "established",
+   "data": {},
+   "category": "Quantum mechanics"
+  },
+  {
+   "id": "high-energy-physics",
+   "name": "High-energy physics",
+   "branch": "Physics",
+   "description": "Radiation processes in extreme environments.",
+   "costRP": 120,
+   "costCredits": 1600,
+   "days": 12,
+   "requires": [
+    "relativity",
+    "infrared-astronomy"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "instrument:xray"
+    },
+    {
+     "type": "unlock",
+     "key": "equipment:xray"
+    }
+   ],
+   "effectText": "Unlocks X-ray observatory and detector",
+   "limitation": "High-energy detectors are costly and power-hungry.",
+   "status": "established",
+   "data": {
+    "infrared": 1
+   },
+   "category": "High-energy physics"
+  },
+  {
+   "id": "gamma-neutrino-physics",
+   "name": "Gamma and neutrino physics",
+   "branch": "Physics",
+   "description": "Burst monitoring and solar-interior neutrinos.",
+   "costRP": 170,
+   "costCredits": 2200,
+   "days": 14,
+   "requires": [
+    "high-energy-physics"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "instrument:gamma"
+    },
+    {
+     "type": "unlock",
+     "key": "instrument:neutrino"
+    }
+   ],
+   "effectText": "Unlocks gamma-ray and neutrino detectors",
+   "limitation": "Neutrino detection from distant sources is extremely hard.",
+   "status": "established",
+   "data": {
+    "highenergy": 1
+   },
+   "category": ""
+  },
+  {
+   "id": "gravitational-physics",
+   "name": "Gravitational physics",
+   "branch": "Physics",
+   "description": "Interferometry for ripples in spacetime.",
+   "costRP": 190,
+   "costCredits": 2600,
+   "days": 16,
+   "requires": [
+    "relativity",
+    "quantum-mechanics"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "instrument:gw"
+    },
+    {
+     "type": "unlock",
+     "key": "equipment:gw"
+    }
+   ],
+   "effectText": "Unlocks the gravitational-wave observatory and sensor",
+   "limitation": "Only the most violent mergers are detectable.",
+   "status": "established",
+   "data": {
+    "highenergy": 1
+   },
+   "category": "Gravitational physics"
+  },
+  {
+   "id": "organic-compounds",
+   "name": "Organic compounds",
+   "branch": "Astrobiology",
+   "description": "Detecting and classifying organic molecules.",
+   "costRP": 70,
+   "costCredits": 800,
+   "days": 8,
+   "requires": [
+    "hydroponics"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "equipment:bio"
+    }
+   ],
+   "effectText": "Unlocks the biosignature analyser",
+   "limitation": "Organic chemistry is common; it is not evidence of life by itself.",
+   "status": "established",
+   "data": {
+    "planetary": 1
+   },
+   "category": "Organic compounds"
+  },
+  {
+   "id": "planetary-environments",
+   "name": "Planetary environments",
+   "branch": "Astrobiology",
+   "description": "Climate, geology and chemistry of other worlds.",
+   "costRP": 90,
+   "costCredits": 900,
+   "days": 10,
+   "requires": [
+    "organic-compounds"
+   ],
+   "effects": [
+    {
+     "type": "dataYield",
+     "value": 0.04
+    }
+   ],
+   "effectText": "+4% data yield",
+   "limitation": "Models need ground truth from landings.",
+   "status": "established",
+   "data": {
+    "planetary": 1
+   },
+   "category": "Planetary environments"
+  },
+  {
+   "id": "habitability",
+   "name": "Habitability",
+   "branch": "Astrobiology",
+   "description": "Which conditions can support liquid water and chemistry.",
+   "costRP": 130,
+   "costCredits": 1200,
+   "days": 12,
+   "requires": [
+    "planetary-environments",
+    "exoplanet-science"
+   ],
+   "effects": [
+    {
+     "type": "dataYield",
+     "value": 0.03
+    }
+   ],
+   "effectText": "+3% data yield; habitability assessments",
+   "limitation": "Habitable is not the same as inhabited.",
+   "status": "established",
+   "data": {
+    "spectral": 1
+   },
+   "category": "Habitability"
+  },
+  {
+   "id": "biosignatures",
+   "name": "Biosignatures",
+   "branch": "Astrobiology",
+   "description": "Gas combinations and surface features that may indicate biology.",
+   "costRP": 200,
+   "costCredits": 2000,
+   "days": 16,
+   "requires": [
+    "habitability"
+   ],
+   "effects": [
+    {
+     "type": "analysisSpeed",
+     "value": 0.04
+    },
+    {
+     "type": "unlock",
+     "key": "theory:biosignatures"
+    }
+   ],
+   "effectText": "+4% analysis speed; opens biosignature investigations",
+   "limitation": "Biosignatures can have non-biological explanations.",
+   "status": "hypothesis",
+   "data": {
+    "biological": 1
+   },
+   "category": "Biosignatures"
+  },
+  {
+   "id": "advanced-materials",
+   "name": "Advanced materials",
+   "branch": "Engineering",
+   "description": "Lighter, tougher hulls and structures.",
+   "costRP": 60,
+   "costCredits": 900,
+   "days": 8,
+   "requires": [
+    "solar-mk2"
+   ],
+   "effects": [
+    {
+     "type": "shipReliability",
+     "value": 0.06
+    }
+   ],
+   "effectText": "\u22126% mission risk",
+   "limitation": "Cost scales with vessel size.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "scientific-instruments",
+   "name": "Scientific instruments",
+   "branch": "Engineering",
+   "description": "Better sensors and calibration standards.",
+   "costRP": 80,
+   "costCredits": 1000,
+   "days": 9,
+   "requires": [
+    "advanced-materials"
+   ],
+   "effects": [
+    {
+     "type": "accuracy",
+     "value": 0.02
+    }
+   ],
+   "effectText": "+2% accuracy on all instruments",
+   "limitation": "Calibration needs regular servicing.",
+   "status": "established",
+   "data": {},
+   "category": "Scientific instruments"
+  },
+  {
+   "id": "power-systems",
+   "name": "Power systems",
+   "branch": "Energy",
+   "description": "High-efficiency power conversion.",
+   "costRP": 110,
+   "costCredits": 1500,
+   "days": 12,
+   "requires": [
+    "battery-bank",
+    "advanced-materials"
+   ],
+   "effects": [
+    {
+     "type": "powerGenMult",
+     "value": 0.15
+    }
+   ],
+   "effectText": "+15% solar output",
+   "limitation": "Output falls with distance from the Sun.",
+   "status": "established",
+   "data": {},
+   "category": "Power systems"
+  },
+  {
+   "id": "fission-power",
+   "name": "Compact fission power",
+   "branch": "Energy",
+   "description": "Small fission reactors for deep-space power.",
+   "costRP": 180,
+   "costCredits": 2800,
+   "days": 16,
+   "requires": [
+    "power-systems"
+   ],
+   "effects": [
+    {
+     "type": "powerGenMult",
+     "value": 0.2
+    },
+    {
+     "type": "batteryCap",
+     "value": 150
+    }
+   ],
+   "effectText": "+20% power, +150 kWh storage",
+   "limitation": "Requires shielding and regulation.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "autonomous-systems",
+   "name": "Autonomous systems",
+   "branch": "Robotics",
+   "description": "Self-guided vehicles that need no crew.",
+   "costRP": 70,
+   "costCredits": 900,
+   "days": 8,
+   "requires": [
+    "data-pipeline"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "class:drone"
+    },
+    {
+     "type": "shipReliability",
+     "value": 0.03
+    }
+   ],
+   "effectText": "Unlocks autonomous drones; \u22123% mission risk",
+   "limitation": "Drones are short-range and light.",
+   "status": "established",
+   "data": {},
+   "category": "Autonomous systems"
+  },
+  {
+   "id": "landing-systems",
+   "name": "Landing systems",
+   "branch": "Robotics",
+   "description": "Guidance and braking for surface touchdowns.",
+   "costRP": 110,
+   "costCredits": 1400,
+   "days": 10,
+   "requires": [
+    "autonomous-systems",
+    "advanced-materials"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "class:lander"
+    }
+   ],
+   "effectText": "Unlocks planetary landers",
+   "limitation": "Landings are the riskiest phase of a mission.",
+   "status": "established",
+   "data": {
+    "optical": 1
+   },
+   "category": ""
+  },
+  {
+   "id": "atmospheric-entry",
+   "name": "Atmospheric entry",
+   "branch": "Robotics",
+   "description": "Heat shields and descent systems for atmospheres.",
+   "costRP": 100,
+   "costCredits": 1200,
+   "days": 10,
+   "requires": [
+    "landing-systems"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "class:atmos"
+    },
+    {
+     "type": "unlock",
+     "key": "equipment:atmos"
+    }
+   ],
+   "effectText": "Unlocks atmospheric probes",
+   "limitation": "Probes are lost once they sink too deep.",
+   "status": "established",
+   "data": {
+    "planetary": 1
+   },
+   "category": ""
+  },
+  {
+   "id": "chemical-optimisation",
+   "name": "Conventional propulsion",
+   "branch": "Propulsion",
+   "description": "Better engines and mixtures for chemical rockets.",
+   "costRP": 50,
+   "costCredits": 700,
+   "days": 6,
+   "requires": [
+    "advanced-materials"
+   ],
+   "effects": [
+    {
+     "type": "fuelEfficiency",
+     "value": 0.15
+    }
+   ],
+   "effectText": "+15% propellant efficiency",
+   "limitation": "Chemical rockets are fundamentally limited.",
+   "status": "established",
+   "data": {},
+   "category": "Conventional propulsion"
+  },
+  {
+   "id": "ion-propulsion",
+   "name": "Advanced electric propulsion",
+   "branch": "Propulsion",
+   "description": "Ion and Hall thrusters.",
+   "costRP": 120,
+   "costCredits": 2000,
+   "days": 12,
+   "requires": [
+    "chemical-optimisation",
+    "power-systems"
+   ],
+   "effects": [
+    {
+     "type": "shipSpeedMult",
+     "value": 0.25
+    },
+    {
+     "type": "fuelEfficiency",
+     "value": 0.3
+    },
+    {
+     "type": "unlock",
+     "key": "class:deep-probe"
+    }
+   ],
+   "effectText": "+25% speed, +30% efficiency; unlocks deep-space probes",
+   "limitation": "Low thrust means slow acceleration.",
+   "status": "established",
+   "data": {
+    "planetary": 1
+   },
+   "category": "Advanced electric propulsion"
+  },
+  {
+   "id": "nuclear-thermal",
+   "name": "Nuclear propulsion",
+   "branch": "Propulsion",
+   "description": "Nuclear thermal rocket concepts.",
+   "costRP": 200,
+   "costCredits": 3200,
+   "days": 16,
+   "requires": [
+    "ion-propulsion",
+    "fission-power"
+   ],
+   "effects": [
+    {
+     "type": "shipSpeedMult",
+     "value": 0.3
+    },
+    {
+     "type": "fuelEfficiency",
+     "value": 0.25
+    }
+   ],
+   "effectText": "+30% speed, +25% efficiency",
+   "limitation": "Regulatory and shielding burden.",
+   "status": "established",
+   "data": {},
+   "category": "Nuclear propulsion"
+  },
+  {
+   "id": "advanced-propulsion",
+   "name": "Advanced propulsion research",
+   "branch": "Propulsion",
+   "description": "Fusion drive concepts and beamed propulsion studies.",
+   "costRP": 320,
+   "costCredits": 5000,
+   "days": 22,
+   "requires": [
+    "nuclear-thermal",
+    "quantum-gravity"
+   ],
+   "effects": [
+    {
+     "type": "shipSpeedMult",
+     "value": 0.35
+    },
+    {
+     "type": "unlock",
+     "key": "prop:advanced"
+    }
+   ],
+   "effectText": "+35% speed; opens interstellar-precursor work",
+   "limitation": "Concept stage: theory runs ahead of hardware.",
+   "status": "hypothesis",
+   "data": {
+    "gravitational": 1
+   },
+   "category": "Advanced propulsion research"
+  },
+  {
+   "id": "modular-hulls",
+   "name": "Modular hulls",
+   "branch": "Spacecraft",
+   "description": "Standard modules for free-flying platforms.",
+   "costRP": 100,
+   "costCredits": 1800,
+   "days": 10,
+   "requires": [
+    "advanced-materials"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "class:orbital-obs"
+    },
+    {
+     "type": "shipReliability",
+     "value": 0.04
+    }
+   ],
+   "effectText": "Unlocks orbital observatories; \u22124% risk",
+   "limitation": "Large platforms are fragile to launch.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "crew-vessel-design",
+   "name": "Crew vessel design",
+   "branch": "Spacecraft",
+   "description": "Long-endurance crewed vessels with laboratories.",
+   "costRP": 200,
+   "costCredits": 3500,
+   "days": 16,
+   "requires": [
+    "modular-hulls",
+    "nuclear-thermal"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "class:research-ship"
+    }
+   ],
+   "effectText": "Unlocks research spacecraft",
+   "limitation": "Large crewed ships are very expensive.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "radiation-shielding",
+   "name": "Radiation shielding",
+   "branch": "Spacecraft",
+   "description": "Protection for crew and electronics.",
+   "costRP": 120,
+   "costCredits": 1500,
+   "days": 10,
+   "requires": [
+    "modular-hulls"
+   ],
+   "effects": [
+    {
+     "type": "shipReliability",
+     "value": 0.05
+    }
+   ],
+   "effectText": "\u22125% mission risk",
+   "limitation": "Shielding adds mass.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "high-gain-antennas",
+   "name": "High-gain antennas",
+   "branch": "Communications",
+   "description": "Large dishes for distant spacecraft.",
+   "costRP": 60,
+   "costCredits": 900,
+   "days": 7,
+   "requires": [],
+   "effects": [
+    {
+     "type": "commRangeAu",
+     "value": 20
+    }
+   ],
+   "effectText": "+20 AU communication range",
+   "limitation": "Narrow beams need accurate pointing.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "deep-space-relay",
+   "name": "Deep-space relay",
+   "branch": "Communications",
+   "description": "Relay nodes extend the link.",
+   "costRP": 130,
+   "costCredits": 2200,
+   "days": 12,
+   "requires": [
+    "high-gain-antennas"
+   ],
+   "effects": [
+    {
+     "type": "commRangeAu",
+     "value": 40
+    },
+    {
+     "type": "unlock",
+     "key": "facility:relay"
+    }
+   ],
+   "effectText": "+40 AU range; unlocks relay stations",
+   "limitation": "Relays must be placed and maintained.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "laser-communications",
+   "name": "Laser communications",
+   "branch": "Communications",
+   "description": "Optical links with very high data rates.",
+   "costRP": 200,
+   "costCredits": 3200,
+   "days": 16,
+   "requires": [
+    "deep-space-relay",
+    "quantum-mechanics"
+   ],
+   "effects": [
+    {
+     "type": "commRangeAu",
+     "value": 80
+    },
+    {
+     "type": "dataYield",
+     "value": 0.05
+    }
+   ],
+   "effectText": "+80 AU range, +5% data yield",
+   "limitation": "Needs precise pointing; weather-free in space only.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "quantum-gravity",
+   "name": "Quantum gravity",
+   "branch": "Theory",
+   "description": "Attempts to reconcile quantum theory and gravity.",
+   "costRP": 220,
+   "costCredits": 3000,
+   "days": 18,
+   "requires": [
+    "quantum-mechanics",
+    "gravitational-physics"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "theory:quantum-gravity"
+    }
+   ],
+   "effectText": "Opens theoretical physics research",
+   "limitation": "No accepted theory exists. This is active research, not established science.",
+   "status": "hypothesis",
+   "data": {
+    "gravitational": 1
+   },
+   "category": "Quantum gravity"
+  },
+  {
+   "id": "spacetime-topology",
+   "name": "Spacetime topology",
+   "branch": "Theory",
+   "description": "Topological models of spacetime.",
+   "costRP": 260,
+   "costCredits": 3600,
+   "days": 20,
+   "requires": [
+    "quantum-gravity"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "theory:spacetime"
+    }
+   ],
+   "effectText": "Opens spacetime models",
+   "limitation": "Speculative mathematical work with no observational test yet.",
+   "status": "speculative",
+   "data": {
+    "gravitational": 1
+   },
+   "category": "Spacetime"
+  },
+  {
+   "id": "exotic-matter",
+   "name": "Exotic matter hypotheses",
+   "branch": "Theory",
+   "description": "Negative-energy and exotic-matter hypotheses.",
+   "costRP": 300,
+   "costCredits": 4200,
+   "days": 22,
+   "requires": [
+    "spacetime-topology",
+    "dark-matter-research"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "theory:exotic"
+    }
+   ],
+   "effectText": "Opens exotic-matter hypotheses",
+   "limitation": "Exotic matter has never been observed. Purely hypothetical.",
+   "status": "speculative",
+   "data": {
+    "highenergy": 1
+   },
+   "category": "Exotic matter"
+  },
+  {
+   "id": "advanced-cosmological-models",
+   "name": "Advanced cosmological models",
+   "branch": "Theory",
+   "description": "Inflation, multiverse and cyclic models.",
+   "costRP": 320,
+   "costCredits": 4500,
+   "days": 22,
+   "requires": [
+    "cosmology",
+    "quantum-gravity"
+   ],
+   "effects": [
+    {
+     "type": "dataYield",
+     "value": 0.05
+    },
+    {
+     "type": "unlock",
+     "key": "theory:cosmology"
+    }
+   ],
+   "effectText": "+5% data yield; opens frontier cosmology",
+   "limitation": "Models compete and some cannot be tested.",
+   "status": "speculative",
+   "data": {
+    "optical": 3
+   },
+   "category": "Advanced cosmological models"
+  }
+ ],
+ "planned": [
+  {
+   "branch": "Robotics / Engineering",
+   "version": "V3",
+   "items": [
+    "Manufacturing",
+    "Resource extraction",
+    "Habitat engineering",
+    "Autonomous operations"
+   ]
+  },
+  {
+   "branch": "Propulsion",
+   "version": "V5",
+   "items": [
+    "Advanced fusion concepts",
+    "Antimatter research",
+    "Experimental spacetime propulsion (fictional)"
+   ]
+  },
+  {
+   "branch": "Theory",
+   "version": "V5",
+   "items": [
+    "Hypothetical wormhole research (fictional)"
+   ]
+  }
+ ]
 }

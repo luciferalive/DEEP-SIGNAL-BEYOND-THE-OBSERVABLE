@@ -16,12 +16,12 @@
   "spectral_type": "G2V",
   "mass": {
    "value": 1.0,
-   "unit": "M☉",
+   "unit": "M\u2609",
    "err": null
   },
   "radius": {
    "value": 1.0,
-   "unit": "R☉",
+   "unit": "R\u2609",
    "err": null
   },
   "temperature_k": 5772,
@@ -41,7 +41,7 @@
    },
    {
     "label": "Luminosity",
-    "value": "1 L☉ (nominal)"
+    "value": "1 L\u2609 (nominal)"
    }
   ]
  },
@@ -62,7 +62,7 @@
   "spectral_type": null,
   "mass": {
    "value": 0.0553,
-   "unit": "M⊕",
+   "unit": "M\u2295",
    "err": null
   },
   "radius": {
@@ -72,7 +72,7 @@
   },
   "temperature_k": null,
   "luminosity_lsun": null,
-  "characteristics": "Innermost planet; extreme day–night surface temperature range and almost no atmosphere.",
+  "characteristics": "Innermost planet; extreme day\u2013night surface temperature range and almost no atmosphere.",
   "discovery": "Known since antiquity",
   "references": [
    "NASA Planetary Fact Sheets"
@@ -104,7 +104,7 @@
   "spectral_type": null,
   "mass": {
    "value": 0.815,
-   "unit": "M⊕",
+   "unit": "M\u2295",
    "err": null
   },
   "radius": {
@@ -146,7 +146,7 @@
   "spectral_type": null,
   "mass": {
    "value": 1.0,
-   "unit": "M⊕",
+   "unit": "M\u2295",
    "err": null
   },
   "radius": {
@@ -156,7 +156,7 @@
   },
   "temperature_k": null,
   "luminosity_lsun": null,
-  "characteristics": "Home of the Earth Mission Control organisations. Your station orbits the Sun at the Sun–Earth L2 point.",
+  "characteristics": "Home of the Earth Mission Control organisations. Your station orbits the Sun at the Sun\u2013Earth L2 point.",
   "discovery": "Known since antiquity",
   "references": [
    "NASA Planetary Fact Sheets"
@@ -188,7 +188,7 @@
   "spectral_type": null,
   "mass": {
    "value": 0.0123,
-   "unit": "M⊕",
+   "unit": "M\u2295",
    "err": null
   },
   "radius": {
@@ -198,7 +198,7 @@
   },
   "temperature_k": null,
   "luminosity_lsun": null,
-  "characteristics": "Earth’s only natural satellite.",
+  "characteristics": "Earth\u2019s only natural satellite.",
   "discovery": "Known since antiquity",
   "references": [
    "NASA Planetary Fact Sheets"
@@ -230,7 +230,7 @@
   "spectral_type": null,
   "mass": {
    "value": 0.107,
-   "unit": "M⊕",
+   "unit": "M\u2295",
    "err": null
   },
   "radius": {
@@ -272,7 +272,7 @@
   "spectral_type": null,
   "mass": {
    "value": 317.8,
-   "unit": "M⊕",
+   "unit": "M\u2295",
    "err": null
   },
   "radius": {
@@ -282,7 +282,7 @@
   },
   "temperature_k": null,
   "luminosity_lsun": null,
-  "characteristics": "Largest planet; hydrogen–helium gas giant.",
+  "characteristics": "Largest planet; hydrogen\u2013helium gas giant.",
   "discovery": "Known since antiquity",
   "references": [
    "NASA Planetary Fact Sheets"
@@ -314,7 +314,7 @@
   "spectral_type": null,
   "mass": {
    "value": 0.00803,
-   "unit": "M⊕",
+   "unit": "M\u2295",
    "err": null
   },
   "radius": {
@@ -356,7 +356,7 @@
   "spectral_type": null,
   "mass": {
    "value": 95.16,
-   "unit": "M⊕",
+   "unit": "M\u2295",
    "err": null
   },
   "radius": {
@@ -398,7 +398,7 @@
   "spectral_type": null,
   "mass": {
    "value": 0.0225,
-   "unit": "M⊕",
+   "unit": "M\u2295",
    "err": null
   },
   "radius": {
@@ -408,7 +408,7 @@
   },
   "temperature_k": null,
   "luminosity_lsun": null,
-  "characteristics": "Only moon with a dense atmosphere; methane–ethane lakes on its surface.",
+  "characteristics": "Only moon with a dense atmosphere; methane\u2013ethane lakes on its surface.",
   "discovery": "Christiaan Huygens, 1655",
   "references": [
    "NASA Planetary Fact Sheets"
@@ -440,7 +440,7 @@
   "spectral_type": null,
   "mass": {
    "value": 1.81e-05,
-   "unit": "M⊕",
+   "unit": "M\u2295",
    "err": null
   },
   "radius": {
@@ -482,7 +482,7 @@
   "spectral_type": null,
   "mass": {
    "value": 14.54,
-   "unit": "M⊕",
+   "unit": "M\u2295",
    "err": null
   },
   "radius": {
@@ -492,7 +492,7 @@
   },
   "temperature_k": null,
   "luminosity_lsun": null,
-  "characteristics": "Ice giant with an axial tilt of about 98°.",
+  "characteristics": "Ice giant with an axial tilt of about 98\u00b0.",
   "discovery": "William Herschel, 1781",
   "references": [
    "NASA Planetary Fact Sheets"
@@ -524,7 +524,7 @@
   "spectral_type": null,
   "mass": {
    "value": 17.15,
-   "unit": "M⊕",
+   "unit": "M\u2295",
    "err": null
   },
   "radius": {
@@ -535,7 +535,7 @@
   "temperature_k": null,
   "luminosity_lsun": null,
   "characteristics": "Outermost major planet; fastest winds measured in the Solar System.",
-  "discovery": "Le Verrier, Galle, d’Arrest, 1846",
+  "discovery": "Le Verrier, Galle, d\u2019Arrest, 1846",
   "references": [
    "NASA Planetary Fact Sheets"
   ],
@@ -548,5 +548,38 @@
     "value": "164.8 yr"
    }
   ]
+ },
+ {
+  "id": "pluto",
+  "designation": "134340 Pluto",
+  "name": "Pluto",
+  "classification": "Dwarf planet (Kuiper belt)",
+  "group": "solar",
+  "category": "known",
+  "ra_deg": null,
+  "dec_deg": null,
+  "distance_ly": null,
+  "distance_err_ly": null,
+  "distance_note": "Mean distance from the Sun (semi-major axis)",
+  "distance_au": 39.48,
+  "redshift": null,
+  "spectral_type": null,
+  "mass": null,
+  "radius": {
+   "value": 1188.3,
+   "unit": "km",
+   "err": null
+  },
+  "temperature_k": null,
+  "luminosity_lsun": null,
+  "characteristics": "Dwarf planet in the Kuiper belt with a thin nitrogen atmosphere and geologically active surface. Visited by New Horizons in 2015.",
+  "discovery": "Clyde Tombaugh, 1930",
+  "references": [
+   "New Horizons mission results (NASA/APL)"
+  ],
+  "source": "NASA Solar System Dynamics / JPL Small-Body Database, compiled from published values",
+  "last_verified": null,
+  "parent": null,
+  "extra": []
  }
 ]

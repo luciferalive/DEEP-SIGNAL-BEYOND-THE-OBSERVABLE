@@ -6,7 +6,8 @@ import { Game } from './game-engine.js';
 import { SLOTS, prefsStore } from './save-manager.js';
 import { setAssignment } from './crew-management.js';
 import { serviceSystem } from './station.js';
-import { startObservation, serviceInstrument } from './observatory.js';
+import { startObservation, serviceInstrument, buyInstrument } from './observatory.js';
+import { startInitialAnalysis, setHypothesis, startMethod, classifyAnomaly, reopenAnomaly } from './anomaly-engine.js';
 import { startAnalysis, startTech } from './research-engine.js';
 import { acceptMission, declineMission, submitReport, createSurvey, requestSupplies, sendDiscovery, requestVerification, respondToFunding } from './mission-control.js';
 import { resolveEvent, respondToTransient, activeTransients } from './cosmic-events.js';
@@ -160,10 +161,17 @@ export class UI {
       // observatory
       case 'obs-set': s.obsInstrument = $('#obs-instrument')?.value || s.obsInstrument; s.obsHours = +($('#obs-hours')?.value || s.obsHours); s.obsTarget = $('#obs-target')?.value || s.obsTarget; return this.render(true);
       case 'obs-start': return this.res(startObservation(g, { instrumentId: s.obsInstrument, targetId: s.obsTarget, hours: s.obsHours }), 'Observation started.');
+      case 'buy-instrument': return this.res(buyInstrument(g, id), 'Instrument purchased.');
+      case 'an-initial': return this.res(startInitialAnalysis(g, id), 'Initial analysis started.');
+      case 'an-hypothesis': return this.res(setHypothesis(g, id, v), 'Working hypothesis set.');
+      case 'an-method': return this.res(startMethod(g, id, v), 'Investigation step started.');
+      case 'an-classify': return this.res(classifyAnomaly(g, id, v), 'Anomaly classified.');
+      case 'an-reopen': return this.res(reopenAnomaly(g, id), 'Case re-opened.');
       case 'service-instrument': return this.res(serviceInstrument(g, id), 'Instrument serviced.');
-      case 'reobserve': { const an = g.state.anomalies.find(x => x.id === id); return this.res(startObservation(g, { instrumentId: an.instrumentId, targetId: an.targetId, hours: +v, anomalyId: id }), 'Re-observation started.'); }
+      case 'reobserve': { const an = g.state.anomalies.find(x => x.id === id); return this.res(startObservation(g, { instrumentId: el.dataset.inst || an.instrumentId, targetId: an.targetId, hours: +v, anomalyId: id }), 'Re-observation started.'); }
       // lab / tech
       case 'analyse': return this.res(startAnalysis(g, id), 'Analysis started.');
+      case 'tech-select': s.tech = id; return this.render(true);
       case 'tech-start': return this.res(startTech(g, id), 'Research started.');
       // spacecraft / crew
       case 'refuel': return this.res(refuel(g, id, +v), 'Refuelled.');

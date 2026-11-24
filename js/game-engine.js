@@ -24,7 +24,7 @@ export class Game {
     this.data = data; this.state = state; this.prefs = { ...DEFAULT_PREFS, ...prefs };
     this.listeners = new Set(); this.lastHistory = -1;
     for (const [id, m] of Object.entries(initialModules(data))) if (!this.state.modules[id]) this.state.modules[id] = m;
-    for (const inst of this.state.instruments) if (!inst.name) Object.assign(inst, data.instruments.active.find(i => i.id === inst.id));
+    for (const inst of this.state.instruments) { const cat = data.instruments.active.find(i => i.id === inst.id); if (cat) { if (!inst.name) Object.assign(inst, cat); inst.capabilities = JSON.parse(JSON.stringify(cat.capabilities)); } } // capabilities are catalog data, so older saves gain new target classes
   }
   static create(data, { seed, prefs } = {}) {
     const state = createNewGame(seed);

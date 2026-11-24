@@ -5,8 +5,9 @@ import path from 'node:path';
 import { loadAllData } from '../js/data-loader.js';
 import { Game } from '../js/game-engine.js';
 import { SaveManager, MemoryBackend } from '../js/save-manager.js';
-import { startObservation, canObserve } from '../js/observatory.js';
-import { startAnalysis, startTech } from '../js/research-engine.js';
+import { startObservation, canObserve, buyInstrument } from '../js/observatory.js';
+import { createAnomaly, classifyAnomaly, canClassify, startMethod, startInitialAnalysis, setHypothesis, reopenAnomaly, tallyOf, currentStage, CAUSES, PRIORS } from '../js/anomaly-engine.js';
+import { startAnalysis, startTech, canStartTech, analysedCount } from '../js/research-engine.js';
 import { acceptMission, submitReport, requestSupplies, sendDiscovery, requestVerification, missionProgress, respondToFunding, createSurvey } from '../js/mission-control.js';
 import { triggerEvent, resolveEvent } from '../js/cosmic-events.js';
 import { setAssignment } from '../js/crew-management.js';
@@ -29,7 +30,8 @@ await test('astronomy data: unique ids, sources, references, no invented fields'
     ok(o.source && o.references.length, `${o.id} needs a source and references`);
     ok(o.category === 'known', `${o.id} must be in the known universe`);
     ok(o.last_verified === null, `${o.id}: last_verified must not be claimed`);
-    if (o.group !== 'solar') ok(o.distance_ly != null, `${o.id} needs a distance`);
+    if (o.group !== 'solar' && o.group !== 'smallbody') ok(o.distance_ly != null, `${o.id} needs a distance`);
+    if (o.group === 'smallbody') ok(o.distance_au > 0, `${o.id} needs a distance in AU`);
   }
   for (const name of ['Sagittarius A*', 'M87*', 'TON 618', 'Cygnus X-1', 'Andromeda Galaxy', 'Triangulum Galaxy', 'Sombrero Galaxy', 'Proxima Centauri', 'Alpha Centauri A', 'Alpha Centauri B', 'Betelgeuse', 'Sirius A', 'Vega', 'Rigel', 'Polaris', 'TRAPPIST-1', 'Kepler-186f'.replace('f', ' f'), 'Proxima Centauri b', 'Kepler-452 b', 'TOI-700 d', 'Crab Nebula', 'Orion Nebula', 'Eagle Nebula', 'Pillars of Creation', 'Helix Nebula', 'Cygnus Loop', 'Milky Way'])
     ok(data.db.list.some(o => o.name === name), 'missing ' + name);
@@ -98,8 +100,8 @@ await test('false positives create anomalies that re-observation resolves', () =
     if (s.anomalies.length) found = g;
   }
   ok(found, 'an anomaly should appear within some seeds'); const a = found.state.anomalies[0]; eq(a.status, 'unresolved');
-  for (let i = 0; i < 4 && a.status === 'unresolved'; i++) { startObservation(found, { instrumentId: 'opt-1', targetId: a.targetId, hours: 24, anomalyId: a.id }); found.advance(25 * HOUR); }
-  eq(a.status, 'resolved'); ok(a.resolution.includes('instrumental'));
+  for (let i = 0; i < 6 && a.evidence.length < 2; i++) { startObservation(found, { instrumentId: 'opt-1', targetId: a.targetId, hours: 24, anomalyId: a.id }); found.advance(25 * HOUR); }
+  ok(a.evidence.length >= 2, 're-observations add evidence'); ok(canClassify(a)); ok(classifyAnomaly(found, a.id, a.cause).ok); eq(a.status, 'resolved'); ok(a.resolution.includes('Classified'));
 });
 await test('research: tech requires RP, credits, prerequisites and has real effects', () => {
   const g = fresh(); const s = g.state;
@@ -131,7 +133,7 @@ await test('supplies, funding and daily costs', () => {
 });
 await test('Earth: send discovery and request verification', () => {
   const g = fresh(); const s = g.state; startObservation(g, { instrumentId: 'opt-1', targetId: 'vega', hours: 12 }); g.advance(13 * HOUR); startAnalysis(g, s.datasets[0].id); g.advance(3 * DAY);
-  const d = s.discoveries[0]; const rep0 = s.resources.reputation; const conf0 = d.confidence;
+  const d = s.discoveries[0]; s.resources.reputation = 10; const rep0 = 10; const conf0 = d.confidence;
   ok(sendDiscovery(g, d.id).ok); ok(!sendDiscovery(g, d.id).ok); ok(requestVerification(g, d.id).ok); g.advance(6 * DAY);
   ok(s.resources.reputation > rep0); ok(d.confidence > conf0); eq(d.verification, 'verified');
 });
@@ -385,5 +387,43 @@ await test('V3 determinism: expedition runs replay identically', () => {
   eq(run(), run());
 });
 
+
+await test('anomalies: staged investigation, hidden cause, wrong classification disputed later, no extraordinary cause in the known universe', () => {
+  ok(PRIORS.extraordinary === 0, 'no fictional causes before V4');
+  const g = fresh(); const s = g.state; s.resources.credits = 5000;
+  const ds = { id: 'ds-x', targetId: 'sirius-a', instrumentId: 'opt-1', kind: 'optical', status: 'analysed', quality: 0.8 }; s.datasets.push(ds);
+  const a = createAnomaly(g, ds); eq(currentStage(a), 'DETECTION'); ok(CAUSES[a.cause]);
+  ok(!classifyAnomaly(g, a.id, 'natural').ok, 'needs evidence');
+  ok(startInitialAnalysis(g, a.id).ok); g.advance(1.1 * DAY); eq(a.evidence.length, 1);
+  ok(setHypothesis(g, a.id, 'natural').ok); eq(currentStage(a), 'HYPOTHESIS');
+  ok(startMethod(g, a.id, 'long-term').ok); eq(currentStage(a), 'INVESTIGATION'); ok(!startMethod(g, a.id, 'long-term').ok, 'one step at a time');
+  g.advance(31 * DAY); eq(a.evidence.length, 2); ok(canClassify(a)); ok(tallyOf(a).total > 0);
+  const wrong = Object.keys(CAUSES).find(k => PRIORS[k] > 0 && k !== a.cause); s.resources.reputation = 10; const rep0 = 10;
+  ok(classifyAnomaly(g, a.id, wrong).ok); eq(a.status, 'resolved'); g.advance(26 * DAY);
+  eq(a.status, 'disputed'); ok(s.resources.reputation < rep0); ok(a.truthRevealed); ok(reopenAnomaly(g, a.id).ok); eq(a.status, 'unresolved');
+});
+await test('instruments: purchase needs the unlocking technology and credits; capabilities refresh from the catalog', () => {
+  const g = fresh(); const s = g.state;
+  ok(!buyInstrument(g, 'ir-1').ok, 'locked'); s.tech.researched['infrared-astronomy'] = 1; s.resources.credits = 100000;
+  ok(!buyInstrument(g, 'nope').ok); ok(buyInstrument(g, 'ir-1').ok); ok(s.instruments.some(i => i.id === 'ir-1')); ok(!buyInstrument(g, 'ir-1').ok, 'already owned');
+  const opt = s.instruments.find(i => i.id === 'opt-1'); opt.capabilities = opt.capabilities.filter(c => c.group === 'star');
+  const g2 = new Game(data, JSON.parse(JSON.stringify(s))); ok(g2.state.instruments.find(i => i.id === 'opt-1').capabilities.some(c => c.group === 'smallbody'), 'old saves gain new target classes');
+});
+await test('technology: data requirements count analysed datasets; unlocks work; every tech has a status and valid prerequisites', () => {
+  const g = fresh(); const s = g.state; s.resources.researchPoints = 9999; s.resources.credits = 99999;
+  for (const t of data.technologies.active) { ok(['established', 'hypothesis', 'speculative', 'fictional'].includes(t.status), t.id + ' status'); for (const r of t.requires) ok(data.techById[r], t.id + ' prerequisite ' + r); }
+  const t = data.technologies.active.find(x => x.id === 'stellar-classification'); ok(t, 'exists'); eq(Object.keys(t.data)[0], 'optical');
+  for (const r of t.requires) s.tech.researched[r] = 1; const c = canStartTech(g, 'stellar-classification'); ok(!c.ok && /analysed optical/.test(c.error), c.error);
+  for (let i = 0; i < t.data.optical; i++) s.datasets.push({ id: 'd' + i, kind: 'optical', status: 'analysed', targetId: 'sirius-a', quality: .8 });
+  eq(analysedCount(g, 'optical'), t.data.optical); ok(canStartTech(g, 'stellar-classification').ok);
+  ok(!g.unlocked('instrument:ir')); s.tech.researched['infrared-astronomy'] = 1; ok(g.unlocked('instrument:ir'));
+});
+await test('V3 -> V4 migration from a real v3 save: anomalies gain stages, evidence and cause; backup made', async () => {
+  const f3 = JSON.parse(await readFile(path.join(root, 'tests/fixtures/v3-save.json'), 'utf8'));
+  const backend = new MemoryBackend(); const sm = new SaveManager(backend);
+  await backend.put('manual-1', f3.state, { savedAt: 1, gameTime: f3.state.time.t, version: 3 });
+  const r = await sm.load('manual-1'); ok(r.ok, r.error); eq(r.state.version, 4); ok(await backend.get('backup-manual-1-v3'), 'backup made'); const g = Game.fromSave(data, r.state);
+  const a = g.state.anomalies[0]; ok(a && Array.isArray(a.evidence) && a.cause && a.stage); g.advance(2 * DAY); ok(g.state.time.t > 0);
+});
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

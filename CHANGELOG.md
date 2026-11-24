@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 (in progress) - milestone 2b
+- 43 technologies in 10 branches with status labels (established / hypothesis / speculative), data requirements (analysed datasets by kind) and unlock effects; visual SVG tech tree.
+- Six purchasable instruments unlocked by technology (spectral, infrared, X-ray, gamma, neutrino, gravitational-wave); instrument catalogue in the Observatory; capabilities refresh from the catalog so old saves gain new target classes.
+- New real astronomy data: pulsars and neutron stars, star clusters, asteroids and comets (plus Pluto); datasets now carry noise, completeness, reliability and value.
+- Staged anomaly investigation (detection to classification) with noisy evidence, hidden cause, disputed misclassification and re-opening.
+- Save format 4 with migration from v3 (real v3 fixture added to tests).
+
 ## 0.3.0 (in progress) – V2 milestone 2 (save format 3)
 Added: speed ladder 1x–100x; event scheduler; spacecraft fleet (8 classes, equipment, ordering, overhaul); multi-stage expeditions (preparation, launch, transit, operation, data collection, recovery, analysis; failure, abort, cancel, stranding and recovery missions); communication links with five states and transmission history; crew recruitment, specialisations, training, experience and shift policy; richer dataset fields; 12 new engine tests and a V2 save fixture.
 Changed: save format 2 → 3 (migration with automatic backup); navigation grouped.

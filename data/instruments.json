@@ -1,42 +1,309 @@
 {
-  "active": [
+ "active": [
+  {
+   "id": "opt-1",
+   "name": "Meridian 2.4 m Optical Telescope",
+   "kind": "optical",
+   "band": "Optical / near-UV",
+   "purchaseCost": 0,
+   "operatingCostPerHour": 6,
+   "powerKw": 4.5,
+   "standbyKw": 0.5,
+   "accuracy": 0.62,
+   "level": 1,
+   "maxLevel": 1,
+   "owned": true,
+   "capabilities": [
     {
-      "id": "opt-1", "name": "Meridian 2.4 m Optical Telescope", "kind": "optical", "band": "Optical / near-UV",
-      "purchaseCost": 0, "operatingCostPerHour": 6, "powerKw": 4.5, "standbyKw": 0.5,
-      "accuracy": 0.62, "level": 1, "maxLevel": 1, "owned": true,
-      "capabilities": [
-        { "group": "solar", "maxDistanceLy": null },
-        { "group": "star", "maxDistanceLy": 1500 },
-        { "group": "nebula", "maxDistanceLy": 8000 },
-        { "group": "galaxy", "maxDistanceLy": 3000000 }
-      ],
-      "limitations": "Cannot see through dense dust, so the Galactic Centre and distant compact objects are out of reach. Exoplanets can only be studied through their host stars at this stage.",
-      "maintenanceHours": 400,
-      "description": "A segmented-mirror optical telescope on a deployable boom, tuned for stellar photometry and imaging of nearby objects."
+     "group": "solar",
+     "maxDistanceLy": null
     },
     {
-      "id": "rad-1", "name": "Halcyon 15 m Radio Dish", "kind": "radio", "band": "Radio (1–30 GHz)",
-      "purchaseCost": 0, "operatingCostPerHour": 5, "powerKw": 6.0, "standbyKw": 0.6,
-      "accuracy": 0.55, "level": 1, "maxLevel": 1, "owned": true,
-      "capabilities": [
-        { "group": "solar", "maxDistanceLy": null },
-        { "group": "star", "maxDistanceLy": 30 },
-        { "group": "nebula", "maxDistanceLy": 8000 },
-        { "group": "compact", "maxDistanceLy": 30000 },
-        { "group": "galaxy", "maxDistanceLy": 3000000 }
-      ],
-      "limitations": "Poor angular resolution. Only nearby stars and bright radio sources are practical targets. Cannot reach very distant quasars.",
-      "maintenanceHours": 500,
-      "description": "A steerable dish with cryogenically cooled receivers. Radio waves pass through interstellar dust, which makes it the first instrument able to listen to the Galactic Centre."
+     "group": "star",
+     "maxDistanceLy": 1500
+    },
+    {
+     "group": "nebula",
+     "maxDistanceLy": 8000
+    },
+    {
+     "group": "galaxy",
+     "maxDistanceLy": 3000000
+    },
+    {
+     "group": "cluster",
+     "maxDistanceLy": 30000
+    },
+    {
+     "group": "smallbody",
+     "maxDistanceLy": null
     }
-  ],
-  "planned": [
-    { "id": "ir", "name": "Infrared Telescope", "version": "0.3", "note": "Will see through dust and observe cool objects." },
-    { "id": "xray", "name": "X-ray Observatory", "version": "0.3", "note": "Will observe accretion disks and hot gas around compact objects." },
-    { "id": "gamma", "name": "Gamma-ray Detector", "version": "0.3", "note": "Will monitor bursts and extreme events." },
-    { "id": "neutrino", "name": "Neutrino Detector", "version": "0.3", "note": "Will observe supernova neutrinos and the solar interior." },
-    { "id": "gw", "name": "Gravitational-wave Observatory", "version": "0.3", "note": "Will detect mergers of compact objects." },
-    { "id": "spec", "name": "Spectrometer Suite", "version": "0.3", "note": "Will measure composition and exoplanet atmospheres." },
-    { "id": "array", "name": "Deep-space Sensor Array", "version": "0.3", "note": "Will combine instruments for long-baseline observations." }
-  ]
+   ],
+   "limitations": "Cannot see through dense dust, so the Galactic Centre and distant compact objects are out of reach. Exoplanets can only be studied through their host stars at this stage.",
+   "maintenanceHours": 400,
+   "description": "A segmented-mirror optical telescope on a deployable boom, tuned for stellar photometry and imaging of nearby objects.",
+   "unlock": null
+  },
+  {
+   "id": "rad-1",
+   "name": "Halcyon 15 m Radio Dish",
+   "kind": "radio",
+   "band": "Radio (1\u201330 GHz)",
+   "purchaseCost": 0,
+   "operatingCostPerHour": 5,
+   "powerKw": 6.0,
+   "standbyKw": 0.6,
+   "accuracy": 0.55,
+   "level": 1,
+   "maxLevel": 1,
+   "owned": true,
+   "capabilities": [
+    {
+     "group": "solar",
+     "maxDistanceLy": null
+    },
+    {
+     "group": "star",
+     "maxDistanceLy": 30
+    },
+    {
+     "group": "nebula",
+     "maxDistanceLy": 8000
+    },
+    {
+     "group": "compact",
+     "maxDistanceLy": 30000
+    },
+    {
+     "group": "galaxy",
+     "maxDistanceLy": 3000000
+    },
+    {
+     "group": "cluster",
+     "maxDistanceLy": 60000
+    },
+    {
+     "group": "smallbody",
+     "maxDistanceLy": null
+    }
+   ],
+   "limitations": "Poor angular resolution. Only nearby stars and bright radio sources are practical targets. Cannot reach very distant quasars.",
+   "maintenanceHours": 500,
+   "description": "A steerable dish with cryogenically cooled receivers. Radio waves pass through interstellar dust, which makes it the first instrument able to listen to the Galactic Centre.",
+   "unlock": null
+  },
+  {
+   "id": "spec-obs",
+   "name": "Spectrometer Suite",
+   "kind": "spectral",
+   "band": "Optical / near-IR spectroscopy",
+   "purchaseCost": 1800,
+   "operatingCostPerHour": 9,
+   "powerKw": 3.5,
+   "standbyKw": 0.4,
+   "accuracy": 0.6,
+   "level": 1,
+   "maxLevel": 1,
+   "owned": false,
+   "capabilities": [
+    {
+     "group": "solar",
+     "maxDistanceLy": null
+    },
+    {
+     "group": "star",
+     "maxDistanceLy": 800
+    },
+    {
+     "group": "nebula",
+     "maxDistanceLy": 6000
+    },
+    {
+     "group": "galaxy",
+     "maxDistanceLy": 500000
+    },
+    {
+     "group": "cluster",
+     "maxDistanceLy": 20000
+    },
+    {
+     "group": "smallbody",
+     "maxDistanceLy": null
+    }
+   ],
+   "limitations": "Needs bright targets or long exposures.",
+   "maintenanceHours": 400,
+   "description": "Splits light into spectra to measure composition, motion and temperature.",
+   "unlock": "instrument:spec"
+  },
+  {
+   "id": "ir-1",
+   "name": "Infrared Telescope",
+   "kind": "infrared",
+   "band": "Near and mid infrared",
+   "purchaseCost": 2400,
+   "operatingCostPerHour": 8,
+   "powerKw": 5.0,
+   "standbyKw": 0.4,
+   "accuracy": 0.62,
+   "level": 1,
+   "maxLevel": 1,
+   "owned": false,
+   "capabilities": [
+    {
+     "group": "solar",
+     "maxDistanceLy": null
+    },
+    {
+     "group": "star",
+     "maxDistanceLy": 3000
+    },
+    {
+     "group": "nebula",
+     "maxDistanceLy": 20000
+    },
+    {
+     "group": "compact",
+     "maxDistanceLy": 30000
+    },
+    {
+     "group": "galaxy",
+     "maxDistanceLy": 3000000
+    },
+    {
+     "group": "cluster",
+     "maxDistanceLy": 40000
+    },
+    {
+     "group": "smallbody",
+     "maxDistanceLy": null
+    }
+   ],
+   "limitations": "Cooled detectors drift with temperature; needs servicing.",
+   "maintenanceHours": 400,
+   "description": "Sees through dust and cool objects, including the Galactic Centre.",
+   "unlock": "instrument:ir"
+  },
+  {
+   "id": "xray-1",
+   "name": "X-ray Observatory",
+   "kind": "xray",
+   "band": "X-ray",
+   "purchaseCost": 3600,
+   "operatingCostPerHour": 12,
+   "powerKw": 6.0,
+   "standbyKw": 0.4,
+   "accuracy": 0.6,
+   "level": 1,
+   "maxLevel": 1,
+   "owned": false,
+   "capabilities": [
+    {
+     "group": "compact",
+     "maxDistanceLy": 100000
+    },
+    {
+     "group": "nebula",
+     "maxDistanceLy": 20000
+    },
+    {
+     "group": "galaxy",
+     "maxDistanceLy": 500000
+    },
+    {
+     "group": "star",
+     "maxDistanceLy": 300
+    },
+    {
+     "group": "cluster",
+     "maxDistanceLy": 60000
+    }
+   ],
+   "limitations": "Cannot observe cool objects; low angular resolution.",
+   "maintenanceHours": 400,
+   "description": "Hot gas, accretion disks and compact objects.",
+   "unlock": "instrument:xray"
+  },
+  {
+   "id": "gamma-1",
+   "name": "Gamma-ray Detector",
+   "kind": "gamma",
+   "band": "Gamma rays",
+   "purchaseCost": 4400,
+   "operatingCostPerHour": 12,
+   "powerKw": 6.5,
+   "standbyKw": 0.4,
+   "accuracy": 0.58,
+   "level": 1,
+   "maxLevel": 1,
+   "owned": false,
+   "capabilities": [
+    {
+     "group": "compact",
+     "maxDistanceLy": 200000
+    },
+    {
+     "group": "galaxy",
+     "maxDistanceLy": 1000000
+    },
+    {
+     "group": "nebula",
+     "maxDistanceLy": 20000
+    }
+   ],
+   "limitations": "Poor positional accuracy.",
+   "maintenanceHours": 400,
+   "description": "Monitors bursts and extreme events, and answers gamma-ray alerts.",
+   "unlock": "instrument:gamma"
+  },
+  {
+   "id": "neutrino-1",
+   "name": "Neutrino Detector",
+   "kind": "neutrino",
+   "band": "Neutrinos",
+   "purchaseCost": 5200,
+   "operatingCostPerHour": 14,
+   "powerKw": 7.0,
+   "standbyKw": 0.4,
+   "accuracy": 0.55,
+   "level": 1,
+   "maxLevel": 1,
+   "owned": false,
+   "capabilities": [
+    {
+     "group": "solar",
+     "maxDistanceLy": 0.0001
+    }
+   ],
+   "limitations": "Only the Sun is bright enough in neutrinos at this scale.",
+   "maintenanceHours": 400,
+   "description": "Watches the solar interior and listens for nearby supernova neutrinos.",
+   "unlock": "instrument:neutrino"
+  },
+  {
+   "id": "gw-1",
+   "name": "Gravitational-wave Observatory",
+   "kind": "gravitational",
+   "band": "Gravitational waves",
+   "purchaseCost": 6800,
+   "operatingCostPerHour": 18,
+   "powerKw": 9.0,
+   "standbyKw": 0.4,
+   "accuracy": 0.5,
+   "level": 1,
+   "maxLevel": 1,
+   "owned": false,
+   "capabilities": [
+    {
+     "group": "compact",
+     "maxDistanceLy": 500000
+    }
+   ],
+   "limitations": "Detects only violent mergers; poor sky localisation.",
+   "maintenanceHours": 400,
+   "description": "Interferometer sensitive to mergers of compact objects, and answers gravitational-wave alerts.",
+   "unlock": "instrument:gw"
+  }
+ ],
+ "planned": []
 }

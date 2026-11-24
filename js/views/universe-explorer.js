@@ -3,7 +3,7 @@ import { search, GROUPS, formatRA, formatDec, formatDistance, formatUncertainty,
 import { canObserve } from '../observatory.js';
 
 export const title = 'Universe Explorer';
-const COLORS = { star: '#e3c987', exoplanet: '#7fb893', compact: '#d46b6b', galaxy: '#a395c9', nebula: '#6fa7a3', solar: '#d3a85f' };
+const COLORS = { star: '#e3c987', exoplanet: '#7fb893', compact: '#d46b6b', galaxy: '#a395c9', nebula: '#6fa7a3', solar: '#d3a85f', cluster: '#9fc4e8', smallbody: '#b39a7a' };
 const hash = s => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) | 0; return Math.abs(h); };
 
 function skyMap(ui, list) {

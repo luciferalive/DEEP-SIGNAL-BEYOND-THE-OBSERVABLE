@@ -1,7 +1,7 @@
 // Loads every JSON data file. `readJson(path)` is injected so the same code runs in the browser (fetch) and in Node tests (fs).
 import { buildDatabase } from './astronomy-database.js';
 
-const ASTRO_FILES = ['solar-system', 'stars', 'exoplanets', 'black-holes', 'galaxies', 'nebulae'];
+const ASTRO_FILES = ['solar-system', 'stars', 'exoplanets', 'black-holes', 'galaxies', 'nebulae', 'pulsars', 'clusters', 'small-bodies'];
 
 export async function loadAllData(readJson) {
   const astro = await Promise.all(ASTRO_FILES.map(name => readJson(`data/${name}.json`)));

@@ -8,7 +8,10 @@ import { record } from './chronicle.js';
 
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const REQUIRED_WORK = { solar: 30, star: 40, nebula: 44, galaxy: 56, compact: 56, exoplanet: 40 };
-const RP_BASE = { solar: 4, star: 8, nebula: 10, galaxy: 14, compact: 16, exoplanet: 12 };
+const RP_BASE = { solar: 4, smallbody: 6, star: 8, cluster: 9, nebula: 10, galaxy: 14, compact: 16, exoplanet: 12 };
+const DATA_KIND = { xray: 'highenergy', gamma: 'highenergy', neutrino: 'highenergy' };
+// Analysed datasets by kind (used by technologies that need real data behind them).
+export function analysedCount(game, kind) { return game.state.datasets.filter(d => d.status === 'analysed' && (DATA_KIND[d.kind] || d.kind) === kind).length; }
 
 export const analysisRate = game => (workRates(game).research / 4) * (1 + game.techEffect('analysisSpeed') + game.moduleEffect('analysisSpeed'));
 
@@ -58,6 +61,7 @@ export function canStartTech(game, techId) {
   const missing = tech.requires.filter(r => !s.tech.researched[r]);
   if (missing.length) return { ok: false, error: `Requires: ${missing.map(m => game.data.techById[m]?.name || m).join(', ')}.` };
   if (workRates(game).research <= 0) return { ok: false, error: 'Assign at least one healthy crew member to Research and analysis.' };
+  for (const [k, n] of Object.entries(tech.data || {})) { const have = analysedCount(game, k); if (have < n) return { ok: false, error: `Needs ${n} analysed ${k} dataset${n > 1 ? 's' : ''} (you have ${have}).` }; }
   if (s.resources.researchPoints < tech.costRP) return { ok: false, error: `Needs ${tech.costRP} research points.` };
   if (s.resources.credits < tech.costCredits) return { ok: false, error: `Needs ${tech.costCredits} RC.` };
   return { ok: true };

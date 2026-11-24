@@ -2,7 +2,7 @@
 import { LY_PER_AU } from './constants.js';
 
 export const GROUPS = {
-  solar: 'Solar System', star: 'Stars', exoplanet: 'Exoplanets', compact: 'Black holes and compact objects', galaxy: 'Galaxies', nebula: 'Nebulae and remnants'
+  solar: 'Solar System', star: 'Stars', exoplanet: 'Exoplanets', compact: 'Black holes and compact objects', galaxy: 'Galaxies', nebula: 'Nebulae and remnants', cluster: 'Star clusters', smallbody: 'Asteroids and comets'
 };
 export const UNKNOWN = 'DATA UNKNOWN';
 
