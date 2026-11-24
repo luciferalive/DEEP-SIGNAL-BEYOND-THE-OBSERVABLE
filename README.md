@@ -46,7 +46,9 @@ All V1 systems still work: 14 original sections, game clock, 59 real catalogue o
   Not done in V2: data-economy uses beyond dataset quality fields, research-category requirement tiers, rotating per-autosave backups (only pre-migration backups).
 - **V3 Beyond Human Limits** (save v5) – implemented in compact form: planetary exploration stages, facilities (relay, factory, mines, outposts), resource stock and connection rules, settlements, spacecraft design and construction, interstellar precursor probes, civilization index, policies and map.
   Not done in V3: multiple independent stations, a separate deep-space-network simulation beyond relay range, resource logistics routes (production is credited to a single stock), crewed settlement life-support detail.
-- **V4 / V5** – not started (nothing is claimed).
+- **V4 The Unknown** (save v6) – implemented: persistent mystery engine with 7 data-driven FICTIONAL arcs (Silent Star, Forgotten Transmission, Impossible Planet, Dark Structure, Observer, Distant Signal, Empty System), 7-stage investigations with real instruments/techs/expeditions, noisy conflicting evidence with a hidden truth, player hypotheses with confidence, calibrated conclusions and later disputes, follow-ups and experiments, anomaly network cross-references, five scientific decisions with consequences, rare cosmic events, unknown civilizations with light-delay messaging, fictional catalogue objects in the Universe Explorer, archive integration, extraordinary anomaly causes (3%).
+  Not done in V4: more than 7 arcs (the data format is expandable), branching story text beyond the evidence lines, crew assignment to specific steps, a map placement of fictional objects.
+- **V5** – not started (nothing is claimed).
 
 Tested with `npm test` (engine tests including migration of genuine saves made by the V1, V2, V3 and V4 engines in `tests/fixtures/`, plus a test that renders every view) and with headless Chromium: every section renders with no console errors.
 

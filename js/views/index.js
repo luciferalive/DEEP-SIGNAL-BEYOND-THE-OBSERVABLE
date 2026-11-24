@@ -20,3 +20,4 @@ export * as worlds from './worlds.js';
 export * as shipyard from './shipyard.js';
 export * as interstellar from './interstellar.js';
 export * as civilization from './civilization.js';
+export * as mysteries from './mysteries.js';

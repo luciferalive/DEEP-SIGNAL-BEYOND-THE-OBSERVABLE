@@ -11,6 +11,7 @@ import { saveDesign, validateDesign, buildShip, deleteDesign, materialsFor } fro
 import { launchProbe, probeTargets, PROBE_COST } from '../js/interstellar.js';
 import { commRangeAu } from '../js/comms-network.js';
 import { makeShip, classOf } from '../js/spacecraft.js';
+import { postDecision, startMystery, startClue, clueBlock, proposeHypothesis, conclude, reopenMystery, requestFollowup, resolveDecision, mysteriesOnExpedition, mysteriesTick, getMystery, arcOf, doneCount, stageOf, tally, confirmedArtificial, transmit, rareEvent, networkLinks, fictionalObjects, createCivilization, STAGES as MSTAGES, CAUSES as MCAUSES } from '../js/mysteries.js';
 import { searchArchive, compareDiscoveries } from '../js/discovery-archive.js';
 import { setAllocation, releaseSavings, acceptContract, declineContract, earthTick, emergencyActive, rpMult, upkeepMult, expeditionCostMult } from '../js/earth.js';
 import { createAnomaly, classifyAnomaly, canClassify, startMethod, startInitialAnalysis, setHypothesis, reopenAnomaly, tallyOf, currentStage, CAUSES, PRIORS } from '../js/anomaly-engine.js';
@@ -396,7 +397,7 @@ await test('V3 determinism: expedition runs replay identically', () => {
 
 
 await test('anomalies: staged investigation, hidden cause, wrong classification disputed later, no extraordinary cause in the known universe', () => {
-  ok(PRIORS.extraordinary === 0, 'no fictional causes before V4');
+  ok(PRIORS.extraordinary > 0 && PRIORS.extraordinary <= 0.05 && /FICTIONAL/.test(CAUSES.extraordinary), 'fictional cause is rare and labelled');
   const g = fresh(); const s = g.state; s.resources.credits = 5000;
   const ds = { id: 'ds-x', targetId: 'sirius-a', instrumentId: 'opt-1', kind: 'optical', status: 'analysed', quality: 0.8 }; s.datasets.push(ds);
   const a = createAnomaly(g, ds); eq(currentStage(a), 'DETECTION'); ok(CAUSES[a.cause]);
@@ -510,6 +511,68 @@ await test('V3 civilization: policies change real risk and cost multipliers; the
   const g = fresh(); const s = g.state; ok(!setPolicy(g, 'safety', 'reckless').ok); ok(setPolicy(g, 'safety', 'cautious').ok); ok(safetyOf(g).risk < 1 && safetyOf(g).cost > 1); ok(setPolicy(g, 'safety', 'bold').ok); ok(safetyOf(g).risk > 1 && safetyOf(g).cost < 1);
   const i0 = civIndex(g); s.facilities.push({ id: 'a', type: 'relay', site: 'moon', status: 'active', pop: 5, condition: 100 }); s.worlds.mars = { stage: 4, log: [] }; const i1 = civIndex(g); ok(i1.score > i0.score); ok(i1.infrastructure > i0.infrastructure && i1.exploration > i0.exploration && i1.population > i0.population);
   s.facilities.push({ id: 'o', type: 'outpost', site: 'mars', status: 'active', pop: 8, condition: 100, settledDays: 0 }); const rp = s.resources.researchPoints; civilizationDaily(g); ok(s.resources.researchPoints > rp, 'outposts give research'); ok(typeof g.state.civ.tier === 'string');
+});
+await test('V5 -> V6 migration from a real v5 save adds the mystery state and loses nothing', async () => {
+  const f5 = JSON.parse(await readFile(path.join(root, 'tests/fixtures/v5-save.json'), 'utf8')); eq(f5.state.version, 5);
+  const backend = new MemoryBackend(); const sm = new SaveManager(backend); await backend.put('manual-1', f5.state, { savedAt: 1, gameTime: f5.state.time.t, version: 5 });
+  const r = await sm.load('manual-1'); ok(r.ok, r.error); eq(r.state.version, SAVE_VERSION); ok(await backend.get('backup-manual-1-v5'), 'backup made');
+  ok(Array.isArray(r.state.mysteries.list) && r.state.mysteries.decisions.pending.length === 0); eq(r.state.stock.materials, f5.state.stock.materials); eq(Object.keys(r.state.worlds).join(), Object.keys(f5.state.worlds).join());
+  const g = Game.fromSave(data, r.state); g.advance(3 * DAY); ok(g.state.time.t > f5.state.time.t);
+});
+await test('V4 data: every arc has five clues with evidence text for every cause, valid links, valid tech and expedition types', () => {
+  eq(data.mysteryArcs.length, 7); const ids = new Set(data.mysteryArcs.map(a => a.id));
+  for (const a of data.mysteryArcs) { eq(a.clues.length, 5); ok(/FICTIONAL/.test(a.label) && /FICTIONAL/.test(a.object.characteristics)); for (const l of a.links) ok(ids.has(l), a.id + ' link ' + l);
+    for (const c of a.clues) for (const k of Object.keys(MCAUSES)) ok(c.points[k] && c.points[k].length > 20, `${a.id}/${c.id}/${k}`);
+    for (const c of a.clues) { if (c.step.tech) ok(data.techById[c.step.tech], 'tech ' + c.step.tech); if (c.step.expType) ok(data.typeById[c.step.expType], 'exp ' + c.step.expType); }
+    eq(Math.round(Object.values(a.truthWeights).reduce((x, y) => x + y, 0) * 100), 100); }
+  for (const d of data.decisionDefs) ok(d.options.length >= 2);
+});
+await test('V4 mysteries: staged clues, noisy evidence, hypotheses, conclusion with calibrated consequences, wrong conclusions disputed and re-openable', () => {
+  const g = fresh(); const s = g.state; s.resources.credits = 50000; s.resources.reputation = 10;
+  const m = startMystery(g, 'silent-star'); ok(m); ok(!startMystery(g, 'silent-star'), 'one per arc'); eq(stageOf(m), 'DETECTION'); ok(MCAUSES[m.truth]);
+  ok(!!clueBlock(g, m, 'verify'), 'locked'); ok(startClue(g, m.id, 'detect').ok, 'radio observation'); ok(!startClue(g, m.id, 'detect').ok); const radio = s.instruments.find(i => i.kind === 'radio'); ok(radio, 'has radio');
+  g.advance(0.6 * DAY); eq(m.clues.detect.status, 'done'); eq(m.evidence.length, 1); eq(stageOf(m), 'VERIFICATION'); ok(s.mysteries.decisions.pending.length >= 1, 'decision posted');
+  ok(startClue(g, m.id, 'verify').ok ? true : (s.instruments.push({ ...radio, id: 'x' }), false)); 
+  // drive remaining steps directly
+  for (const cid of ['verify', 'characterise', 'pattern']) { m.clues[cid].status = 'done'; m.evidence.push({ t: 1, cid, kind: 'step', title: cid, weight: .7, points: m.truth, text: 'x' }); }
+  m.pending = null; m.clues.source.status = 'open'; eq(doneCount(m), 4); ok(fictionalObjects(g).length === 0); 
+  ok(!conclude(g, m.id, m.truth).ok, 'steps not finished'); ok(!proposeHypothesis(g, 'nope', 'natural', 50).ok);
+  ok(startClue(g, m.id, 'source').ok); eq(m.clues.source.status, 'running'); mysteriesOnExpedition(g, { type: 'planetary-survey', finishedAt: s.time.t + 1 }); eq(m.clues.source.status, 'running', 'wrong expedition type');
+  mysteriesOnExpedition(g, { type: 'radio-signal-investigation', finishedAt: s.time.t + 1 }); eq(m.clues.source.status, 'done'); eq(stageOf(m), 'HYPOTHESIS'); ok(fictionalObjects(g).length === 1, 'catalogue entry revealed');
+  ok(!proposeHypothesis(g, m.id, 'natural', 0).ok); ok(proposeHypothesis(g, m.id, m.truth, 70).ok); ok(proposeHypothesis(g, m.id, m.truth, 80).ok); eq(m.hypotheses.length, 1); eq(m.hypotheses[0].revised, 1);
+  ok(!conclude(g, m.id, 'natural' === m.truth ? 'unknown' : 'natural').ok, 'needs a hypothesis for it');
+  const rp0 = s.resources.researchPoints, rep0 = s.resources.reputation; const r = conclude(g, m.id, m.truth); ok(r.ok && r.correct); ok(s.resources.researchPoints > rp0); ok(s.resources.reputation > rep0); eq(m.status, 'concluded'); eq(stageOf(m), 'CONCLUSION');
+  // wrong, overconfident conclusion
+  const g2 = fresh(); const s2 = g2.state; s2.resources.reputation = 10; const m2 = startMystery(g2, 'impossible-planet'); for (const c of arcOf(g2, 'impossible-planet').clues) { m2.clues[c.id].status = 'done'; m2.evidence.push({ t: 1, cid: c.id, kind: 'step', title: c.title, weight: .6, points: m2.truth, text: 'x' }); }
+  const wrong = Object.keys(MCAUSES).find(k => k !== m2.truth); ok(proposeHypothesis(g2, m2.id, wrong, 90).ok); m2.published = true; const w = conclude(g2, m2.id, wrong); ok(w.ok && !w.correct); eq(m2.status, 'disputed'); ok(s2.resources.reputation <= 10 - 3 - 3, 'overconfidence and retraction cost reputation');
+  g2.advance(41 * DAY); ok(m2.reviewNote && m2.reviewNote.includes(MCAUSES[m2.truth].toLowerCase())); ok(reopenMystery(g2, m2.id).ok); eq(m2.status, 'active'); eq(m2.hypotheses.length, 0);
+});
+await test('V4 follow-ups and experiments cost money and add evidence; the anomaly network links related arcs', () => {
+  const g = fresh(); const s = g.state; s.resources.credits = 50000; const a = startMystery(g, 'silent-star'); const b = startMystery(g, 'distant-signal'); ok(!requestFollowup(g, a.id, 'observation').ok, 'needs evidence first');
+  a.evidence.push({ t: 1, cid: 'detect', kind: 'step', title: 't', weight: .6, points: a.truth, text: 'x' }); const c0 = s.resources.credits; ok(requestFollowup(g, a.id, 'experiment').ok); ok(s.resources.credits < c0); ok(!requestFollowup(g, a.id, 'observation').ok, 'one at a time'); g.advance(11 * DAY); ok(a.evidence.length >= 1);
+  const lk = networkLinks(g); ok(lk.some(l => (l.a === 'silent-star' && l.b === 'distant-signal') || (l.b === 'silent-star' && l.a === 'distant-signal'))); const n0 = b.evidence.length;
+  a.clues.detect.status = 'done'; a.clues.verify.status = 'open'; a.clues.characterise.status = 'running'; a.pending = { cid: 'characterise', until: s.time.t + 10 }; a.clues.characterise.startedAt = s.time.t; schedule(g, s.time.t + 10, 'mystery-clue', { mid: a.id, cid: 'characterise' }); g.advance(1 * DAY); ok(b.evidence.length > n0, 'link adds a cross-reference to the other case'); ok(networkLinks(g).some(l => l.live));
+});
+await test('V4 decisions: options apply real consequences; undecided choices expire to the safe default; secrecy can leak', () => {
+  const g = fresh(); const s = g.state; s.resources.credits = 5000; s.resources.reputation = 5; const m = startMystery(g, 'forgotten-transmission');
+  m.clues.detect.status = 'done'; m.evidence.push({ t: 1, cid: 'detect', kind: 'step', title: 't', weight: .6, points: m.truth, text: 'x' }); mysteriesTick(g); 
+  const def = g.data.decisionDefs.find(d => d.id === 'publish-uncertain'); postDecision(g, m, def); const p = s.mysteries.decisions.pending.at(-1); const rep = s.resources.reputation;
+  ok(resolveDecision(g, p.uid, 0).ok); eq(s.resources.reputation, rep + 2); ok(m.published); ok(!resolveDecision(g, p.uid, 0).ok, 'only once');
+  const def2 = g.data.decisionDefs.find(d => d.id === 'probe-or-crew'); postDecision(g, m, def2); const p2 = s.mysteries.decisions.pending.at(-1); const cr = s.resources.credits; const mor = s.crew[0].morale; ok(resolveDecision(g, p2.uid, 1).ok); eq(s.resources.credits, cr - 1200); ok(s.crew[0].morale < mor); ok(m.bonus > 0);
+  const def3 = g.data.decisionDefs.find(d => d.id === 'prioritise-signal'); postDecision(g, m, def3); const p3 = s.mysteries.decisions.pending.at(-1); s.time.t = p3.expiresAt + 10; mysteriesTick(g); ok(!s.mysteries.decisions.pending.some(x => x.uid === p3.uid), 'expired'); ok(s.mysteries.decisions.history[0].auto);
+  const def4 = g.data.decisionDefs.find(d => d.id === 'reveal-or-secrecy'); postDecision(g, m, def4); const p4 = s.mysteries.decisions.pending.at(-1); ok(resolveDecision(g, p4.uid, 1).ok); ok(m.secret);
+});
+await test('V4 civilizations and rare events: artificial truth needs strong evidence; messages take years; rare events offer contracts or open fictional mysteries', () => {
+  const g = fresh(); const s = g.state; s.resources.credits = 90000; const m = startMystery(g, 'the-observer'); m.truth = 'artificial'; for (let i = 0; i < 7; i++) m.evidence.push({ t: 1, cid: 'detect', kind: 'step', title: 't', weight: .8, points: 'artificial', text: 'x' });
+  ok(confirmedArtificial(m)); for (const c of Object.keys(m.clues)) m.clues[c].status = 'done'; ok(proposeHypothesis(g, m.id, 'artificial', 85).ok); ok(conclude(g, m.id, 'artificial').ok); eq(m.conclusion.label, 'Confirmed fictional intelligence'); eq(s.mysteries.civs.length, 1);
+  const civ = s.mysteries.civs[0]; const tr = transmit(g, civ.id, 'greeting'); ok(tr.ok && tr.expectsReply && tr.years > 15); ok(!transmit(g, civ.id, 'mathematics').ok, 'one in transit'); const rp0 = s.resources.researchPoints; s.time.t = civ.contacts[0].replyAt + 1; g.advance(1); eq(civ.contacts[0].status, 'replied'); ok(s.resources.researchPoints >= rp0 + 200);
+  const g2 = fresh(); const s2 = g2.state; s2.resources.credits = 90000; const m2 = startMystery(g2, 'distant-signal'); m2.truth = 'artificial'; for (let i = 0; i < 3; i++) m2.evidence.push({ t: 1, cid: 'detect', kind: 'step', title: 't', weight: .8, points: 'artificial', text: 'x' }); for (const c of Object.keys(m2.clues)) m2.clues[c].status = 'done'; proposeHypothesis(g2, m2.id, 'artificial', 60); ok(conclude(g2, m2.id, 'artificial').ok); eq(m2.conclusion.label, 'Artificial origin candidate'); eq(s2.mysteries.civs.length, 0, 'weak evidence: no civilization');
+  const g3 = fresh(); const n0 = g3.state.earth.contracts.length; ok(rareEvent(g3, 'interstellar-object')); eq(g3.state.earth.contracts.length, n0 + 1); ok(rareEvent(g3, 'extraordinary')); ok(g3.state.mysteries.list.some(x => x.seeded)); ok(!rareEvent(g3, 'nope'));
+});
+await test('V4 integration: mysteries appear in the archive search and are deterministic from a seed', () => {
+  const g = fresh(); startMystery(g, 'empty-system'); const rows = searchArchive(g, { type: 'investigation' }); ok(rows.length >= 1 && /EMPTY SYSTEM/.test(rows[0].title));
+  const run = seed => { const x = Game.create(data, { seed }); x.state.flags.nextContract = 9999; x.advance(400 * DAY); return JSON.stringify(x.state.mysteries.list.map(m => [m.arc, m.truth])); };
+  eq(run(77), run(77)); ok(JSON.parse(run(77)).length >= 1, 'mysteries start by themselves');
 });
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

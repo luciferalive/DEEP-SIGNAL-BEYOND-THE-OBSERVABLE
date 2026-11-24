@@ -8,7 +8,7 @@ export const ALLOC_DEFAULT = { science: 40, operations: 30, expeditions: 20, res
 export const allocation = game => game.state.finance.allocation || ALLOC_DEFAULT;
 // Effects: science share raises research points from analysis; operations share lowers daily upkeep; expeditions share lowers mission cost;
 // the reserve share of each monthly grant is set aside as protected savings.
-export const rpMult = game => 1 + (allocation(game).science - 25) / 250;
+export const rpMult = game => (1 + (allocation(game).science - 25) / 250) * (game.state.flags.priorityUntil > game.state.time.t ? 0.8 : 1);
 export const upkeepMult = game => 1 - (allocation(game).operations - 25) / 500;
 export const expeditionCostMult = game => 1 - (allocation(game).expeditions - 25) / 400;
 export function setAllocation(game, a) {
@@ -37,6 +37,7 @@ const TEMPLATES = [
 ];
 const EMERGENCY = { id: 'emergency', kind: 'emergency', n: 1, days: 25, title: 'Emergency mission', desc: 'Earth requests an urgent in-situ mission (Expeditions, type: Emergency mission).', reward: { credits: 2600, rp: 40, rep: 4 }, penalty: { rep: 3 } };
 
+export function offerContract(game, tpl) { return offer(game, tpl); }
 function offer(game, tpl) {
   const s = game.state; const c = { uid: `ct-${s.uid++}`, ...JSON.parse(JSON.stringify(tpl)), status: 'offered', offeredAt: s.time.t, deadline: null, progress: 0 };
   s.earth.contracts.unshift(c);

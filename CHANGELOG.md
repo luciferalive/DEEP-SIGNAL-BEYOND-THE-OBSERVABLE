@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0 (V4) 
+- The Unknown: mystery engine, hypotheses, conclusions with consequences, anomaly network, decisions, rare events, unknown civilizations (all FICTIONAL, clearly labelled), explorer and archive integration.
+- Save format 6 with migration from v5 (real v5 fixture). Anomalies can have a rare FICTIONAL extraordinary cause that opens a mystery.
+
 ## 0.4.0 (V3 in progress) - milestone 3
 - Planetary exploration stages (orbital survey to prepared site) advanced by real expeditions; landing vessels needed for surface stages; hostile bodies capped.
 - Facilities: deep space relay (+25 AU range), orbital factory, volatiles and ore mines, outposts and settlements; staffing, upkeep, condition, relay-connection rules; materials import and stock.

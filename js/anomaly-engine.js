@@ -1,3 +1,4 @@
+import { startMystery } from './mysteries.js';
 // Anomaly investigation (V2). An unusual feature in raw data goes through stages:
 // DETECTION -> INITIAL ANALYSIS -> HYPOTHESIS -> INVESTIGATION -> EVIDENCE COLLECTION -> CLASSIFICATION.
 // Every anomaly has a hidden true cause drawn when it is created. Evidence is noisy; the player classifies and may be wrong,
@@ -16,10 +17,10 @@ export const CAUSES = {
   'known-object': 'Known object in the field',
   'new-discovery': 'New discovery',
   unresolved: 'Cannot be resolved with current data',
-  extraordinary: 'Extraordinary source (fictional)'
+  extraordinary: 'Extraordinary source (FICTIONAL)'
 };
 // Prior weights of the hidden cause. "extraordinary" is zero in the known universe.
-export const PRIORS = { 'instrument-error': 0.42, natural: 0.28, 'known-object': 0.16, 'new-discovery': 0.06, unresolved: 0.08, extraordinary: 0 };
+export const PRIORS = { 'instrument-error': 0.42, natural: 0.28, 'known-object': 0.16, 'new-discovery': 0.06, unresolved: 0.08, extraordinary: 0.03 };
 export const METHODS = {
   optical: { label: 'Optical re-observation', kind: 'optical', days: 0, cost: 0, instrument: true },
   radio: { label: 'Radio re-observation', kind: 'radio', days: 0, cost: 0, instrument: true },
@@ -136,6 +137,7 @@ export function classifyAnomaly(game, id, cause) {
 onSchedule('anomaly-review', (game, { id }) => {
   const s = game.state; const a = s.anomalies.find(x => x.id === id); if (!a) return;
   a.truthRevealed = true;
+  if (a.cause === 'extraordinary' && !a.seededMystery) { a.seededMystery = true; const free = game.data.mysteryArcs.filter(x => !game.state.mysteries.list.some(m => m.arc === x.id)); if (free.length) startMystery(game, free[Math.floor(game.rand() * free.length)].id, { seeded: true, from: a.id }); }
   if (a.classification === a.cause) { a.reviewed = 'upheld'; game.log(`Review upheld your classification of "${a.title}".`, 'good'); return; }
   a.status = 'disputed'; a.reviewed = 'disputed'; s.resources.reputation = Math.max(0, s.resources.reputation - 2);
   a.resolution += ` Later review disagreed: the cause was ${CAUSES[a.cause].toLowerCase()}. Reputation -2. You may re-open the case with new evidence.`;

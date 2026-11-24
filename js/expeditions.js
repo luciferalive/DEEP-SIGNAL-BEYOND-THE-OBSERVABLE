@@ -1,3 +1,4 @@
+import { mysteriesOnExpedition } from './mysteries.js';
 import { worldsOnExpedition, safetyOf } from './civilization.js';
 import { expeditionCostMult, contractsOnExpedition, emergencyActive } from './earth.js';
 // Expeditions: multi-stage missions flown by spacecraft.
@@ -168,7 +169,7 @@ function complete(game, ex) {
   addCredits(game, credits, `Mission reward: ${ex.name}`, 'income'); s.resources.researchPoints += rp; s.resources.reputation += rep; setStage(game, ex, 'COMPLETED'); ex.status = 'done'; ex.outcome = `Data quality ${Math.round(q * 100)}%`; ex.rewards = { credits, rp, rep }; s.earth.completed += 1;
   game.log(`MISSION COMPLETE: ${ex.name} (+${credits} RC, +${rp} RP, +${rep} reputation).`, 'good'); record(game, { kind: 'mission', title: `Mission completed: ${ex.name}`, text: ex.outcome, major: s.earth.completed === 1, ref: ex.id });
   game.addMessage({ from: 'Mission Operations', subject: `Mission complete: ${ex.name}`, body: `Final data quality ${Math.round(q * 100)}%. Rewards credited.`, type: 'info', fictional: false });
-  worldsOnExpedition(game, ex); contractsOnExpedition(game, ex); game.emit?.('expedition-complete', ex);
+  mysteriesOnExpedition(game, ex); worldsOnExpedition(game, ex); contractsOnExpedition(game, ex); game.emit?.('expedition-complete', ex);
 }
 export function abortExpedition(game, id) {
   const s = game.state, ex = s.expeditions.find(x => x.id === id); if (!ex || ['COMPLETED', 'FAILED', 'CANCELLED', 'ABORTED', 'RECOVERY', 'ANALYSIS'].includes(ex.stage)) return { ok: false, error: 'This mission cannot be aborted now.' };

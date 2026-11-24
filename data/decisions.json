@@ -1,0 +1,116 @@
+{
+ "decisions": [
+  {
+   "id": "publish-uncertain",
+   "stage": "VERIFICATION",
+   "title": "Publish an uncertain finding?",
+   "text": "The detection has been verified once. You can publish a preliminary report now, or keep investigating quietly.",
+   "options": [
+    {
+     "label": "Publish preliminary report",
+     "effects": {
+      "rep": 2,
+      "rp": 10,
+      "retractionRisk": 0.35
+     },
+     "note": "+2 reputation now. If the final conclusion disagrees you must retract (-3 reputation)."
+    },
+    {
+     "label": "Keep investigating",
+     "effects": {},
+     "note": "No immediate reward."
+    }
+   ]
+  },
+  {
+   "id": "prioritise-signal",
+   "stage": "CHARACTERIZATION",
+   "title": "Prioritise this investigation over routine research?",
+   "text": "The characterisation is demanding. Redirecting the laboratory will speed the investigation but slow ordinary analysis.",
+   "options": [
+    {
+     "label": "Prioritise for 30 days",
+     "effects": {
+      "priorityDays": 30
+     },
+     "note": "Evidence from new steps is 10% more reliable; research points from analysis are 20% lower for 30 days."
+    },
+    {
+     "label": "Keep routine research",
+     "effects": {},
+     "note": "No change."
+    }
+   ]
+  },
+  {
+   "id": "probe-or-crew",
+   "stage": "PATTERN ANALYSIS",
+   "title": "Send an autonomous probe or a crewed mission?",
+   "text": "The source needs on-site data. A probe is cheap and expendable; a crewed mission gets better data but puts people at risk.",
+   "options": [
+    {
+     "label": "Autonomous probe",
+     "effects": {
+      "credits": -400
+     },
+     "note": "Costs 400 RC. No risk to people."
+    },
+    {
+     "label": "Crewed mission",
+     "effects": {
+      "credits": -1200,
+      "reliabilityBonus": 0.12,
+      "crewStress": 8
+     },
+     "note": "Costs 1200 RC. Better evidence (+12% reliability) but crew morale drops."
+    }
+   ]
+  },
+  {
+   "id": "preserve-or-experiment",
+   "stage": "SOURCE INVESTIGATION",
+   "title": "Preserve the evidence or run a destructive experiment?",
+   "text": "A destructive test could resolve the question, but if it fails the best sample is lost for good.",
+   "options": [
+    {
+     "label": "Run the experiment",
+     "effects": {
+      "credits": -600,
+      "experiment": true
+     },
+     "note": "Large evidence gain on success; 30% chance to lose the best evidence item."
+    },
+    {
+     "label": "Preserve the evidence",
+     "effects": {
+      "rp": 8
+     },
+     "note": "Safe. The sample is archived for future methods."
+    }
+   ]
+  },
+  {
+   "id": "reveal-or-secrecy",
+   "stage": "CONCLUSION-ARTIFICIAL",
+   "title": "Reveal the discovery or keep it secret?",
+   "text": "Evidence points to a fictional intelligent source. Announce it to civilization, or maintain secrecy while you learn more?",
+   "options": [
+    {
+     "label": "Reveal publicly",
+     "effects": {
+      "rep": 4,
+      "rp": 30
+     },
+     "note": "+4 reputation."
+    },
+    {
+     "label": "Maintain secrecy",
+     "effects": {
+      "secrecy": true
+     },
+     "note": "No reward now. About 1 in 3 chance the secret leaks within 4 months, costing 3 reputation."
+    }
+   ]
+  }
+ ]
+}

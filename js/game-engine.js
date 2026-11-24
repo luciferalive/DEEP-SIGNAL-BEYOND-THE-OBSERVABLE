@@ -1,3 +1,4 @@
+import { mysteriesTick } from './mysteries.js';
 import { civilizationDaily, relayBonus } from './civilization.js';
 import './interstellar.js';
 import './shipyard.js';
@@ -78,7 +79,7 @@ export class Game {
     eventsTick(this); missionControlTick(this); expeditionsTick(this);
     const day = Math.floor(s.time.t / DAY);
     if (s.finance.lastUpkeepDay === undefined) s.finance.lastUpkeepDay = Math.floor((s.time.t - dt) / DAY);
-    while (s.finance.lastUpkeepDay < day) { s.finance.lastUpkeepDay += 1; dailyFinance(this); civilizationDaily(this); }
+    while (s.finance.lastUpkeepDay < day) { s.finance.lastUpkeepDay += 1; dailyFinance(this); civilizationDaily(this); mysteriesTick(this); }
     this.sampleHistory();
   }
   sampleHistory() {

@@ -1,3 +1,4 @@
+import { fictionalObjects } from '../mysteries.js';
 import { esc, num, badge, panel, head, empty, select, tabs, unknown, val, btn } from '../ui-components.js';
 import { search, GROUPS, formatRA, formatDec, formatDistance, formatUncertainty, formatQuantity, formatPlain, getObject, distanceLy } from '../astronomy-database.js';
 import { canObserve } from '../observatory.js';
@@ -48,10 +49,10 @@ function detail(ui, o) {
 
 export function render(ui) {
   const g = ui.game; const st = ui.s; const db = g.data.db;
-  const list = search(db, { query: st.query, group: st.group, bookmarks: st.bookmarksOnly ? g.state.bookmarks : null });
-  const sel = st.object ? getObject(db, st.object) : null;
+  const fic = fictionalObjects(g).filter(o => (st.group === 'all' || st.group === 'unknown') && !st.bookmarksOnly && (!st.query.trim() || [o.name, o.designation, o.classification].some(v => String(v).toLowerCase().includes(st.query.trim().toLowerCase())))); const list = [...fic, ...search(db, { query: st.query, group: st.group, bookmarks: st.bookmarksOnly ? g.state.bookmarks : null })];
+  const sel = st.object ? (fictionalObjects(g).find(o => o.id === st.object) || getObject(db, st.object)) : null;
   const tracked = g.state.tracked.map(id => getObject(db, id)).filter(Boolean);
-  return `${head('Astronomy', 'Universe Explorer', 'A database of real astronomical objects. Values come from published catalogues; anything not known is marked DATA UNKNOWN. Nothing here is fictional.')}
+  return `${head('Astronomy', 'Universe Explorer', 'A database of real astronomical objects. Values come from published catalogues; anything not known is marked DATA UNKNOWN. The only fictional entries are the ones marked FICTIONAL, discovered through investigations in The Unknown.')}
   <div class="panel" style="margin-bottom:1rem"><div class="row between"><div class="panel-title" style="margin:0">Map</div>${tabs([['sky', 'Sky map'], ['solar', 'Solar System']], st.mapMode, 'map-mode')}</div>${st.mapMode === 'solar' ? orrery(ui, db.list) : skyMap(ui, db.list)}</div>
   <div class="grid cols-side">
     <section class="panel"><div class="stack">

@@ -18,15 +18,16 @@ import { hire, startTraining, setShift } from './crew-management.js';
 import { startPublication } from './publications.js';
 import { setReserve } from './finance.js';
 import { refuel, repairSystem } from './spacecraft.js';
+import { startClue, requestFollowup, proposeHypothesis, withdrawHypothesis, conclude, reopenMystery, resolveDecision, transmit } from './mysteries.js';
 import { buildFacility, staffFacility, serviceFacility, importMaterials, setPolicy } from './civilization.js';
 import { saveDesign, deleteDesign, buildShip } from './shipyard.js';
 import { launchProbe } from './interstellar.js';
 import { acceptContract, declineContract, setAllocation, releaseSavings, ALLOC_KEYS } from './earth.js';
 import * as V from './views/index.js';
 
-const NAV_GROUPS = { command: 'Station', explorer: 'Science', observatory: 'Science', lab: 'Science', spacecraft: 'Fleet', expeditions: 'Fleet', shipyard: 'Fleet', worlds: 'Civilization', interstellar: 'Civilization', civilization: 'Civilization', missions: 'Earth', crew: 'Station', tech: 'Science', events: 'Universe', archive: 'Science', anomalies: 'Universe', comms: 'Earth', finance: 'Earth', station: 'Station', publications: 'Science', history: 'Universe', settings: 'System' };
-const NAV = [['command', 'Command Centre'], ['crew', 'Crew Management'], ['station', 'Station Infrastructure'], ['explorer', 'Universe Explorer'], ['observatory', 'Observatory'], ['lab', 'Research Laboratory'], ['tech', 'Technology Tree'], ['archive', 'Discovery Archive'], ['publications', 'Publications'], ['spacecraft', 'Spacecraft'], ['shipyard', 'Shipyard'], ['expeditions', 'Expeditions'], ['worlds', 'Worlds and Facilities'], ['interstellar', 'Interstellar'], ['civilization', 'Civilization'], ['missions', 'Mission Control'], ['comms', 'Communications'], ['finance', 'Financial Management'], ['events', 'Cosmic Events'], ['anomalies', 'Anomaly Investigation'], ['history', 'Civilization History'], ['settings', 'Settings']];
-const VIEWS = { command: V.command, explorer: V.explorer, observatory: V.observatory, lab: V.lab, spacecraft: V.spacecraft, shipyard: V.shipyard, worlds: V.worlds, interstellar: V.interstellar, civilization: V.civilization, expeditions: V.expeditions, missions: V.missions, crew: V.crew, tech: V.tech, events: V.events, archive: V.archive, anomalies: V.anomalies, comms: V.comms, finance: V.finance, station: V.station, publications: V.publications, history: V.history, settings: V.settings };
+const NAV_GROUPS = { command: 'Station', explorer: 'Science', observatory: 'Science', lab: 'Science', spacecraft: 'Fleet', expeditions: 'Fleet', shipyard: 'Fleet', worlds: 'Civilization', interstellar: 'Civilization', civilization: 'Civilization', missions: 'Earth', crew: 'Station', tech: 'Science', events: 'Universe', archive: 'Science', anomalies: 'Universe', comms: 'Earth', finance: 'Earth', station: 'Station', publications: 'Science', history: 'Universe', mysteries: 'Universe', settings: 'System' };
+const NAV = [['command', 'Command Centre'], ['crew', 'Crew Management'], ['station', 'Station Infrastructure'], ['explorer', 'Universe Explorer'], ['observatory', 'Observatory'], ['lab', 'Research Laboratory'], ['tech', 'Technology Tree'], ['archive', 'Discovery Archive'], ['publications', 'Publications'], ['spacecraft', 'Spacecraft'], ['shipyard', 'Shipyard'], ['expeditions', 'Expeditions'], ['worlds', 'Worlds and Facilities'], ['interstellar', 'Interstellar'], ['civilization', 'Civilization'], ['missions', 'Mission Control'], ['comms', 'Communications'], ['finance', 'Financial Management'], ['events', 'Cosmic Events'], ['anomalies', 'Anomaly Investigation'], ['mysteries', 'The Unknown'], ['history', 'Civilization History'], ['settings', 'Settings']];
+const VIEWS = { command: V.command, explorer: V.explorer, observatory: V.observatory, lab: V.lab, spacecraft: V.spacecraft, shipyard: V.shipyard, worlds: V.worlds, interstellar: V.interstellar, civilization: V.civilization, expeditions: V.expeditions, missions: V.missions, crew: V.crew, tech: V.tech, events: V.events, archive: V.archive, anomalies: V.anomalies, mysteries: V.mysteries, comms: V.comms, finance: V.finance, station: V.station, publications: V.publications, history: V.history, settings: V.settings };
 const $ = s => document.querySelector(s);
 
 export class UI {
@@ -76,7 +77,7 @@ export class UI {
     set('top-res', `${Math.round(s.resources.credits).toLocaleString('en-US')} RC`);
     document.querySelectorAll('.speed button').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.id === (s.time.paused ? 0 : s.time.speed))));
     const unread = s.messages.filter(m => !m.read).length, offers = s.missions.offered.length, an = s.anomalies.filter(a => a.status === 'unresolved').length, ev = (s.events.pending ? 1 : 0) + activeTransients(this.game).filter(r => r.respondable).length;
-    const pips = { comms: [unread, false], missions: [offers, false], anomalies: [an, false], events: [ev, !!s.events.pending] };
+    const pips = { comms: [unread, false], missions: [offers, false], anomalies: [an, false], events: [ev, !!s.events.pending], mysteries: [s.mysteries.decisions.pending.length, true] };
     document.querySelectorAll('.nav-item').forEach(n => { const id = n.dataset.id; n.setAttribute('aria-current', id === this.view ? 'page' : 'false'); const p = n.querySelector('.pip'); const v = pips[id]; if (v && v[0]) { p.hidden = false; p.textContent = v[0]; p.classList.toggle('warn', v[1]); } else p.hidden = true; });
   }
   watchAlerts() { const p = this.game.state.events.pending; const id = p ? p.id + p.t : null; if (id && id !== this.alerted) { this.alerted = id; this.toast('A cosmic event needs your decision. See Cosmic Events.', 'warn'); } if (!id) this.alerted = null; }
@@ -183,6 +184,16 @@ export class UI {
       case 'design-build': return this.res(buildShip(g, id), 'Construction started.');
       case 'probe-set': s.probeTarget = $('#probe-target')?.value; return this.render(true);
       case 'probe-launch': return this.res(launchProbe(g, $('#probe-target')?.value || s.probeTarget || ''), 'Probe launched.');
+      case 'my-tab': s.myTab = id; return this.render(true);
+      case 'my-select': s.myId = id; s.myTab = 'cases'; return this.render(true);
+      case 'my-clue': return this.res(startClue(g, id, v), 'Step started.');
+      case 'my-followup': return this.res(requestFollowup(g, id, v), 'Follow-up requested.');
+      case 'my-hyp': return this.res(proposeHypothesis(g, id, $('#hy-cause')?.value, $('#hy-conf')?.value), 'Hypothesis recorded.');
+      case 'my-withdraw': return this.res(withdrawHypothesis(g, id, v), 'Hypothesis withdrawn.');
+      case 'my-conclude': return this.res(conclude(g, id, v), 'Investigation concluded.');
+      case 'my-reopen': return this.res(reopenMystery(g, id), 'Case re-opened.');
+      case 'decision-resolve': return this.res(resolveDecision(g, id, +v), 'Decision made.');
+      case 'civ-transmit': return this.res(transmit(g, id, v), 'Message sent.');
       case 'buy-instrument': return this.res(buyInstrument(g, id), 'Instrument purchased.');
       case 'an-initial': return this.res(startInitialAnalysis(g, id), 'Initial analysis started.');
       case 'an-hypothesis': return this.res(setHypothesis(g, id, v), 'Working hypothesis set.');

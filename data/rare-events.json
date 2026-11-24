@@ -1,0 +1,74 @@
+{
+ "events": [
+  {
+   "id": "interstellar-object",
+   "title": "Interstellar object detected",
+   "label": "REAL-STYLE (similar objects have been observed)",
+   "text": "A small object on a hyperbolic orbit is passing through the Solar System and will be observable for weeks.",
+   "contract": {
+    "kind": "datasets",
+    "dataKind": "optical",
+    "n": 2,
+    "days": 25,
+    "reward": {
+     "credits": 1500,
+     "rp": 40,
+     "rep": 2
+    },
+    "title": "Observe the interstellar visitor",
+    "desc": "Analyse 2 optical datasets within 25 days."
+   },
+   "weight": 3
+  },
+  {
+   "id": "gw-burst",
+   "title": "Unusual gravitational signal",
+   "label": "REAL-STYLE",
+   "text": "A strong gravitational-wave burst crossed the Solar System. Follow-up data could tell what produced it.",
+   "contract": {
+    "kind": "datasets",
+    "dataKind": "gravitational",
+    "n": 1,
+    "days": 20,
+    "reward": {
+     "credits": 1800,
+     "rp": 50,
+     "rep": 2
+    },
+    "title": "Follow up the gravitational burst",
+    "desc": "Analyse 1 gravitational dataset within 20 days."
+   },
+   "weight": 2,
+   "needsKind": "gravitational"
+  },
+  {
+   "id": "multi-system-flare",
+   "title": "Multi-system stellar flare",
+   "label": "REAL-STYLE",
+   "text": "Several nearby stars flared within days of each other. Surveys are asking for coordinated observations.",
+   "contract": {
+    "kind": "datasets",
+    "dataKind": "spectral",
+    "n": 2,
+    "days": 30,
+    "reward": {
+     "credits": 1400,
+     "rp": 35,
+     "rep": 2
+    },
+    "title": "Coordinated flare survey",
+    "desc": "Analyse 2 spectral datasets within 30 days."
+   },
+   "weight": 2,
+   "needsKind": "spectral"
+  },
+  {
+   "id": "extraordinary",
+   "title": "Extraordinary detection",
+   "label": "FICTIONAL",
+   "text": "An unexplained detection that fits no known category has appeared in several instruments at once. A new investigation has been opened.",
+   "seedMystery": true,
+   "weight": 1
+  }
+ ]
+}

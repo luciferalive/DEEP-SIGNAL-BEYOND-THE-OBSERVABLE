@@ -1,0 +1,876 @@
+{
+ "truths": [
+  "natural",
+  "interference",
+  "instrumental",
+  "unknown",
+  "artificial"
+ ],
+ "arcs": [
+  {
+   "id": "silent-star",
+   "title": "THE SILENT STAR",
+   "theme": "signal",
+   "blurb": "A catalogued star that has always emitted a faint periodic radio pulse has fallen silent.",
+   "truthWeights": {
+    "natural": 0.34,
+    "interference": 0.08,
+    "instrumental": 0.14,
+    "unknown": 0.24,
+    "artificial": 0.2
+   },
+   "tags": [
+    "signal",
+    "star"
+   ],
+   "links": [
+    "distant-signal"
+   ],
+   "unlock": {
+    "minDay": 20,
+    "tier": "Research Station"
+   },
+   "object": {
+    "name": "DS-1 (the silent star)",
+    "designation": "DS-1",
+    "classification": "Star with an unexplained radio cut-off",
+    "group": "unknown",
+    "ra_deg": 212.4,
+    "dec_deg": -18.3,
+    "distance_ly": 41,
+    "characteristics": "FICTIONAL. A star whose periodic radio emission ended abruptly."
+   },
+   "civ": null,
+   "clues": [
+    {
+     "id": "detect",
+     "title": "Initial detection",
+     "step": {
+      "kind": "observe",
+      "instrument": "radio",
+      "hours": 12,
+      "cost": 80
+     },
+     "points": {
+      "natural": "A faint, repeatable change in the star's radio emission fits what is known about a stellar magnetic cycle ending.",
+      "interference": "The feature in the star's radio emission lines up with a known terrestrial or station interference pattern.",
+      "instrumental": "The same feature shows up in calibration frames taken with the star's radio emission out of the field, so the instrument is the likely source.",
+      "unknown": "A change in the star's radio emission that does not match any catalogued behaviour. No obvious cause.",
+      "artificial": "A change in the star's radio emission with an oddly regular structure: a pulse train that stops and restarts on a 3.1-hour schedule."
+     }
+    },
+    {
+     "id": "verify",
+     "title": "Independent verification",
+     "step": {
+      "kind": "observe",
+      "instrument": "optical",
+      "hours": 24,
+      "cost": 160
+     },
+     "points": {
+      "natural": "A second look confirms the change and its slow drift, consistent with a stellar magnetic cycle ending.",
+      "interference": "The second dataset shows the feature moving with the station's own cycles, not with the sky.",
+      "instrumental": "A cross-check with a second detector does not reproduce the feature.",
+      "unknown": "A second independent look reproduces the feature. It is real but unexplained.",
+      "artificial": "The feature repeats in the second dataset with the same structure: a pulse train that stops and restarts on a 3.1-hour schedule."
+     }
+    },
+    {
+     "id": "characterise",
+     "title": "Characterisation",
+     "step": {
+      "kind": "research",
+      "tech": "high-gain-antennas",
+      "data": {
+       "radio": 2
+      }
+     },
+     "points": {
+      "natural": "Its spectrum and timing are broad and smooth, as expected for a stellar magnetic cycle ending.",
+      "interference": "Its spectrum is narrow and sits on a band used by human equipment.",
+      "instrumental": "Its amplitude follows the detector temperature and gain, not the target.",
+      "unknown": "Its spectrum and timing match nothing in the reference tables.",
+      "artificial": "Its spectrum is unusually narrow and stable, and its timing is too regular for a natural process: a pulse train that stops and restarts on a 3.1-hour schedule."
+     }
+    },
+    {
+     "id": "pattern",
+     "title": "Pattern analysis",
+     "step": {
+      "kind": "monitor",
+      "days": 30,
+      "cost": 300
+     },
+     "points": {
+      "natural": "Over a month the pattern wanders irregularly and decays, like a stellar magnetic cycle ending.",
+      "interference": "The pattern vanishes whenever the station changes its operating mode.",
+      "instrumental": "The pattern appears and disappears with detector maintenance.",
+      "unknown": "The pattern persists, is not periodic, and is not obviously stochastic. Different analyses disagree.",
+      "artificial": "The pattern repeats on a fixed cycle and carries structure that survives re-analysis: a pulse train that stops and restarts on a 3.1-hour schedule."
+     }
+    },
+    {
+     "id": "source",
+     "title": "Source investigation",
+     "step": {
+      "kind": "mission",
+      "expType": "radio-signal-investigation"
+     },
+     "points": {
+      "natural": "The source region shows an ordinary physical environment, consistent with a stellar magnetic cycle ending.",
+      "interference": "No source is found at the position; the signal came from within the Solar System's own transmissions.",
+      "instrumental": "On-site instruments see nothing at all. The earlier detections were produced by the detector chain.",
+      "unknown": "On-site measurements find a real source, but its nature cannot be classified with current knowledge.",
+      "artificial": "On-site measurements find a compact source whose behaviour is hard to explain without design: a pulse train that stops and restarts on a 3.1-hour schedule."
+     }
+    }
+   ],
+   "label": "FICTIONAL storyline built on real observing methods"
+  },
+  {
+   "id": "forgotten-transmission",
+   "title": "THE FORGOTTEN TRANSMISSION",
+   "theme": "signal",
+   "blurb": "Decades-old archive data from before the station holds a short structured burst that nobody analysed.",
+   "truthWeights": {
+    "natural": 0.2,
+    "interference": 0.15,
+    "instrumental": 0.2,
+    "unknown": 0.15,
+    "artificial": 0.3
+   },
+   "tags": [
+    "signal",
+    "archive"
+   ],
+   "links": [
+    "distant-signal",
+    "the-observer"
+   ],
+   "unlock": {
+    "minDay": 45,
+    "tier": "Research Station"
+   },
+   "object": {
+    "name": "FT-7 (burst source)",
+    "designation": "FT-7",
+    "classification": "Unlocated structured radio source",
+    "group": "unknown",
+    "ra_deg": 84.9,
+    "dec_deg": 33.1,
+    "distance_ly": 120,
+    "characteristics": "FICTIONAL. Source region of an archived structured radio burst."
+   },
+   "civ": null,
+   "clues": [
+    {
+     "id": "detect",
+     "title": "Initial detection",
+     "step": {
+      "kind": "observe",
+      "instrument": "radio",
+      "hours": 12,
+      "cost": 80
+     },
+     "points": {
+      "natural": "A faint, repeatable change in the archived burst fits what is known about a pulsar-like emitter.",
+      "interference": "The feature in the archived burst lines up with a known terrestrial or station interference pattern.",
+      "instrumental": "The same feature shows up in calibration frames taken with the archived burst out of the field, so the instrument is the likely source.",
+      "unknown": "A change in the archived burst that does not match any catalogued behaviour. No obvious cause.",
+      "artificial": "A change in the archived burst with an oddly regular structure: a nested sequence of pulses grouped in primes."
+     }
+    },
+    {
+     "id": "verify",
+     "title": "Independent verification",
+     "step": {
+      "kind": "observe",
+      "instrument": "spectral",
+      "hours": 24,
+      "cost": 160
+     },
+     "points": {
+      "natural": "A second look confirms the change and its slow drift, consistent with a pulsar-like emitter.",
+      "interference": "The second dataset shows the feature moving with the station's own cycles, not with the sky.",
+      "instrumental": "A cross-check with a second detector does not reproduce the feature.",
+      "unknown": "A second independent look reproduces the feature. It is real but unexplained.",
+      "artificial": "The feature repeats in the second dataset with the same structure: a nested sequence of pulses grouped in primes."
+     }
+    },
+    {
+     "id": "characterise",
+     "title": "Characterisation",
+     "step": {
+      "kind": "research",
+      "tech": "quantum-mechanics",
+      "data": {
+       "radio": 2
+      }
+     },
+     "points": {
+      "natural": "Its spectrum and timing are broad and smooth, as expected for a pulsar-like emitter.",
+      "interference": "Its spectrum is narrow and sits on a band used by human equipment.",
+      "instrumental": "Its amplitude follows the detector temperature and gain, not the target.",
+      "unknown": "Its spectrum and timing match nothing in the reference tables.",
+      "artificial": "Its spectrum is unusually narrow and stable, and its timing is too regular for a natural process: a nested sequence of pulses grouped in primes."
+     }
+    },
+    {
+     "id": "pattern",
+     "title": "Pattern analysis",
+     "step": {
+      "kind": "monitor",
+      "days": 30,
+      "cost": 300
+     },
+     "points": {
+      "natural": "Over a month the pattern wanders irregularly and decays, like a pulsar-like emitter.",
+      "interference": "The pattern vanishes whenever the station changes its operating mode.",
+      "instrumental": "The pattern appears and disappears with detector maintenance.",
+      "unknown": "The pattern persists, is not periodic, and is not obviously stochastic. Different analyses disagree.",
+      "artificial": "The pattern repeats on a fixed cycle and carries structure that survives re-analysis: a nested sequence of pulses grouped in primes."
+     }
+    },
+    {
+     "id": "source",
+     "title": "Source investigation",
+     "step": {
+      "kind": "mission",
+      "expType": "radio-signal-investigation"
+     },
+     "points": {
+      "natural": "The source region shows an ordinary physical environment, consistent with a pulsar-like emitter.",
+      "interference": "No source is found at the position; the signal came from within the Solar System's own transmissions.",
+      "instrumental": "On-site instruments see nothing at all. The earlier detections were produced by the detector chain.",
+      "unknown": "On-site measurements find a real source, but its nature cannot be classified with current knowledge.",
+      "artificial": "On-site measurements find a compact source whose behaviour is hard to explain without design: a nested sequence of pulses grouped in primes."
+     }
+    }
+   ],
+   "label": "FICTIONAL storyline built on real observing methods"
+  },
+  {
+   "id": "impossible-planet",
+   "title": "THE IMPOSSIBLE PLANET",
+   "theme": "object",
+   "blurb": "A planet in the exoplanet data appears too dense and too close to its star to have formed there.",
+   "truthWeights": {
+    "natural": 0.42,
+    "interference": 0.02,
+    "instrumental": 0.18,
+    "unknown": 0.28,
+    "artificial": 0.1
+   },
+   "tags": [
+    "object",
+    "exoplanet"
+   ],
+   "links": [
+    "empty-system"
+   ],
+   "unlock": {
+    "minDay": 60,
+    "tier": "Space Programme",
+    "tech": "exoplanet-science"
+   },
+   "object": {
+    "name": "DS-3 b (the impossible planet)",
+    "designation": "DS-3 b",
+    "classification": "Planet with an unexplained density and orbit",
+    "group": "unknown",
+    "ra_deg": 301.2,
+    "dec_deg": -47.9,
+    "distance_ly": 88,
+    "characteristics": "FICTIONAL. A planet that existing formation models cannot explain."
+   },
+   "civ": null,
+   "clues": [
+    {
+     "id": "detect",
+     "title": "Initial detection",
+     "step": {
+      "kind": "observe",
+      "instrument": "optical",
+      "hours": 12,
+      "cost": 80
+     },
+     "points": {
+      "natural": "A faint, repeatable change in the planet's transit signal fits what is known about an unusual but possible formation history.",
+      "interference": "The feature in the planet's transit signal lines up with a known terrestrial or station interference pattern.",
+      "instrumental": "The same feature shows up in calibration frames taken with the planet's transit signal out of the field, so the instrument is the likely source.",
+      "unknown": "A change in the planet's transit signal that does not match any catalogued behaviour. No obvious cause.",
+      "artificial": "A change in the planet's transit signal with an oddly regular structure: a transit shape with flat, geometric edges."
+     }
+    },
+    {
+     "id": "verify",
+     "title": "Independent verification",
+     "step": {
+      "kind": "observe",
+      "instrument": "spectral",
+      "hours": 24,
+      "cost": 160
+     },
+     "points": {
+      "natural": "A second look confirms the change and its slow drift, consistent with an unusual but possible formation history.",
+      "interference": "The second dataset shows the feature moving with the station's own cycles, not with the sky.",
+      "instrumental": "A cross-check with a second detector does not reproduce the feature.",
+      "unknown": "A second independent look reproduces the feature. It is real but unexplained.",
+      "artificial": "The feature repeats in the second dataset with the same structure: a transit shape with flat, geometric edges."
+     }
+    },
+    {
+     "id": "characterise",
+     "title": "Characterisation",
+     "step": {
+      "kind": "research",
+      "tech": "exoplanet-science",
+      "data": {
+       "spectral": 2
+      }
+     },
+     "points": {
+      "natural": "Its spectrum and timing are broad and smooth, as expected for an unusual but possible formation history.",
+      "interference": "Its spectrum is narrow and sits on a band used by human equipment.",
+      "instrumental": "Its amplitude follows the detector temperature and gain, not the target.",
+      "unknown": "Its spectrum and timing match nothing in the reference tables.",
+      "artificial": "Its spectrum is unusually narrow and stable, and its timing is too regular for a natural process: a transit shape with flat, geometric edges."
+     }
+    },
+    {
+     "id": "pattern",
+     "title": "Pattern analysis",
+     "step": {
+      "kind": "monitor",
+      "days": 30,
+      "cost": 300
+     },
+     "points": {
+      "natural": "Over a month the pattern wanders irregularly and decays, like an unusual but possible formation history.",
+      "interference": "The pattern vanishes whenever the station changes its operating mode.",
+      "instrumental": "The pattern appears and disappears with detector maintenance.",
+      "unknown": "The pattern persists, is not periodic, and is not obviously stochastic. Different analyses disagree.",
+      "artificial": "The pattern repeats on a fixed cycle and carries structure that survives re-analysis: a transit shape with flat, geometric edges."
+     }
+    },
+    {
+     "id": "source",
+     "title": "Source investigation",
+     "step": {
+      "kind": "mission",
+      "expType": "planetary-survey"
+     },
+     "points": {
+      "natural": "The source region shows an ordinary physical environment, consistent with an unusual but possible formation history.",
+      "interference": "No source is found at the position; the signal came from within the Solar System's own transmissions.",
+      "instrumental": "On-site instruments see nothing at all. The earlier detections were produced by the detector chain.",
+      "unknown": "On-site measurements find a real source, but its nature cannot be classified with current knowledge.",
+      "artificial": "On-site measurements find a compact source whose behaviour is hard to explain without design: a transit shape with flat, geometric edges."
+     }
+    }
+   ],
+   "label": "FICTIONAL storyline built on real observing methods"
+  },
+  {
+   "id": "dark-structure",
+   "title": "THE DARK STRUCTURE",
+   "theme": "structure",
+   "blurb": "A background galaxy is lensed as if by a large mass, yet no matching object is visible at any wavelength.",
+   "truthWeights": {
+    "natural": 0.3,
+    "interference": 0.02,
+    "instrumental": 0.18,
+    "unknown": 0.38,
+    "artificial": 0.12
+   },
+   "tags": [
+    "structure",
+    "gravity"
+   ],
+   "links": [
+    "empty-system"
+   ],
+   "unlock": {
+    "minDay": 100,
+    "tier": "Space Programme",
+    "tech": "gravitational-physics"
+   },
+   "object": {
+    "name": "DS-4 (the dark structure)",
+    "designation": "DS-4",
+    "classification": "Unseen lensing mass",
+    "group": "unknown",
+    "ra_deg": 150.1,
+    "dec_deg": 2.2,
+    "distance_ly": 1400000000.0,
+    "characteristics": "FICTIONAL. A lensing mass with no visible counterpart."
+   },
+   "civ": null,
+   "clues": [
+    {
+     "id": "detect",
+     "title": "Initial detection",
+     "step": {
+      "kind": "observe",
+      "instrument": "infrared",
+      "hours": 12,
+      "cost": 80
+     },
+     "points": {
+      "natural": "A faint, repeatable change in the lensed background field fits what is known about an unusually compact dark-matter clump.",
+      "interference": "The feature in the lensed background field lines up with a known terrestrial or station interference pattern.",
+      "instrumental": "The same feature shows up in calibration frames taken with the lensed background field out of the field, so the instrument is the likely source.",
+      "unknown": "A change in the lensed background field that does not match any catalogued behaviour. No obvious cause.",
+      "artificial": "A change in the lensed background field with an oddly regular structure: an arrangement of lensing peaks on a regular lattice."
+     }
+    },
+    {
+     "id": "verify",
+     "title": "Independent verification",
+     "step": {
+      "kind": "observe",
+      "instrument": "gravitational",
+      "hours": 24,
+      "cost": 160
+     },
+     "points": {
+      "natural": "A second look confirms the change and its slow drift, consistent with an unusually compact dark-matter clump.",
+      "interference": "The second dataset shows the feature moving with the station's own cycles, not with the sky.",
+      "instrumental": "A cross-check with a second detector does not reproduce the feature.",
+      "unknown": "A second independent look reproduces the feature. It is real but unexplained.",
+      "artificial": "The feature repeats in the second dataset with the same structure: an arrangement of lensing peaks on a regular lattice."
+     }
+    },
+    {
+     "id": "characterise",
+     "title": "Characterisation",
+     "step": {
+      "kind": "research",
+      "tech": "gravitational-physics",
+      "data": {
+       "gravitational": 2
+      }
+     },
+     "points": {
+      "natural": "Its spectrum and timing are broad and smooth, as expected for an unusually compact dark-matter clump.",
+      "interference": "Its spectrum is narrow and sits on a band used by human equipment.",
+      "instrumental": "Its amplitude follows the detector temperature and gain, not the target.",
+      "unknown": "Its spectrum and timing match nothing in the reference tables.",
+      "artificial": "Its spectrum is unusually narrow and stable, and its timing is too regular for a natural process: an arrangement of lensing peaks on a regular lattice."
+     }
+    },
+    {
+     "id": "pattern",
+     "title": "Pattern analysis",
+     "step": {
+      "kind": "monitor",
+      "days": 30,
+      "cost": 300
+     },
+     "points": {
+      "natural": "Over a month the pattern wanders irregularly and decays, like an unusually compact dark-matter clump.",
+      "interference": "The pattern vanishes whenever the station changes its operating mode.",
+      "instrumental": "The pattern appears and disappears with detector maintenance.",
+      "unknown": "The pattern persists, is not periodic, and is not obviously stochastic. Different analyses disagree.",
+      "artificial": "The pattern repeats on a fixed cycle and carries structure that survives re-analysis: an arrangement of lensing peaks on a regular lattice."
+     }
+    },
+    {
+     "id": "source",
+     "title": "Source investigation",
+     "step": {
+      "kind": "mission",
+      "expType": "gravitational-wave-research"
+     },
+     "points": {
+      "natural": "The source region shows an ordinary physical environment, consistent with an unusually compact dark-matter clump.",
+      "interference": "No source is found at the position; the signal came from within the Solar System's own transmissions.",
+      "instrumental": "On-site instruments see nothing at all. The earlier detections were produced by the detector chain.",
+      "unknown": "On-site measurements find a real source, but its nature cannot be classified with current knowledge.",
+      "artificial": "On-site measurements find a compact source whose behaviour is hard to explain without design: an arrangement of lensing peaks on a regular lattice."
+     }
+    }
+   ],
+   "label": "FICTIONAL storyline built on real observing methods"
+  },
+  {
+   "id": "the-observer",
+   "title": "THE OBSERVER",
+   "theme": "signal",
+   "blurb": "Faint echoes of the station's own transmissions return slightly changed.",
+   "truthWeights": {
+    "natural": 0.18,
+    "interference": 0.22,
+    "instrumental": 0.2,
+    "unknown": 0.15,
+    "artificial": 0.25
+   },
+   "tags": [
+    "signal",
+    "comms"
+   ],
+   "links": [
+    "forgotten-transmission"
+   ],
+   "unlock": {
+    "minDay": 150,
+    "tier": "Space Programme",
+    "tech": "laser-communications"
+   },
+   "object": {
+    "name": "DS-5 (the observer)",
+    "designation": "DS-5",
+    "classification": "Unlocated echo source",
+    "group": "unknown",
+    "ra_deg": 12.0,
+    "dec_deg": 58.0,
+    "distance_ly": 9.5,
+    "characteristics": "FICTIONAL. The apparent origin of altered echoes."
+   },
+   "civ": {
+    "name": "The Observers (provisional)",
+    "distanceLy": 9.5,
+    "disposition": "curious",
+    "reason": "A long-lived automated listening post that replies only to signals it has already heard."
+   },
+   "clues": [
+    {
+     "id": "detect",
+     "title": "Initial detection",
+     "step": {
+      "kind": "observe",
+      "instrument": "radio",
+      "hours": 12,
+      "cost": 80
+     },
+     "points": {
+      "natural": "A faint, repeatable change in the returning echoes fits what is known about a distant reflecting cloud.",
+      "interference": "The feature in the returning echoes lines up with a known terrestrial or station interference pattern.",
+      "instrumental": "The same feature shows up in calibration frames taken with the returning echoes out of the field, so the instrument is the likely source.",
+      "unknown": "A change in the returning echoes that does not match any catalogued behaviour. No obvious cause.",
+      "artificial": "A change in the returning echoes with an oddly regular structure: changes in the echoes that track the content of what was sent."
+     }
+    },
+    {
+     "id": "verify",
+     "title": "Independent verification",
+     "step": {
+      "kind": "observe",
+      "instrument": "infrared",
+      "hours": 24,
+      "cost": 160
+     },
+     "points": {
+      "natural": "A second look confirms the change and its slow drift, consistent with a distant reflecting cloud.",
+      "interference": "The second dataset shows the feature moving with the station's own cycles, not with the sky.",
+      "instrumental": "A cross-check with a second detector does not reproduce the feature.",
+      "unknown": "A second independent look reproduces the feature. It is real but unexplained.",
+      "artificial": "The feature repeats in the second dataset with the same structure: changes in the echoes that track the content of what was sent."
+     }
+    },
+    {
+     "id": "characterise",
+     "title": "Characterisation",
+     "step": {
+      "kind": "research",
+      "tech": "laser-communications",
+      "data": {
+       "radio": 2
+      }
+     },
+     "points": {
+      "natural": "Its spectrum and timing are broad and smooth, as expected for a distant reflecting cloud.",
+      "interference": "Its spectrum is narrow and sits on a band used by human equipment.",
+      "instrumental": "Its amplitude follows the detector temperature and gain, not the target.",
+      "unknown": "Its spectrum and timing match nothing in the reference tables.",
+      "artificial": "Its spectrum is unusually narrow and stable, and its timing is too regular for a natural process: changes in the echoes that track the content of what was sent."
+     }
+    },
+    {
+     "id": "pattern",
+     "title": "Pattern analysis",
+     "step": {
+      "kind": "monitor",
+      "days": 30,
+      "cost": 300
+     },
+     "points": {
+      "natural": "Over a month the pattern wanders irregularly and decays, like a distant reflecting cloud.",
+      "interference": "The pattern vanishes whenever the station changes its operating mode.",
+      "instrumental": "The pattern appears and disappears with detector maintenance.",
+      "unknown": "The pattern persists, is not periodic, and is not obviously stochastic. Different analyses disagree.",
+      "artificial": "The pattern repeats on a fixed cycle and carries structure that survives re-analysis: changes in the echoes that track the content of what was sent."
+     }
+    },
+    {
+     "id": "source",
+     "title": "Source investigation",
+     "step": {
+      "kind": "mission",
+      "expType": "deep-space-exploration"
+     },
+     "points": {
+      "natural": "The source region shows an ordinary physical environment, consistent with a distant reflecting cloud.",
+      "interference": "No source is found at the position; the signal came from within the Solar System's own transmissions.",
+      "instrumental": "On-site instruments see nothing at all. The earlier detections were produced by the detector chain.",
+      "unknown": "On-site measurements find a real source, but its nature cannot be classified with current knowledge.",
+      "artificial": "On-site measurements find a compact source whose behaviour is hard to explain without design: changes in the echoes that track the content of what was sent."
+     }
+    }
+   ],
+   "label": "FICTIONAL storyline built on real observing methods"
+  },
+  {
+   "id": "distant-signal",
+   "title": "THE DISTANT SIGNAL",
+   "theme": "signal",
+   "blurb": "A deep-space transmission appears in several unrelated surveys, always at the edge of detection.",
+   "truthWeights": {
+    "natural": 0.22,
+    "interference": 0.1,
+    "instrumental": 0.12,
+    "unknown": 0.2,
+    "artificial": 0.36
+   },
+   "tags": [
+    "signal",
+    "deep-space"
+   ],
+   "links": [
+    "silent-star",
+    "forgotten-transmission"
+   ],
+   "unlock": {
+    "minDay": 200,
+    "tier": "Space Programme",
+    "tech": "deep-space-relay"
+   },
+   "object": {
+    "name": "DS-6 (the distant signal)",
+    "designation": "DS-6",
+    "classification": "Repeating deep-space transmission",
+    "group": "unknown",
+    "ra_deg": 266.4,
+    "dec_deg": -29.0,
+    "distance_ly": 26000,
+    "characteristics": "FICTIONAL. A faint, repeating carrier from toward the Galactic centre."
+   },
+   "civ": {
+    "name": "The Carrier Civilization (provisional)",
+    "distanceLy": 26000,
+    "disposition": "silent",
+    "reason": "A civilization or its automated beacon whose emission cycle is far longer than any message exchange."
+   },
+   "clues": [
+    {
+     "id": "detect",
+     "title": "Initial detection",
+     "step": {
+      "kind": "observe",
+      "instrument": "radio",
+      "hours": 12,
+      "cost": 80
+     },
+     "points": {
+      "natural": "A faint, repeatable change in the faint carrier fits what is known about an unresolved background of faint pulsars.",
+      "interference": "The feature in the faint carrier lines up with a known terrestrial or station interference pattern.",
+      "instrumental": "The same feature shows up in calibration frames taken with the faint carrier out of the field, so the instrument is the likely source.",
+      "unknown": "A change in the faint carrier that does not match any catalogued behaviour. No obvious cause.",
+      "artificial": "A change in the faint carrier with an oddly regular structure: a carrier that drifts exactly as a moving transmitter would."
+     }
+    },
+    {
+     "id": "verify",
+     "title": "Independent verification",
+     "step": {
+      "kind": "observe",
+      "instrument": "radio",
+      "hours": 24,
+      "cost": 160
+     },
+     "points": {
+      "natural": "A second look confirms the change and its slow drift, consistent with an unresolved background of faint pulsars.",
+      "interference": "The second dataset shows the feature moving with the station's own cycles, not with the sky.",
+      "instrumental": "A cross-check with a second detector does not reproduce the feature.",
+      "unknown": "A second independent look reproduces the feature. It is real but unexplained.",
+      "artificial": "The feature repeats in the second dataset with the same structure: a carrier that drifts exactly as a moving transmitter would."
+     }
+    },
+    {
+     "id": "characterise",
+     "title": "Characterisation",
+     "step": {
+      "kind": "research",
+      "tech": "deep-space-relay",
+      "data": {
+       "radio": 2
+      }
+     },
+     "points": {
+      "natural": "Its spectrum and timing are broad and smooth, as expected for an unresolved background of faint pulsars.",
+      "interference": "Its spectrum is narrow and sits on a band used by human equipment.",
+      "instrumental": "Its amplitude follows the detector temperature and gain, not the target.",
+      "unknown": "Its spectrum and timing match nothing in the reference tables.",
+      "artificial": "Its spectrum is unusually narrow and stable, and its timing is too regular for a natural process: a carrier that drifts exactly as a moving transmitter would."
+     }
+    },
+    {
+     "id": "pattern",
+     "title": "Pattern analysis",
+     "step": {
+      "kind": "monitor",
+      "days": 30,
+      "cost": 300
+     },
+     "points": {
+      "natural": "Over a month the pattern wanders irregularly and decays, like an unresolved background of faint pulsars.",
+      "interference": "The pattern vanishes whenever the station changes its operating mode.",
+      "instrumental": "The pattern appears and disappears with detector maintenance.",
+      "unknown": "The pattern persists, is not periodic, and is not obviously stochastic. Different analyses disagree.",
+      "artificial": "The pattern repeats on a fixed cycle and carries structure that survives re-analysis: a carrier that drifts exactly as a moving transmitter would."
+     }
+    },
+    {
+     "id": "source",
+     "title": "Source investigation",
+     "step": {
+      "kind": "mission",
+      "expType": "deep-space-exploration"
+     },
+     "points": {
+      "natural": "The source region shows an ordinary physical environment, consistent with an unresolved background of faint pulsars.",
+      "interference": "No source is found at the position; the signal came from within the Solar System's own transmissions.",
+      "instrumental": "On-site instruments see nothing at all. The earlier detections were produced by the detector chain.",
+      "unknown": "On-site measurements find a real source, but its nature cannot be classified with current knowledge.",
+      "artificial": "On-site measurements find a compact source whose behaviour is hard to explain without design: a carrier that drifts exactly as a moving transmitter would."
+     }
+    }
+   ],
+   "label": "FICTIONAL storyline built on real observing methods"
+  },
+  {
+   "id": "empty-system",
+   "title": "THE EMPTY SYSTEM",
+   "theme": "object",
+   "blurb": "A star where models and past data both say there should be planets shows none at all.",
+   "truthWeights": {
+    "natural": 0.4,
+    "interference": 0.02,
+    "instrumental": 0.16,
+    "unknown": 0.3,
+    "artificial": 0.12
+   },
+   "tags": [
+    "object",
+    "star"
+   ],
+   "links": [
+    "impossible-planet",
+    "dark-structure"
+   ],
+   "unlock": {
+    "minDay": 120,
+    "tier": "Space Programme",
+    "tech": "habitability"
+   },
+   "object": {
+    "name": "DS-7 (the empty system)",
+    "designation": "DS-7",
+    "classification": "Star with a missing planetary system",
+    "group": "unknown",
+    "ra_deg": 45.5,
+    "dec_deg": -12.4,
+    "distance_ly": 64,
+    "characteristics": "FICTIONAL. A star whose expected planets are absent."
+   },
+   "civ": null,
+   "clues": [
+    {
+     "id": "detect",
+     "title": "Initial detection",
+     "step": {
+      "kind": "observe",
+      "instrument": "optical",
+      "hours": 12,
+      "cost": 80
+     },
+     "points": {
+      "natural": "A faint, repeatable change in the star's expected planetary system fits what is known about a system whose planets were ejected long ago.",
+      "interference": "The feature in the star's expected planetary system lines up with a known terrestrial or station interference pattern.",
+      "instrumental": "The same feature shows up in calibration frames taken with the star's expected planetary system out of the field, so the instrument is the likely source.",
+      "unknown": "A change in the star's expected planetary system that does not match any catalogued behaviour. No obvious cause.",
+      "artificial": "A change in the star's expected planetary system with an oddly regular structure: debris in orderly rings with sharp, regular gaps."
+     }
+    },
+    {
+     "id": "verify",
+     "title": "Independent verification",
+     "step": {
+      "kind": "observe",
+      "instrument": "infrared",
+      "hours": 24,
+      "cost": 160
+     },
+     "points": {
+      "natural": "A second look confirms the change and its slow drift, consistent with a system whose planets were ejected long ago.",
+      "interference": "The second dataset shows the feature moving with the station's own cycles, not with the sky.",
+      "instrumental": "A cross-check with a second detector does not reproduce the feature.",
+      "unknown": "A second independent look reproduces the feature. It is real but unexplained.",
+      "artificial": "The feature repeats in the second dataset with the same structure: debris in orderly rings with sharp, regular gaps."
+     }
+    },
+    {
+     "id": "characterise",
+     "title": "Characterisation",
+     "step": {
+      "kind": "research",
+      "tech": "habitability",
+      "data": {
+       "spectral": 2
+      }
+     },
+     "points": {
+      "natural": "Its spectrum and timing are broad and smooth, as expected for a system whose planets were ejected long ago.",
+      "interference": "Its spectrum is narrow and sits on a band used by human equipment.",
+      "instrumental": "Its amplitude follows the detector temperature and gain, not the target.",
+      "unknown": "Its spectrum and timing match nothing in the reference tables.",
+      "artificial": "Its spectrum is unusually narrow and stable, and its timing is too regular for a natural process: debris in orderly rings with sharp, regular gaps."
+     }
+    },
+    {
+     "id": "pattern",
+     "title": "Pattern analysis",
+     "step": {
+      "kind": "monitor",
+      "days": 30,
+      "cost": 300
+     },
+     "points": {
+      "natural": "Over a month the pattern wanders irregularly and decays, like a system whose planets were ejected long ago.",
+      "interference": "The pattern vanishes whenever the station changes its operating mode.",
+      "instrumental": "The pattern appears and disappears with detector maintenance.",
+      "unknown": "The pattern persists, is not periodic, and is not obviously stochastic. Different analyses disagree.",
+      "artificial": "The pattern repeats on a fixed cycle and carries structure that survives re-analysis: debris in orderly rings with sharp, regular gaps."
+     }
+    },
+    {
+     "id": "source",
+     "title": "Source investigation",
+     "step": {
+      "kind": "mission",
+      "expType": "planetary-survey"
+     },
+     "points": {
+      "natural": "The source region shows an ordinary physical environment, consistent with a system whose planets were ejected long ago.",
+      "interference": "No source is found at the position; the signal came from within the Solar System's own transmissions.",
+      "instrumental": "On-site instruments see nothing at all. The earlier detections were produced by the detector chain.",
+      "unknown": "On-site measurements find a real source, but its nature cannot be classified with current knowledge.",
+      "artificial": "On-site measurements find a compact source whose behaviour is hard to explain without design: debris in orderly rings with sharp, regular gaps."
+     }
+    }
+   ],
+   "label": "FICTIONAL storyline built on real observing methods"
+  }
+ ]
+}

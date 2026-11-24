@@ -24,7 +24,7 @@ export function render(ui) {
         <div class="row"><span class="faint" style="font-size:.8rem">Classify:</span>${causeKeys.map(k => btn(CAUSES[k], 'an-classify', { id: a.id, val: k, cls: 'small', disabled: !canClassify(a) })).join('')}</div>
         ${!canClassify(a) ? '<span class="faint" style="font-size:.76rem">Classification needs at least two pieces of evidence. Evidence is noisy, so more is better.</span>' : ''}</div>`;
     } else if (a.status === 'disputed') actions = `<div class="row">${btn('Re-open case', 'an-reopen', { id: a.id, cls: 'small' })}</div>`;
-    return panel(a.title, `<div class="row" style="margin-bottom:.2rem">${badge(obj.name)}${badge(a.status, a.status === 'resolved' ? 'ok' : a.status === 'disputed' ? 'bad' : 'warn')}${badge('Leading: ' + a.confidence)}${badge('Known universe · instrument data', 'known')}</div>${stageBar}
+    return panel(a.title, `<div class="row" style="margin-bottom:.2rem">${badge(obj.name)}${badge(a.status, a.status === 'resolved' ? 'ok' : a.status === 'disputed' ? 'bad' : 'warn')}${badge('Leading: ' + a.confidence)}${a.truthRevealed && a.cause === 'extraordinary' ? badge('FICTIONAL cause', 'bad') : badge('Known universe · instrument data', 'known')}</div>${stageBar}
       <p class="faint mono" style="font-size:.74rem">Flagged ${formatDateTime(a.t)} · ${esc(inst?.name || 'expedition data')} · dataset ${esc(a.datasetId)}</p>
       ${evid}${a.resolution ? `<p class="muted" style="font-size:.84rem">${esc(a.resolution)}</p>` : ''}${a.truthRevealed ? `<p class="faint" style="font-size:.8rem">Review: true cause was ${esc(CAUSES[a.cause].toLowerCase())}.</p>` : ''}${actions}`);
   };

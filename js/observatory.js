@@ -1,3 +1,4 @@
+import { mysteryBusy } from './mysteries.js';
 // Observatory: instrument capabilities, observation jobs, data production and false positives.
 import { HOUR } from './constants.js';
 import { getObject, distanceLy, GROUPS } from './astronomy-database.js';
@@ -38,7 +39,7 @@ export function estimateQuality(game, inst, obj, hours) {
   return clamp(instrumentAccuracy(game, inst) * rangeFactor * durFactor * opFactor * cond * env * (1 + game.techEffect('dataYield')) / 0.75, 0, 0.97);
 }
 
-export const isInstrumentBusy = (game, inst) => game.state.observations.some(o => o.status === 'running' && o.instrumentId === inst.id) || (game.state.events.responses || []).some(r => r.instrumentId === inst.id);
+export const isInstrumentBusy = (game, inst) => game.state.observations.some(o => o.status === 'running' && o.instrumentId === inst.id) || (game.state.events.responses || []).some(r => r.instrumentId === inst.id) || mysteryBusy(game, inst);
 
 export function startObservation(game, { instrumentId, targetId, hours, anomalyId = null }) {
   const s = game.state;
