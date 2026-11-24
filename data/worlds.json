@@ -1,0 +1,83 @@
+{
+ "worlds": {
+  "moon": {
+   "volatiles": 2,
+   "materials": 3,
+   "hazard": 0.2,
+   "note": "Water ice is detected in permanently shadowed polar craters; regolith is rich in silicates and metals."
+  },
+  "mars": {
+   "volatiles": 3,
+   "materials": 3,
+   "hazard": 0.35,
+   "note": "Water ice below the surface and in polar caps; thin carbon dioxide atmosphere; dust storms."
+  },
+  "mercury": {
+   "volatiles": 1,
+   "materials": 3,
+   "hazard": 0.6,
+   "note": "Extreme temperatures; water ice indicated in polar craters."
+  },
+  "venus": {
+   "volatiles": 0,
+   "materials": 0,
+   "hazard": 0.9,
+   "note": "Surface is far too hot and the pressure crushing; no surface facility is possible."
+  },
+  "europa": {
+   "volatiles": 3,
+   "materials": 1,
+   "hazard": 0.8,
+   "note": "Subsurface ocean beneath an ice shell; intense radiation from Jupiter."
+  },
+  "enceladus": {
+   "volatiles": 3,
+   "materials": 0,
+   "hazard": 0.5,
+   "note": "Water-ice plumes from a subsurface ocean."
+  },
+  "titan": {
+   "volatiles": 2,
+   "materials": 1,
+   "hazard": 0.5,
+   "note": "Thick nitrogen atmosphere and methane lakes; very cold."
+  },
+  "ceres": {
+   "volatiles": 2,
+   "materials": 2,
+   "hazard": 0.3,
+   "note": "Largest asteroid-belt body with a water-rich crust."
+  },
+  "vesta": {
+   "volatiles": 0,
+   "materials": 3,
+   "hazard": 0.3,
+   "note": "Differentiated rocky body."
+  },
+  "eros": {
+   "volatiles": 0,
+   "materials": 3,
+   "hazard": 0.25,
+   "note": "Near-Earth S-type asteroid."
+  },
+  "bennu": {
+   "volatiles": 1,
+   "materials": 2,
+   "hazard": 0.25,
+   "note": "Carbonaceous rubble pile."
+  },
+  "ryugu": {
+   "volatiles": 1,
+   "materials": 2,
+   "hazard": 0.25,
+   "note": "Carbonaceous rubble pile."
+  }
+ },
+ "stages": [
+  "UNEXPLORED",
+  "ORBITAL SURVEY",
+  "SURFACE SURVEY",
+  "RESOURCE ASSESSMENT",
+  "SITE PREPARED"
+ ]
+}

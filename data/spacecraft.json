@@ -159,6 +159,27 @@
    "opsPerDay": 150,
    "riskBase": 0.06,
    "description": "Large crewed expedition vessel with a laboratory. Needs a pilot."
+  },
+  {
+   "id": "interstellar-probe",
+   "name": "Interstellar precursor probe",
+   "crewed": false,
+   "crewCap": 0,
+   "cargo": 5,
+   "fuelCap": 1,
+   "slots": 3,
+   "speedAuDay": 0,
+   "fuelPerAu": 0,
+   "rangeAu": 0,
+   "cost": 60000,
+   "recoverable": false,
+   "canLand": false,
+   "role": "interstellar",
+   "unlock": "class:interstellar",
+   "opsPerDay": 0,
+   "riskBase": 0.2,
+   "description": "SPECULATIVE concept: a light probe sent to a nearby star. It cannot return; it transmits data after arrival.",
+   "hidden": true
   }
  ],
  "equipment": [

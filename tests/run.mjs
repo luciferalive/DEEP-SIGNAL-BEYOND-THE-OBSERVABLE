@@ -6,6 +6,11 @@ import { loadAllData } from '../js/data-loader.js';
 import { Game } from '../js/game-engine.js';
 import { SaveManager, MemoryBackend } from '../js/save-manager.js';
 import { startObservation, canObserve, buyInstrument } from '../js/observatory.js';
+import { worldsOnExpedition, worldStage, canBuild, buildFacility, staffFacility, serviceFacility, importMaterials, activeFacilities, relayBonus, isConnected, civIndex, setPolicy, safetyOf, civilizationDaily } from '../js/civilization.js';
+import { saveDesign, validateDesign, buildShip, deleteDesign, materialsFor } from '../js/shipyard.js';
+import { launchProbe, probeTargets, PROBE_COST } from '../js/interstellar.js';
+import { commRangeAu } from '../js/comms-network.js';
+import { makeShip, classOf } from '../js/spacecraft.js';
 import { searchArchive, compareDiscoveries } from '../js/discovery-archive.js';
 import { setAllocation, releaseSavings, acceptContract, declineContract, earthTick, emergencyActive, rpMult, upkeepMult, expeditionCostMult } from '../js/earth.js';
 import { createAnomaly, classifyAnomaly, canClassify, startMethod, startInitialAnalysis, setHypothesis, reopenAnomaly, tallyOf, currentStage, CAUSES, PRIORS } from '../js/anomaly-engine.js';
@@ -424,7 +429,7 @@ await test('V3 -> V4 migration from a real v3 save: anomalies gain stages, evide
   const f3 = JSON.parse(await readFile(path.join(root, 'tests/fixtures/v3-save.json'), 'utf8'));
   const backend = new MemoryBackend(); const sm = new SaveManager(backend);
   await backend.put('manual-1', f3.state, { savedAt: 1, gameTime: f3.state.time.t, version: 3 });
-  const r = await sm.load('manual-1'); ok(r.ok, r.error); eq(r.state.version, 4); ok(await backend.get('backup-manual-1-v3'), 'backup made'); const g = Game.
+  const r = await sm.load('manual-1'); ok(r.ok, r.error); eq(r.state.version, SAVE_VERSION); ok(await backend.get('backup-manual-1-v3'), 'backup made'); const g = Game.
 fromSave(data, r.state);
   const a = g.state.anomalies[0]; ok(a && Array.isArray(a.evidence) && a.cause && a.stage); g.advance(2 * DAY); ok(g.state.time.t > 0);
 });
@@ -454,6 +459,57 @@ await test('archive: sort orders and compare two discoveries', () => {
   const g = fresh(); const s = g.state; s.discoveries.push({ id: 'dA', t: 1, title: 'B target', quality: .5, confidence: 60, rp: 5, targetId: 'sirius-a', hours: 6, instrumentId: 'opt-1', evidence: [] }, { id: 'dB', t: 2, title: 'A target', quality: .9, confidence: 90, rp: 9, targetId: 'sirius-a', hours: 12, instrumentId: 'opt-1', evidence: [] });
   eq(searchArchive(g, { sort: 'quality' })[0].ref.id, 'dB'); eq(searchArchive(g, { sort: 'oldest' })[0].ref.id, 'dA'); eq(searchArchive(g, { sort: 'title' })[0].title, 'A target');
   const c = compareDiscoveries(g, 'dA', 'dB'); eq(c.better, 'dB'); ok(!compareDiscoveries(g, 'dA', 'nope'));
+});
+await test('V4 -> V5 migration from a real v4 save: new V3 state added, nothing lost, backup made', async () => {
+  const f4 = JSON.parse(await readFile(path.join(root, 'tests/fixtures/v4-save.json'), 'utf8')); eq(f4.state.version, 4);
+  const backend = new MemoryBackend(); const sm = new SaveManager(backend); await backend.put('manual-1', f4.state, { savedAt: 1, gameTime: f4.state.time.t, version: 4 });
+  const r = await sm.load('manual-1'); ok(r.ok, r.error); eq(r.state.version, SAVE_VERSION); ok(await backend.get('backup-manual-1-v4'), 'backup made');
+  eq(r.state.datasets.length, f4.state.datasets.length); eq(r.state.anomalies.length, f4.state.anomalies.length); eq(r.state.earth.contracts.length, f4.state.earth.contracts.length);
+  ok(Array.isArray(r.state.facilities) && r.state.stock.materials === 0 && r.state.civ.policy.safety === 'standard'); const g = Game.fromSave(data, r.state); g.advance(3 * DAY); ok(g.state.time.t > f4.state.time.t);
+});
+await test('V3 worlds: exploration stages need real expeditions, landing vessels, and respect hostile bodies', () => {
+  const g = fresh(); const s = g.state; const lander = makeShip(g, 'planetary-lander', 'L'); const probe = makeShip(g, 'survey-probe', 'P'); s.spacecraft.push(lander, probe);
+  const ex = (ship, target, type = 'planetary-survey') => ({ type, targetId: target, shipId: ship.id, name: 'x' });
+  eq(worldStage(g, 'mars'), 0); worldsOnExpedition(g, ex(probe, 'mars')); eq(worldStage(g, 'mars'), 1); worldsOnExpedition(g, ex(probe, 'mars')); eq(worldStage(g, 'mars'), 1, 'probe cannot land');
+  worldsOnExpedition(g, ex(lander, 'mars')); eq(worldStage(g, 'mars'), 2); worldsOnExpedition(g, ex(lander, 'mars')); worldsOnExpedition(g, ex(lander, 'mars')); eq(worldStage(g, 'mars'), 4); worldsOnExpedition(g, ex(lander, 'mars')); eq(worldStage(g, 'mars'), 4, 'max');
+  for (let i = 0; i < 6; i++) worldsOnExpedition(g, ex(lander, 'venus')); eq(worldStage(g, 'venus'), 2, 'Venus cannot host a site');
+  worldsOnExpedition(g, ex(lander, 'sirius-a')); eq(worldStage(g, 'sirius-a'), 0); worldsOnExpedition(g, ex(lander, 'moon', 'stellar-observation')); eq(worldStage(g, 'moon'), 0, 'only surveys count');
+});
+await test('V3 facilities: gating, construction, stock production only when connected, staffing, upkeep, relays extend range', () => {
+  const g = fresh(); const s = g.state; s.resources.credits = 90000;
+  ok(!canBuild(g, 'mine-ore', 'moon').ok, 'locked'); s.tech.researched['resource-extraction'] = 1; ok(!canBuild(g, 'mine-ore', 'moon').ok, 'needs site stage');
+  s.worlds.moon = { stage: 3, log: [] }; ok(!canBuild(g, 'mine-ore', 'moon').ok, 'needs materials'); ok(!importMaterials(g, 0).ok); ok(importMaterials(g, 100).ok); eq(Math.floor(s.stock.materials), 100);
+  ok(!canBuild(g, 'mine-ore', 'mars').ok, 'wrong site'); const r = buildFacility(g, 'mine-ore', 'moon'); ok(r.ok, r.error); eq(r.facility.status, 'building'); ok(!canBuild(g, 'mine-ore', 'moon').ok, 'duplicate'); eq(s.stock.materials, 75);
+  g.advance(46 * DAY); eq(r.facility.status, 'active'); const m0 = s.stock.materials; g.advance(5 * DAY); eq(s.stock.materials, m0, 'unstaffed and not autonomous: no output');
+  ok(staffFacility(g, r.facility.id, 4).ok); ok(!staffFacility(g, r.facility.id, 9).ok, 'capacity'); g.advance(5 * DAY); ok(s.stock.materials > m0, 'staffed mine produces'); ok(r.facility.produced > 0);
+  const c0 = r.facility.condition; ok(c0 < 100); ok(serviceFacility(g, r.facility.id).ok); eq(r.facility.condition, 100);
+  const bal = s.resources.credits; g.advance(DAY); ok(s.resources.credits < bal, 'upkeep charged');
+  // distant site needs relays
+  const far = { id: 'f', type: 'mine-ore', site: 'neptune', status: 'active' }; ok(!isConnected(g, far), 'no relay');
+  const r0 = commRangeAu(g); s.facilities.push({ id: 'rl1', type: 'relay', site: 'moon', status: 'active', pop: 0, condition: 100 }); eq(relayBonus(g), 25); eq(commRangeAu(g), r0 + 25);
+  s.facilities.push({ id: 'rl2', type: 'relay', site: 'mars', status: 'active', pop: 0, condition: 100 }); ok(isConnected(g, far), 'two relays connect Neptune');
+});
+await test('V3 shipyard: custom designs need manufacturing, a factory and materials; classOf works; missions accept the base class', () => {
+  const g = fresh(); const s = g.state; s.resources.credits = 90000; const spec = { name: 'Pathfinder', base: 'survey-probe', propulsion: 'ion', shielding: 'none', bays: 2 };
+  ok(!validateDesign(g, spec).ok, 'needs manufacturing'); s.tech.researched['manufacturing'] = 1; ok(!validateDesign(g, spec).ok, 'ion not researched');
+  spec.propulsion = 'chemical'; const v = validateDesign(g, spec); ok(v.ok, v.error); ok(!validateDesign(g, { ...spec, name: ' ' }).ok); ok(!validateDesign(g, { ...spec, base: 'nope' }).ok);
+  const d = saveDesign(g, spec).design; eq(d.slots, g.data.classById['survey-probe'].slots + 2); ok(d.cost > 0);
+  ok(!buildShip(g, d.id).ok, 'needs factory'); s.facilities.push({ id: 'fy', type: 'factory', site: 'station', status: 'active', pop: 0, condition: 100 }); ok(!buildShip(g, d.id).ok, 'needs materials');
+  s.stock.materials = 100; const b = buildShip(g, d.id, 'PF-1'); ok(b.ok, b.error); eq(s.stock.materials, 100 - materialsFor(d)); eq(b.ship.status, 'Under delivery'); ok(!deleteDesign(g, d.id).ok, 'ship exists');
+  g.advance(31 * DAY); eq(b.ship.status, 'Docked'); eq(classOf(g, b.ship).baseClass, 'survey-probe'); eq(classOf(g, b.ship).id, d.id);
+  s.tech.researched['nuclear-thermal'] = 1; const n = validateDesign(g, { ...spec, propulsion: 'nuclear' }); ok(n.ok && n.cls.speedAuDay > d.speedAuDay);
+});
+await test('V3 interstellar: needs unlock, takes decades, data arrives after light-travel time, probes can be lost', () => {
+  const g = fresh(); const s = g.state; s.resources.credits = 90000; ok(!launchProbe(g, 'proxima-centauri').ok, 'locked'); s.tech.researched['interstellar-precursor'] = 1;
+  ok(!launchProbe(g, 'andromeda-galaxy').ok, 'not a star'); ok(probeTargets(g).some(t => t.id === 'proxima-centauri'));
+  g.rand = () => 0.9; const r = launchProbe(g, 'proxima-centauri'); ok(r.ok, r.error); ok(r.probe.years > 15 && r.probe.years < 40); ok(!launchProbe(g, 'proxima-centauri').ok, 'one at a time');
+  s.time.t = r.probe.arriveAt + 1; g.advance(1); eq(r.probe.status, 'arrived'); const ds0 = s.datasets.length; s.time.t = r.probe.dataAt + 1; g.advance(1); eq(r.probe.status, 'complete'); eq(s.datasets.length, ds0 + 3);
+  const g2 = fresh(); g2.state.resources.credits = 90000; g2.state.tech.researched['interstellar-precursor'] = 1; g2.rand = () => 0.01; const p2 = launchProbe(g2, 'alpha-centauri-a').probe; g2.state.time.t = p2.arriveAt + 1; g2.advance(1); eq(p2.status, 'lost');
+});
+await test('V3 civilization: policies change real risk and cost multipliers; the index grows with facilities and exploration', () => {
+  const g = fresh(); const s = g.state; ok(!setPolicy(g, 'safety', 'reckless').ok); ok(setPolicy(g, 'safety', 'cautious').ok); ok(safetyOf(g).risk < 1 && safetyOf(g).cost > 1); ok(setPolicy(g, 'safety', 'bold').ok); ok(safetyOf(g).risk > 1 && safetyOf(g).cost < 1);
+  const i0 = civIndex(g); s.facilities.push({ id: 'a', type: 'relay', site: 'moon', status: 'active', pop: 5, condition: 100 }); s.worlds.mars = { stage: 4, log: [] }; const i1 = civIndex(g); ok(i1.score > i0.score); ok(i1.infrastructure > i0.infrastructure && i1.exploration > i0.exploration && i1.population > i0.population);
+  s.facilities.push({ id: 'o', type: 'outpost', site: 'mars', status: 'active', pop: 8, condition: 100, settledDays: 0 }); const rp = s.resources.researchPoints; civilizationDaily(g); ok(s.resources.researchPoints > rp, 'outposts give research'); ok(typeof g.state.civ.tier === 'string');
 });
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

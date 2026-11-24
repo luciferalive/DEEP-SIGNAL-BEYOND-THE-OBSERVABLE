@@ -1119,19 +1119,138 @@
     "optical": 3
    },
    "category": "Advanced cosmological models"
+  },
+  {
+   "id": "manufacturing",
+   "name": "In-space manufacturing",
+   "branch": "Robotics",
+   "description": "Additive manufacturing and assembly of structures and spacecraft parts in orbit.",
+   "costRP": 140,
+   "costCredits": 3000,
+   "days": 14,
+   "requires": [
+    "advanced-materials",
+    "autonomous-systems"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "facility:factory"
+    },
+    {
+     "type": "unlock",
+     "key": "design:custom"
+    }
+   ],
+   "effectText": "Unlocks the orbital factory and custom spacecraft design",
+   "limitation": "Needs a steady supply of raw materials.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "resource-extraction",
+   "name": "Resource extraction",
+   "branch": "Engineering",
+   "description": "Mining and processing of ice, metals and volatiles on other bodies.",
+   "costRP": 150,
+   "costCredits": 3200,
+   "days": 14,
+   "requires": [
+    "landing-systems",
+    "manufacturing"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "facility:mine"
+    }
+   ],
+   "effectText": "Unlocks mining facilities",
+   "limitation": "Only works at sites with a completed resource assessment.",
+   "status": "established",
+   "data": {
+    "planetary": 2
+   },
+   "category": ""
+  },
+  {
+   "id": "habitat-engineering",
+   "name": "Habitat engineering",
+   "branch": "Engineering",
+   "description": "Pressurised, shielded habitats that can be built and expanded on other worlds.",
+   "costRP": 170,
+   "costCredits": 3800,
+   "days": 16,
+   "requires": [
+    "resource-extraction",
+    "radiation-shielding",
+    "hydroponics"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "facility:outpost"
+    }
+   ],
+   "effectText": "Unlocks outposts and settlements",
+   "limitation": "Habitats are expensive and need constant resupply and maintenance.",
+   "status": "established",
+   "data": {
+    "planetary": 3
+   },
+   "category": ""
+  },
+  {
+   "id": "autonomous-operations",
+   "name": "Autonomous operations",
+   "branch": "Robotics",
+   "description": "Self-managing robotic systems that run facilities with little or no human staff.",
+   "costRP": 130,
+   "costCredits": 2600,
+   "days": 12,
+   "requires": [
+    "autonomous-systems",
+    "data-pipeline"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "ops:autonomous"
+    }
+   ],
+   "effectText": "Facilities without staff run at 60% output",
+   "limitation": "Autonomous systems still fail without maintenance.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "interstellar-precursor",
+   "name": "Interstellar precursor probes",
+   "branch": "Propulsion",
+   "description": "Light uncrewed probes accelerated to a fraction of light speed toward the nearest stars.",
+   "costRP": 260,
+   "costCredits": 9000,
+   "days": 24,
+   "requires": [
+    "advanced-propulsion",
+    "laser-communications"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "class:interstellar"
+    }
+   ],
+   "effectText": "Unlocks interstellar precursor probes (decades of travel)",
+   "limitation": "HYPOTHESIS-LEVEL: the propulsion is not demonstrated. Flight times are decades; data return is delayed by the distance in light-years.",
+   "status": "hypothesis",
+   "data": {},
+   "category": ""
   }
  ],
  "planned": [
-  {
-   "branch": "Robotics / Engineering",
-   "version": "V3",
-   "items": [
-    "Manufacturing",
-    "Resource extraction",
-    "Habitat engineering",
-    "Autonomous operations"
-   ]
-  },
   {
    "branch": "Propulsion",
    "version": "V5",

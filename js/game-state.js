@@ -28,7 +28,7 @@ export function createNewGame(seed = Date.now() % 2147483647) {
     events: { pending: null, history: [], pauseObsUntil: 0, records: [], responses: [] },
     finance: { ledger: [], lastGrantDay: 0, nextResupplyDay: BASE.resupplyFirstDay, lastSupplyRequestDay: -999, reports: [], period: { income: 0, expense: 0, byCat: {} }, reserve: 600 },
     chronicle: [], publications: [], modules: {},
-    schedule: [], expeditions: [], comms: { interruptedUntil: 0, history: [] }, earth: { contracts: [], completed: 0, failed: 0, aborted: 0 },
+    schedule: [], worlds: {}, facilities: [], stock: { materials: 0, volatiles: 0 }, designs: [], interstellar: [], civ: { policy: { safety: 'standard', pace: 'steady' } }, expeditions: [], comms: { interruptedUntil: 0, history: [] }, earth: { contracts: [], completed: 0, failed: 0, aborted: 0 },
     bookmarks: [], tracked: [], destinations: [],
     history: { oxygen: [], water: [], food: [], power: [], credits: [] },
     log: [],
@@ -51,6 +51,8 @@ export function validateState(s) {
 // Future versions add migration steps here. Never drop data silently.
 const SPEC_BY_NAME = { astrophysics: 'astrophysicist', engineering: 'engineer', 'planetary science': 'astrobiologist', 'computer science': 'data', 'medical science': 'medical' };
 const STEPS = {
+  // 4 -> 5 (V3): worlds, facilities, resource stock, custom designs, interstellar probes and civilization policies. Nothing existing is changed.
+  4: s => { s.worlds = s.worlds || {}; s.facilities = s.facilities || []; s.stock = s.stock || { materials: 0, volatiles: 0 }; s.designs = s.designs || []; s.interstellar = s.interstellar || []; s.civ = s.civ || { policy: { safety: 'standard', pace: 'steady' } }; },
   // 3 -> 4: staged anomaly investigation, instrument data fields. V1-V3 anomalies were all instrument artefacts, so they keep that cause.
   3: s => {
     for (const a of s.anomalies || []) {

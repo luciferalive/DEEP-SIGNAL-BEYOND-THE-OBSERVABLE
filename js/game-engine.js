@@ -1,3 +1,6 @@
+import { civilizationDaily, relayBonus } from './civilization.js';
+import './interstellar.js';
+import './shipyard.js';
 // The Game object ties the state, the data and every system together and advances the simulation in fixed steps.
 import { DAY, HOUR, TICK, SPEEDS } from './constants.js';
 import { nextRandom } from './rng.js';
@@ -62,6 +65,7 @@ export class Game {
     for (const id of Object.keys(this.state.tech.researched)) for (const e of this.data.techById[id]?.effects || []) if (e.type === type && (!kind || !e.kind || e.kind === kind)) sum += e.value;
     return sum;
   }
+  networkRangeBonus() { return relayBonus(this); }
   // Time controls
   setSpeed(index) { const t = this.state.time; t.speed = index; t.paused = index === 0; this.emit('time'); }
   pause() { this.state.time.paused = true; this.emit('time'); }
@@ -74,7 +78,7 @@ export class Game {
     eventsTick(this); missionControlTick(this); expeditionsTick(this);
     const day = Math.floor(s.time.t / DAY);
     if (s.finance.lastUpkeepDay === undefined) s.finance.lastUpkeepDay = Math.floor((s.time.t - dt) / DAY);
-    while (s.finance.lastUpkeepDay < day) { s.finance.lastUpkeepDay += 1; dailyFinance(this); }
+    while (s.finance.lastUpkeepDay < day) { s.finance.lastUpkeepDay += 1; dailyFinance(this); civilizationDaily(this); }
     this.sampleHistory();
   }
   sampleHistory() {

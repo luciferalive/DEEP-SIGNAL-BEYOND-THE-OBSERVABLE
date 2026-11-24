@@ -1,0 +1,105 @@
+{
+ "facilities": [
+  {
+   "id": "relay",
+   "name": "Deep space relay",
+   "unlock": "facility:relay",
+   "sites": [
+    "moon",
+    "mars",
+    "jupiter",
+    "saturn",
+    "uranus",
+    "neptune",
+    "pluto"
+   ],
+   "minStage": 1,
+   "cost": 4000,
+   "materials": 10,
+   "days": 30,
+   "upkeepPerDay": 18,
+   "staffCap": 0,
+   "effect": "Extends communication range by 25 AU and carries resource traffic from distant sites.",
+   "description": "A relay satellite network node."
+  },
+  {
+   "id": "factory",
+   "name": "Orbital factory",
+   "unlock": "facility:factory",
+   "sites": [
+    "station"
+   ],
+   "minStage": 0,
+   "cost": 6000,
+   "materials": 20,
+   "days": 40,
+   "upkeepPerDay": 30,
+   "staffCap": 4,
+   "effect": "Cuts spacecraft construction cost by 25% and converts stock to ship parts.",
+   "description": "Assembly yard attached to the station."
+  },
+  {
+   "id": "mine-ice",
+   "name": "Volatiles mine",
+   "unlock": "facility:mine",
+   "sites": [
+    "moon",
+    "mars",
+    "ceres",
+    "enceladus"
+   ],
+   "minStage": 3,
+   "cost": 7000,
+   "materials": 25,
+   "days": 45,
+   "upkeepPerDay": 35,
+   "staffCap": 6,
+   "produces": {
+    "volatiles": 5
+   },
+   "effect": "Produces volatiles (water ice, propellant feedstock).",
+   "description": "Extracts and processes ice and volatiles."
+  },
+  {
+   "id": "mine-ore",
+   "name": "Ore mine",
+   "unlock": "facility:mine",
+   "sites": [
+    "moon",
+    "mars",
+    "vesta",
+    "eros",
+    "bennu",
+    "ryugu"
+   ],
+   "minStage": 3,
+   "cost": 7000,
+   "materials": 25,
+   "days": 45,
+   "upkeepPerDay": 35,
+   "staffCap": 6,
+   "produces": {
+    "materials": 6
+   },
+   "effect": "Produces construction materials (metals and silicates).",
+   "description": "Extracts metals and construction materials."
+  },
+  {
+   "id": "outpost",
+   "name": "Outpost",
+   "unlock": "facility:outpost",
+   "sites": [
+    "moon",
+    "mars"
+   ],
+   "minStage": 4,
+   "cost": 14000,
+   "materials": 60,
+   "days": 70,
+   "upkeepPerDay": 55,
+   "staffCap": 12,
+   "effect": "Houses staff, gives research bonuses and can grow into a settlement.",
+   "description": "A pressurised, shielded habitat and laboratory."
+  }
+ ]
+}

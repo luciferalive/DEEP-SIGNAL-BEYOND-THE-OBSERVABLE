@@ -18,12 +18,15 @@ import { hire, startTraining, setShift } from './crew-management.js';
 import { startPublication } from './publications.js';
 import { setReserve } from './finance.js';
 import { refuel, repairSystem } from './spacecraft.js';
+import { buildFacility, staffFacility, serviceFacility, importMaterials, setPolicy } from './civilization.js';
+import { saveDesign, deleteDesign, buildShip } from './shipyard.js';
+import { launchProbe } from './interstellar.js';
 import { acceptContract, declineContract, setAllocation, releaseSavings, ALLOC_KEYS } from './earth.js';
 import * as V from './views/index.js';
 
-const NAV_GROUPS = { command: 'Station', explorer: 'Science', observatory: 'Science', lab: 'Science', spacecraft: 'Fleet', expeditions: 'Fleet', missions: 'Earth', crew: 'Station', tech: 'Science', events: 'Universe', archive: 'Science', anomalies: 'Universe', comms: 'Earth', finance: 'Earth', station: 'Station', publications: 'Science', history: 'Universe', settings: 'System' };
-const NAV = [['command', 'Command Centre'], ['crew', 'Crew Management'], ['station', 'Station Infrastructure'], ['explorer', 'Universe Explorer'], ['observatory', 'Observatory'], ['lab', 'Research Laboratory'], ['tech', 'Technology Tree'], ['archive', 'Discovery Archive'], ['publications', 'Publications'], ['spacecraft', 'Spacecraft'], ['expeditions', 'Expeditions'], ['missions', 'Mission Control'], ['comms', 'Communications'], ['finance', 'Financial Management'], ['events', 'Cosmic Events'], ['anomalies', 'Anomaly Investigation'], ['history', 'Civilization History'], ['settings', 'Settings']];
-const VIEWS = { command: V.command, explorer: V.explorer, observatory: V.observatory, lab: V.lab, spacecraft: V.spacecraft, expeditions: V.expeditions, missions: V.missions, crew: V.crew, tech: V.tech, events: V.events, archive: V.archive, anomalies: V.anomalies, comms: V.comms, finance: V.finance, station: V.station, publications: V.publications, history: V.history, settings: V.settings };
+const NAV_GROUPS = { command: 'Station', explorer: 'Science', observatory: 'Science', lab: 'Science', spacecraft: 'Fleet', expeditions: 'Fleet', shipyard: 'Fleet', worlds: 'Civilization', interstellar: 'Civilization', civilization: 'Civilization', missions: 'Earth', crew: 'Station', tech: 'Science', events: 'Universe', archive: 'Science', anomalies: 'Universe', comms: 'Earth', finance: 'Earth', station: 'Station', publications: 'Science', history: 'Universe', settings: 'System' };
+const NAV = [['command', 'Command Centre'], ['crew', 'Crew Management'], ['station', 'Station Infrastructure'], ['explorer', 'Universe Explorer'], ['observatory', 'Observatory'], ['lab', 'Research Laboratory'], ['tech', 'Technology Tree'], ['archive', 'Discovery Archive'], ['publications', 'Publications'], ['spacecraft', 'Spacecraft'], ['shipyard', 'Shipyard'], ['expeditions', 'Expeditions'], ['worlds', 'Worlds and Facilities'], ['interstellar', 'Interstellar'], ['civilization', 'Civilization'], ['missions', 'Mission Control'], ['comms', 'Communications'], ['finance', 'Financial Management'], ['events', 'Cosmic Events'], ['anomalies', 'Anomaly Investigation'], ['history', 'Civilization History'], ['settings', 'Settings']];
+const VIEWS = { command: V.command, explorer: V.explorer, observatory: V.observatory, lab: V.lab, spacecraft: V.spacecraft, shipyard: V.shipyard, worlds: V.worlds, interstellar: V.interstellar, civilization: V.civilization, expeditions: V.expeditions, missions: V.missions, crew: V.crew, tech: V.tech, events: V.events, archive: V.archive, anomalies: V.anomalies, comms: V.comms, finance: V.finance, station: V.station, publications: V.publications, history: V.history, settings: V.settings };
 const $ = s => document.querySelector(s);
 
 export class UI {
@@ -125,7 +128,7 @@ export class UI {
     const root = document.body;
     root.addEventListener('click', e => { const el = e.target.closest('[data-act]'); if (!el || el.disabled || el.tagName === 'SELECT' || el.tagName === 'OPTION') return; if (el.tagName === 'INPUT' && el.type === 'file') return; if (el.tagName === 'INPUT' && el.type === 'checkbox') return; this.act(el.dataset.act, el); });
     root.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches?.('[role="button"][data-act]')) { e.preventDefault(); this.act(e.target.dataset.act, e.target); } });
-    root.addEventListener('change', e => { const el = e.target; if (el.matches('select[data-act], input[type=checkbox][data-act], input[type=file][data-act]')) this.act(el.dataset.act, el); });
+    root.addEventListener('change', e => { const el = e.target; if (el.matches('select[data-act], input[data-act], input[type=checkbox][data-act], input[type=file][data-act]')) this.act(el.dataset.act, el); });
     root.addEventListener('input', e => { const el = e.target; if (el.dataset?.input === 'explorer-query') { this.s.query = el.value; this.liveSearch(); } if (el.dataset?.input === 'history-query') { this.s.histQuery = el.value; this.liveSearch(); } if (el.dataset?.input === 'archive-query') { this.s.archiveQuery = el.value; this.liveSearch(); } });
     root.addEventListener('mouseover', e => this.tip(e)); root.addEventListener('mousemove', e => this.tip(e)); root.addEventListener('mouseleave', () => { $('#tooltip').hidden = true; });
   }
@@ -168,6 +171,18 @@ export class UI {
       case 'savings-release': return this.res(releaseSavings(g), 'Savings released.');
       case 'archive-sort': s.archiveSort = $('#archive-sort').value; return this.render(true);
       case 'cmp-set': s.cmpA = $('#cmp-a').value; s.cmpB = $('#cmp-b').value; return this.render(true);
+      case 'fac-set': s.facType = $('#fac-type')?.value || s.facType; s.facSite = $('#fac-site')?.value || s.facSite; return this.render(true);
+      case 'fac-build': { const ft = s.facType || g.data.facilities[0].id; const t = g.data.facilityById[ft]; return this.res(buildFacility(g, ft, t.sites.includes(s.facSite) ? s.facSite : t.sites[0]), 'Construction started.'); }
+      case 'fac-staff': return this.res(staffFacility(g, id, 2), 'Staff transferred.');
+      case 'fac-service': return this.res(serviceFacility(g, id), 'Facility serviced.');
+      case 'mat-import': return this.res(importMaterials(g, +v), 'Materials ordered.');
+      case 'policy-set': return this.res(setPolicy(g, id, v), 'Policy changed.');
+      case 'dz-set': s.design = { name: $('#dz-name')?.value ?? 'Custom vessel', base: $('#dz-base')?.value, propulsion: $('#dz-prop')?.value, shielding: $('#dz-shield')?.value, bays: +($('#dz-bays')?.value || 0) }; return this.render(true);
+      case 'design-save': return this.res(saveDesign(g, s.design), 'Design saved.');
+      case 'design-delete': return this.res(deleteDesign(g, id), 'Design deleted.');
+      case 'design-build': return this.res(buildShip(g, id), 'Construction started.');
+      case 'probe-set': s.probeTarget = $('#probe-target')?.value; return this.render(true);
+      case 'probe-launch': return this.res(launchProbe(g, $('#probe-target')?.value || s.probeTarget || ''), 'Probe launched.');
       case 'buy-instrument': return this.res(buyInstrument(g, id), 'Instrument purchased.');
       case 'an-initial': return this.res(startInitialAnalysis(g, id), 'Initial analysis started.');
       case 'an-hypothesis': return this.res(setHypothesis(g, id, v), 'Working hypothesis set.');

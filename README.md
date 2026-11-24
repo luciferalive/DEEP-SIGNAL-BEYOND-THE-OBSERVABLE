@@ -40,20 +40,15 @@ All V1 systems still work: 14 original sections, game clock, 59 real catalogue o
 | V2.18 Civilization history | Permanent timeline with search, kind filter and major milestones; rebuilt from older saves once. |
 | V2.19 Saves (partial) | Format v2, validated, V1→V2 migration, automatic backup before any older save is upgraded, recovery to the newest readable save. |
 
-Tested with `npm test` (35 tests, including migration of a genuine save made by the V1 engine, `tests/fixtures/v1-save.json`) and with headless Chromium: all 17 sections render with no console errors; a V1 save imported on the title screen loads and plays; station upgrade, publication start and event response work from the UI; 390 px layout has no horizontal scroll. Performance: 365 simulated days run in well under a second and a save is about 185 KB.
+### Status by version (honest)
 
-### V2 – NOT implemented yet (nothing below is claimed)
+- **V2 The Living Universe** – implemented: speed ladder and scheduler, spacecraft classes and fleet, 8-stage expeditions with risk and recovery, communications link states, crew specialisations/training/hiring/shifts, 43 technologies with data requirements and a visual tree, six purchasable instruments, pulsars/clusters/asteroids/comets, staged anomaly investigation, Earth contracts and emergency missions, budget allocation, archive sorting/comparison, saves v1→v5 with automatic backups.
+  Not done in V2: data-economy uses beyond dataset quality fields, research-category requirement tiers, rotating per-autosave backups (only pre-migration backups).
+- **V3 Beyond Human Limits** (save v5) – implemented in compact form: planetary exploration stages, facilities (relay, factory, mines, outposts), resource stock and connection rules, settlements, spacecraft design and construction, interstellar precursor probes, civilization index, policies and map.
+  Not done in V3: multiple independent stations, a separate deep-space-network simulation beyond relay range, resource logistics routes (production is credited to a single stock), crewed settlement life-support detail.
+- **V4 / V5** – not started (nothing is claimed).
 
-- V2.1: the 1x/2x/5x/10x/25x/100x speed ladder (the game still uses V1 speeds: 1 min/s … 1 day/s) and a general event scheduler
-- V2.3 spacecraft types and operations (launch, transit, orbit, survey…) and V2.4 multi-stage mission lifecycle with planning, risk and failure states
-- V2.5 infrared, X-ray, gamma, neutrino and gravitational-wave instruments; observation noise/completeness records
-- V2.6 research categories beyond the 7 technologies; V2.15 visual tech tree with 10 branches
-- V2.7 crew specialisations, training and experience progression, shifts
-- V2.9 budget allocation; V2.10 Earth relationship tracking beyond reputation
-- V2.11 pulsars, neutron stars, asteroids, comets and clusters in the Universe Explorer
-- V2.12 archive sorting, comparison and reports; V2.13 multi-stage anomaly investigation with several outcomes; V2.14 communication link states and transmission history; V2.16 scientific data economy beyond raw datasets
-- V2.19 backups on every autosave
-- All of V3, V4 and V5
+Tested with `npm test` (engine tests including migration of genuine saves made by the V1, V2, V3 and V4 engines in `tests/fixtures/`, plus a test that renders every view) and with headless Chromium: every section renders with no console errors.
 
 ## Known limitations
 

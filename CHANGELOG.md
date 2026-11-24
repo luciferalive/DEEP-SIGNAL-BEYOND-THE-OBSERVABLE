@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 (V3 in progress) - milestone 3
+- Planetary exploration stages (orbital survey to prepared site) advanced by real expeditions; landing vessels needed for surface stages; hostile bodies capped.
+- Facilities: deep space relay (+25 AU range), orbital factory, volatiles and ore mines, outposts and settlements; staffing, upkeep, condition, relay-connection rules; materials import and stock.
+- Spacecraft design (chassis, propulsion, hull, bays) and construction in the factory; volatiles refuel ships for free.
+- Interstellar precursor probes (SPECULATIVE): decades of cruise, light-travel data delay, possible loss.
+- Civilization index, tiers, safety doctrine and expansion pace policies; solar-system map.
+- Save format 5 with migration from v4 (real v4 fixture). Version 0.4.0.
+
 ## 0.3.0 (in progress) - milestone 2c
 - Earth contracts (survey, expedition, discovery quota) with deadlines, rewards and penalties; emergency missions that unlock the Emergency mission expedition type only while a request is active.
 - Budget allocation (science / operations / expeditions / reserve) with real multipliers; reserve share of each grant becomes savings that cover a deficit.

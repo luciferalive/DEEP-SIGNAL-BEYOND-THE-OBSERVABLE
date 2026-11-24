@@ -1,3 +1,4 @@
+import { worldsOnExpedition, safetyOf } from './civilization.js';
 import { expeditionCostMult, contractsOnExpedition, emergencyActive } from './earth.js';
 // Expeditions: multi-stage missions flown by spacecraft.
 // PLANNING (the planner form) → PREPARATION → LAUNCH → TRANSIT → OPERATION → DATA COLLECTION → [RECOVERY] → ANALYSIS → COMPLETED
@@ -38,7 +39,7 @@ export function estimate(game, plan) {
   if (!ship) errors.push('Choose a spacecraft.'); else {
     const c = classOf(game, ship);
     if (!isIdle(ship)) errors.push(`${ship.name} is not available (${ship.status}).`);
-    if (!type.classes.includes(ship.class)) errors.push(`${c.name} cannot fly this mission type.`);
+    if (!type.classes.includes(c.baseClass || ship.class)) errors.push(`${c.name} cannot fly this mission type.`);
   }
   if (target && type.mode !== 'recovery' && !type.groups.includes(target.group)) errors.push(`This mission type does not suit this kind of target.`);
   const eq = (plan.equipment || []).map(id => game.data.equipById[id]).filter(Boolean);
@@ -66,14 +67,14 @@ export function estimate(game, plan) {
     fuel = type.mode === 'remote' ? 5 : Math.max(2, Math.round(path * c.fuelPerAu * (ret ? 2 : 1) / fuelEfficiency(game)));
     if (fuel > ship.fuel) errors.push(`Needs ${fuel} kg of propellant; ${ship.name} has ${Math.round(ship.fuel)} kg.`);
     const prep = PREP[plan.prep || 0]; const ops = c.opsPerDay * (days + 0.4 * (travel + ret));
-    cost = Math.round((ops * (1 + prep.cost) + 100) * expeditionCostMult(game));
+    cost = Math.round((ops * (1 + prep.cost) + 100) * expeditionCostMult(game) * safetyOf(game).cost);
     if (s.resources.credits < cost) errors.push(`Needs ${cost} RC.`);
     const known = type.mode !== 'recovery' && s.discoveries.some(d => d.targetId === target.id);
     const pilot = crew.filter(isPilot).reduce((a, m) => Math.max(a, (m.skills.robotics + m.skills.engineering) / 2), 0);
     parts = { mission: type.riskBase, vessel: c.riskBase, distance: 0.012 * Math.sqrt(path), condition: (100 - shipCondition(ship)) / 100 * 0.15 + (ship.maintenance.overdue ? 0.04 : 0) };
     const raw = Object.values(parts).reduce((a, b) => a + b, 0);
     const mods = { preparation: -prep.risk, knowledge: known ? -0.15 : 0, crew: c.crewed ? -0.02 * pilot : 0, technology: -game.techEffect('shipReliability') };
-    const mod = clamp(1 + Object.values(mods).reduce((a, b) => a + b, 0), 0.3, 1.5); risk = clamp(raw * mod, 0.01, 0.6); parts = { ...parts, ...mods };
+    const mod = clamp(1 + Object.values(mods).reduce((a, b) => a + b, 0), 0.3, 1.5); risk = clamp(raw * mod * safetyOf(game).risk, 0.01, 0.6); parts = { ...parts, ...mods };
   }
   return { ok: errors.length === 0, errors: [...new Set(errors)], type, ship, target, days, travel, ret, fuel, cost, risk, parts, path, prepDays: PREP[plan.prep || 0].days, crew };
 }
@@ -167,7 +168,7 @@ function complete(game, ex) {
   addCredits(game, credits, `Mission reward: ${ex.name}`, 'income'); s.resources.researchPoints += rp; s.resources.reputation += rep; setStage(game, ex, 'COMPLETED'); ex.status = 'done'; ex.outcome = `Data quality ${Math.round(q * 100)}%`; ex.rewards = { credits, rp, rep }; s.earth.completed += 1;
   game.log(`MISSION COMPLETE: ${ex.name} (+${credits} RC, +${rp} RP, +${rep} reputation).`, 'good'); record(game, { kind: 'mission', title: `Mission completed: ${ex.name}`, text: ex.outcome, major: s.earth.completed === 1, ref: ex.id });
   game.addMessage({ from: 'Mission Operations', subject: `Mission complete: ${ex.name}`, body: `Final data quality ${Math.round(q * 100)}%. Rewards credited.`, type: 'info', fictional: false });
-  contractsOnExpedition(game, ex); game.emit?.('expedition-complete', ex);
+  worldsOnExpedition(game, ex); contractsOnExpedition(game, ex); game.emit?.('expedition-complete', ex);
 }
 export function abortExpedition(game, id) {
   const s = game.state, ex = s.expeditions.find(x => x.id === id); if (!ex || ['COMPLETED', 'FAILED', 'CANCELLED', 'ABORTED', 'RECOVERY', 'ANALYSIS'].includes(ex.stage)) return { ok: false, error: 'This mission cannot be aborted now.' };

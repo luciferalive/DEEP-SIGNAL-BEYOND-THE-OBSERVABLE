@@ -11,7 +11,8 @@ export const SHIP_SYSTEMS = { propulsion: 100, power: 100, navigation: 100, comm
 export const DELIVERY_DAYS = 20;
 
 export const isUnlocked = (game, key) => !key || game.unlocked(key);
-export const classOf = (game, ship) => game.data.classById[ship.class];
+export const classDef = (game, id) => game.state.designs?.find(d => d.id === id) || game.data.classById[id];
+export const classOf = (game, ship) => classDef(game, ship.class);
 export const isReusable = (game, ship) => { const c = classOf(game, ship); return c.recoverable || c.role === 'remote'; };
 export const isIdle = ship => !ship.missionId && ship.location.kind === 'dock' && !['Lost', 'Expended', 'Stranded', 'Under delivery'].includes(ship.status);
 export const shipCondition = ship => Object.values(ship.systems).reduce((a, b) => a + b, 0) / Object.keys(ship.systems).length;
@@ -19,7 +20,7 @@ export const speedAuDay = (game, ship) => classOf(game, ship).speedAuDay * (1 + 
 export const fuelEfficiency = game => 1 + game.techEffect('fuelEfficiency');
 
 export function makeShip(game, classId, name, extra = {}) {
-  const s = game.state, c = game.data.classById[classId];
+  const s = game.state, c = classDef(game, classId);
   return { id: `ship-${s.uid++}`, name, class: classId, type: c.name, status: 'Docked', propulsion: c.speedAuDay >= 0.01 ? 'Ion / advanced' : 'Chemical bipropellant', fuel: c.fuelCap, fuelCap: c.fuelCap, energy: 100,
     systems: { ...SHIP_SYSTEMS }, equipment: [], crewIds: [], cargo: { used: 0, cap: c.cargo }, location: { kind: 'dock', at: 'station' }, missionId: null, commsDownUntil: 0, maintenance: { hours: 0, dueAt: s.time.t + 60 * DAY }, hullCondition: 100, notes: c.description, ...extra };
 }
@@ -62,7 +63,8 @@ export function refuel(game, shipId, kg) {
   if (ship.location.kind !== 'dock') return { ok: false, error: 'Only docked vessels can be refuelled.' };
   const room = ship.fuelCap - ship.fuel; const amount = Math.min(kg, room);
   if (amount <= 0) return { ok: false, error: 'The tanks are already full.' };
-  const cost = Math.round(amount * FUEL_COST_PER_KG);
+  const free = Math.min(amount, (game.state.stock?.volatiles || 0) * 4); const cost = Math.round((amount - free) * FUEL_COST_PER_KG);
+  if (free > 0) game.state.stock.volatiles -= free / 4;
   if (!spend(game, cost, `Refuel ${ship.name}: ${Math.round(amount)} kg`)) return { ok: false, error: `Refuelling costs ${cost} RC.` };
   ship.fuel += amount; game.log(`${ship.name} refuelled with ${Math.round(amount)} kg (${cost} RC).`, 'info');
   return { ok: true };
