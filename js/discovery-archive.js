@@ -18,12 +18,20 @@ export function recordDiscovery(game, { ds, obj, first, rp }) {
   return d;
 }
 
-export function searchArchive(game, { query = '', type = 'all' } = {}) {
+export const SORTS = [['newest', 'Newest first'], ['oldest', 'Oldest first'], ['quality', 'Highest quality'], ['confidence', 'Highest confidence'], ['title', 'Title A-Z']];
+const qualityOf = r => r.ref?.quality ?? (typeof r.ref?.confidence === 'number' ? r.ref.confidence / 100 : -1);
+export function searchArchive(game, { query = '', type = 'all', sort = 'newest' } = {}) {
   const q = query.trim().toLowerCase(); const s = game.state; const rows = [];
   for (const d of s.discoveries) rows.push({ kind: 'discovery', t: d.t, title: d.title, text: d.summary, ref: d });
   for (const o of s.observations.filter(o => o.status !== 'running')) rows.push({ kind: 'observation', t: o.end, title: `Observation: ${o.targetId}`, text: `${o.hours} h, ${o.status}, quality ${o.quality != null ? ((o.quality * 100) | 0) + '%' : 'n/a'}`, ref: o });
   for (const a of s.anomalies) rows.push({ kind: 'anomaly', t: a.t, title: a.title, text: `${a.status}${a.resolution ? ': ' + a.resolution : ''}`, ref: a });
   for (const m of s.missions.completed) rows.push({ kind: 'mission report', t: m.completedAt, title: `Mission report: ${game.data.missionById[m.id]?.title}`, text: 'Mission completed and reported to Earth.', ref: m });
   for (const id of Object.keys(s.tech.researched)) rows.push({ kind: 'technology', t: s.tech.researched[id], title: `Technology: ${game.data.techById[id]?.name}`, text: game.data.techById[id]?.effectText || '', ref: id });
-  return rows.filter(r => (type === 'all' || r.kind === type) && (!q || (r.title + ' ' + r.text).toLowerCase().includes(q))).sort((a, b) => b.t - a.t);
+  return rows.filter(r => (type === 'all' || r.kind === type) && (!q || (r.title + ' ' + r.text).toLowerCase().includes(q))).sort((a, b) => sort === 'oldest' ? a.t - b.t : sort === 'quality' ? qualityOf(b) - qualityOf(a) : sort === 'confidence' ? (b.ref?.confidence ?? -1) - (a.ref?.confidence ?? -1) : sort === 'title' ? a.title.localeCompare(b.title) : b.t - a.t);
+}
+// Side-by-side comparison of two archived discoveries.
+export function compareDiscoveries(game, idA, idB) {
+  const s = game.state; const a = s.discoveries.find(d => d.id === idA), b = s.discoveries.find(d => d.id === idB); if (!a || !b) return null;
+  const row = d => ({ id: d.id, title: d.title, target: d.targetId, instrument: s.instruments.find(i => i.id === d.instrumentId)?.name || '-', hours: d.hours, quality: d.quality, confidence: d.confidence, rp: d.rp, verification: d.verification || 'none', t: d.t });
+  return { a: row(a), b: row(b), better: a.quality === b.quality ? null : a.quality > b.quality ? a.id : b.id };
 }

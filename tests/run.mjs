@@ -6,6 +6,8 @@ import { loadAllData } from '../js/data-loader.js';
 import { Game } from '../js/game-engine.js';
 import { SaveManager, MemoryBackend } from '../js/save-manager.js';
 import { startObservation, canObserve, buyInstrument } from '../js/observatory.js';
+import { searchArchive, compareDiscoveries } from '../js/discovery-archive.js';
+import { setAllocation, releaseSavings, acceptContract, declineContract, earthTick, emergencyActive, rpMult, upkeepMult, expeditionCostMult } from '../js/earth.js';
 import { createAnomaly, classifyAnomaly, canClassify, startMethod, startInitialAnalysis, setHypothesis, reopenAnomaly, tallyOf, currentStage, CAUSES, PRIORS } from '../js/anomaly-engine.js';
 import { startAnalysis, startTech, canStartTech, analysedCount } from '../js/research-engine.js';
 import { acceptMission, submitReport, requestSupplies, sendDiscovery, requestVerification, missionProgress, respondToFunding, createSurvey } from '../js/mission-control.js';
@@ -276,7 +278,7 @@ await test('history: milestones recorded, searchable, first-of-kind marked major
 });
 await test('finance: monthly report from real totals, categories, warnings', () => {
   const g = fresh(); g.state.time.paused = false; g.state.time.speed = 4; g.advance(DAY * 31);
-  const rep = g.state.finance.reports[0]; ok(rep, 'report exists'); ok(rep.expense >= 30 * 110, 'upkeep counted'); eq(rep.income, 5000 + 0 * 1 || rep.income); ok(rep.byCat['Personnel and station'] <= -30 * 110);
+  const rep = g.state.finance.reports[0]; ok(rep, 'report exists'); ok(rep.expense >= 30 * 100, 'upkeep counted'); eq(rep.income, 4500); eq(g.state.finance.savings, 500); ok(rep.byCat['Personnel and station'] <= -30 * 100);
   eq(Math.round(rep.income - rep.expense), rep.net);
   const poor = fresh(); poor.state.resources.credits = 500; ok(financeWarnings(poor).some(w => w.level === 'bad'), 'low balance warns'); poor.state.resources.credits = 5000; eq(financeWarnings(poor).length, 0);
 });
@@ -422,8 +424,36 @@ await test('V3 -> V4 migration from a real v3 save: anomalies gain stages, evide
   const f3 = JSON.parse(await readFile(path.join(root, 'tests/fixtures/v3-save.json'), 'utf8'));
   const backend = new MemoryBackend(); const sm = new SaveManager(backend);
   await backend.put('manual-1', f3.state, { savedAt: 1, gameTime: f3.state.time.t, version: 3 });
-  const r = await sm.load('manual-1'); ok(r.ok, r.error); eq(r.state.version, 4); ok(await backend.get('backup-manual-1-v3'), 'backup made'); const g = Game.fromSave(data, r.state);
+  const r = await sm.load('manual-1'); ok(r.ok, r.error); eq(r.state.version, 4); ok(await backend.get('backup-manual-1-v3'), 'backup made'); const g = Game.
+fromSave(data, r.state);
   const a = g.state.anomalies[0]; ok(a && Array.isArray(a.evidence) && a.cause && a.stage); g.advance(2 * DAY); ok(g.state.time.t > 0);
+});
+await test('Earth: budget allocation must total 100, changes real multipliers, reserve share becomes savings that cover a deficit', () => {
+  const g = fresh(); const s = g.state;
+  ok(!setAllocation(g, { science: 50, operations: 30, expeditions: 20, reserve: 10 }).ok, 'must total 100');
+  const r0 = rpMult(g); ok(setAllocation(g, { science: 70, operations: 10, expeditions: 10, reserve: 10 }).ok); ok(rpMult(g) > r0); ok(upkeepMult(g) > 1);
+  ok(setAllocation(g, { science: 10, operations: 50, expeditions: 30, reserve: 10 }).ok); ok(upkeepMult(g) < 1); ok(expeditionCostMult(g) < 1.001);
+  g.advance(35 * DAY); ok(s.finance.savings > 0, 'savings set aside from the grant');
+  const sv = s.finance.savings; s.resources.credits = -sv / 2; earthTick(g); ok(s.resources.credits >= 0, 'savings cover deficit'); ok(s.finance.savings < sv);
+  ok(releaseSavings(g).ok || s.finance.savings === 0);
+});
+await test('Earth: contracts are offered, accepted with a limit, completed from real progress, fail at deadline; emergency needs contract', () => {
+  const g = fresh(); const s = g.state; s.flags.nextContract = 0; s.resources.reputation = 5; g.advance(2 * DAY);
+  const c = s.earth.contracts.find(x => x.status === 'offered'); ok(c, 'a contract was offered'); ok(acceptContract(g, c.uid).ok); eq(c.status, 'active'); ok(c.deadline > s.time.t);
+  s.flags.nextContract = 9999; c.kind = 'datasets'; c.dataKind = 'optical'; c.n = 1; s.datasets.push({ id: 'dz', kind: 'optical', status: 'analysed', analysedAt: s.time.t + 1, targetId: 'sirius-a', quality: .7 });
+  const cr = s.resources.credits; g.advance(1 * DAY); eq(c.status, 'done'); ok(s.resources.credits > cr - 500);
+  const d = { uid: 'ct-t', kind: 'datasets', dataKind: 'radio', n: 5, days: 2, title: 't', desc: '', reward: { credits: 1, rp: 1, rep: 1 }, status: 'active', acceptedAt: s.time.t, deadline: s.time.t + 2 * DAY, progress: 0 };
+  s.earth.contracts.unshift(d); s.resources.reputation = 5; g.advance(3 * DAY); eq(d.status, 'failed'); ok(s.resources.reputation < 5);
+  ok(!emergencyActive(g)); ok(!acceptContract(g, 'nope').ok);
+});
+await test('every view module loads and renders HTML for a fresh game (syntax and runtime guard)', async () => {
+  const V = await import('../js/views/index.js'); const g = fresh(); const ui = { game: g, s: { query: '', group: 'all', bookmarksOnly: false, object: null, mapMode: 'sky', obsTarget: 'proxima-centauri', obsInstrument: 'opt-1', obsHours: 6, missionTab: 'contracts', archiveQuery: '', archiveType: 'all', tech: 'solar-mk2' }, view: 'x', saveList: [] }; const uiP = new Proxy(ui, { get: (t, k) => k in t ? t[k] : () => false });
+  for (const [name, mod] of Object.entries(V)) { if (typeof mod.render !== 'function') continue; let html; try { html = mod.render(uiP); } catch (e) { throw new Error(name + ': ' + e.message); } ok(typeof html === 'string' && html.length > 50, name + ' renders'); }
+});
+await test('archive: sort orders and compare two discoveries', () => {
+  const g = fresh(); const s = g.state; s.discoveries.push({ id: 'dA', t: 1, title: 'B target', quality: .5, confidence: 60, rp: 5, targetId: 'sirius-a', hours: 6, instrumentId: 'opt-1', evidence: [] }, { id: 'dB', t: 2, title: 'A target', quality: .9, confidence: 90, rp: 9, targetId: 'sirius-a', hours: 12, instrumentId: 'opt-1', evidence: [] });
+  eq(searchArchive(g, { sort: 'quality' })[0].ref.id, 'dB'); eq(searchArchive(g, { sort: 'oldest' })[0].ref.id, 'dA'); eq(searchArchive(g, { sort: 'title' })[0].title, 'A target');
+  const c = compareDiscoveries(g, 'dA', 'dB'); eq(c.better, 'dB'); ok(!compareDiscoveries(g, 'dA', 'nope'));
 });
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

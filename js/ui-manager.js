@@ -18,6 +18,7 @@ import { hire, startTraining, setShift } from './crew-management.js';
 import { startPublication } from './publications.js';
 import { setReserve } from './finance.js';
 import { refuel, repairSystem } from './spacecraft.js';
+import { acceptContract, declineContract, setAllocation, releaseSavings, ALLOC_KEYS } from './earth.js';
 import * as V from './views/index.js';
 
 const NAV_GROUPS = { command: 'Station', explorer: 'Science', observatory: 'Science', lab: 'Science', spacecraft: 'Fleet', expeditions: 'Fleet', missions: 'Earth', crew: 'Station', tech: 'Science', events: 'Universe', archive: 'Science', anomalies: 'Universe', comms: 'Earth', finance: 'Earth', station: 'Station', publications: 'Science', history: 'Universe', settings: 'System' };
@@ -161,6 +162,12 @@ export class UI {
       // observatory
       case 'obs-set': s.obsInstrument = $('#obs-instrument')?.value || s.obsInstrument; s.obsHours = +($('#obs-hours')?.value || s.obsHours); s.obsTarget = $('#obs-target')?.value || s.obsTarget; return this.render(true);
       case 'obs-start': return this.res(startObservation(g, { instrumentId: s.obsInstrument, targetId: s.obsTarget, hours: s.obsHours }), 'Observation started.');
+      case 'contract-accept': return this.res(acceptContract(g, id), 'Contract accepted.');
+      case 'contract-decline': return this.res(declineContract(g, id), 'Contract declined.');
+      case 'alloc-set': return this.res(setAllocation(g, Object.fromEntries(ALLOC_KEYS.map(k => [k, $(`#alloc-${k}`)?.value]))), 'Allocation applied.');
+      case 'savings-release': return this.res(releaseSavings(g), 'Savings released.');
+      case 'archive-sort': s.archiveSort = $('#archive-sort').value; return this.render(true);
+      case 'cmp-set': s.cmpA = $('#cmp-a').value; s.cmpB = $('#cmp-b').value; return this.render(true);
       case 'buy-instrument': return this.res(buyInstrument(g, id), 'Instrument purchased.');
       case 'an-initial': return this.res(startInitialAnalysis(g, id), 'Initial analysis started.');
       case 'an-hypothesis': return this.res(setHypothesis(g, id, v), 'Working hypothesis set.');

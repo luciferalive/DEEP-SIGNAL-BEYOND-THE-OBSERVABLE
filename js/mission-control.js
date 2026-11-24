@@ -1,3 +1,4 @@
+import { earthTick } from './earth.js';
 // Earth Mission Control: messages, missions, funding offers, supply convoys, reports and verification requests.
 import { DAY } from './constants.js';
 import { getObject } from './astronomy-database.js';
@@ -134,7 +135,7 @@ export function requestVerification(game, id) {
 
 export function missionControlTick(game) {
   const s = game.state; const t = s.time.t; const day = Math.floor(t / DAY);
-  evaluateMissions(game);
+  evaluateMissions(game); earthTick(game);
   const pending = s.finance.pending || [];
   const due = pending.filter(p => p.arrives <= t);
   if (due.length) {

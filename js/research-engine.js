@@ -1,3 +1,4 @@
+import { rpMult } from './earth.js';
 // Research laboratory: dataset analysis and technology projects.
 import { DAY } from './constants.js';
 import { getObject } from './astronomy-database.js';
@@ -45,10 +46,10 @@ export function researchTick(game, dt) {
 
 function completeAnalysis(game, a) {
   const s = game.state; a.status = 'done'; a.finishedAt = s.time.t;
-  const ds = s.datasets.find(d => d.id === a.datasetId); ds.status = 'analysed'; s.stats.analyses += 1;
+  const ds = s.datasets.find(d => d.id === a.datasetId); ds.status = 'analysed'; ds.analysedAt = s.time.t; s.stats.analyses += 1;
   const obj = getObject(game.data.db, a.targetId);
   const first = !s.discoveries.some(d => d.targetId === a.targetId);
-  const rp = Math.round((RP_BASE[obj.group] || 6) * (0.5 + ds.quality) * (first ? 2 : 1));
+  const rp = Math.round((RP_BASE[obj.group] || 6) * (0.5 + ds.quality) * (first ? 2 : 1) * rpMult(game));
   s.resources.researchPoints += rp;
   recordDiscovery(game, { ds, obj, first, rp });
 }

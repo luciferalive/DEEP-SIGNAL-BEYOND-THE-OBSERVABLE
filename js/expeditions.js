@@ -1,3 +1,4 @@
+import { expeditionCostMult, contractsOnExpedition, emergencyActive } from './earth.js';
 // Expeditions: multi-stage missions flown by spacecraft.
 // PLANNING (the planner form) → PREPARATION → LAUNCH → TRANSIT → OPERATION → DATA COLLECTION → [RECOVERY] → ANALYSIS → COMPLETED
 // Other end states: FAILED, INTERRUPTED (temporary), ABORTED (then RECOVERY), CANCELLED.
@@ -49,6 +50,7 @@ export function estimate(game, plan) {
       else if (!e.inSitu) errors.push(`${e.name} is a remote instrument and cannot be used in situ.`);
     }
   }
+  if (type.id === 'emergency' && !emergencyActive(game)) errors.push('Emergency missions need an active emergency request from Earth.');
   const days = clamp(Math.round(plan.days || type.days[0]), type.days[0], type.days[1]);
   const crew = (plan.crewIds || []).map(id => s.crew.find(c => c.id === id)).filter(Boolean);
   if (ship) { const c = classOf(game, ship);
@@ -64,7 +66,7 @@ export function estimate(game, plan) {
     fuel = type.mode === 'remote' ? 5 : Math.max(2, Math.round(path * c.fuelPerAu * (ret ? 2 : 1) / fuelEfficiency(game)));
     if (fuel > ship.fuel) errors.push(`Needs ${fuel} kg of propellant; ${ship.name} has ${Math.round(ship.fuel)} kg.`);
     const prep = PREP[plan.prep || 0]; const ops = c.opsPerDay * (days + 0.4 * (travel + ret));
-    cost = Math.round(ops * (1 + prep.cost) + 100);
+    cost = Math.round((ops * (1 + prep.cost) + 100) * expeditionCostMult(game));
     if (s.resources.credits < cost) errors.push(`Needs ${cost} RC.`);
     const known = type.mode !== 'recovery' && s.discoveries.some(d => d.targetId === target.id);
     const pilot = crew.filter(isPilot).reduce((a, m) => Math.max(a, (m.skills.robotics + m.skills.engineering) / 2), 0);
@@ -165,7 +167,7 @@ function complete(game, ex) {
   addCredits(game, credits, `Mission reward: ${ex.name}`, 'income'); s.resources.researchPoints += rp; s.resources.reputation += rep; setStage(game, ex, 'COMPLETED'); ex.status = 'done'; ex.outcome = `Data quality ${Math.round(q * 100)}%`; ex.rewards = { credits, rp, rep }; s.earth.completed += 1;
   game.log(`MISSION COMPLETE: ${ex.name} (+${credits} RC, +${rp} RP, +${rep} reputation).`, 'good'); record(game, { kind: 'mission', title: `Mission completed: ${ex.name}`, text: ex.outcome, major: s.earth.completed === 1, ref: ex.id });
   game.addMessage({ from: 'Mission Operations', subject: `Mission complete: ${ex.name}`, body: `Final data quality ${Math.round(q * 100)}%. Rewards credited.`, type: 'info', fictional: false });
-  game.emit?.('expedition-complete', ex);
+  contractsOnExpedition(game, ex); game.emit?.('expedition-complete', ex);
 }
 export function abortExpedition(game, id) {
   const s = game.state, ex = s.expeditions.find(x => x.id === id); if (!ex || ['COMPLETED', 'FAILED', 'CANCELLED', 'ABORTED', 'RECOVERY', 'ANALYSIS'].includes(ex.stage)) return { ok: false, error: 'This mission cannot be aborted now.' };

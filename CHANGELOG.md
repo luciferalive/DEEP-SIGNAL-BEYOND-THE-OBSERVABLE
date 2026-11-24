@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 (in progress) - milestone 2c
+- Earth contracts (survey, expedition, discovery quota) with deadlines, rewards and penalties; emergency missions that unlock the Emergency mission expedition type only while a request is active.
+- Budget allocation (science / operations / expeditions / reserve) with real multipliers; reserve share of each grant becomes savings that cover a deficit.
+- Discovery Archive: sorting and side-by-side comparison.
+- Test that renders every view module (catches syntax errors the engine tests cannot).
+- Not done in V2: data-economy uses beyond dataset quality fields, research-category requirement tiers, per-autosave rotating backups (only pre-migration backups exist).
+
 ## 0.3.0 (in progress) - milestone 2b
 - 43 technologies in 10 branches with status labels (established / hypothesis / speculative), data requirements (analysed datasets by kind) and unlock effects; visual SVG tech tree.
 - Six purchasable instruments unlocked by technology (spectral, infrared, X-ray, gamma, neutrino, gravitational-wave); instrument catalogue in the Observatory; capabilities refresh from the catalog so old saves gain new target classes.

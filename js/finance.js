@@ -2,6 +2,7 @@
 import { BASE, DAY } from './constants.js';
 import { formatDate } from './time-engine.js';
 import { storageCap } from './station.js';
+import { upkeepMult, splitGrant } from './earth.js';
 
 export const CATEGORIES = ['Personnel and station', 'Missions', 'Research and publications', 'Observations', 'Spacecraft', 'Infrastructure', 'Grants and funding', 'Repairs and servicing', 'Other'];
 export function categoryOf(label) {
@@ -28,7 +29,7 @@ export function spend(game, cost, label) {
   addCredits(game, -cost, label, 'expense');
   return true;
 }
-export const dailyUpkeep = game => BASE.upkeepPerDay + Math.max(0, game.state.crew.length - 5) * 25 + game.state.spacecraft.filter(x => !['Lost', 'Expended'].includes(x.status)).length * 8 - 8;
+export const dailyUpkeep = game => upkeepMult(game) * (BASE.upkeepPerDay + Math.max(0, game.state.crew.length - 5) * 25 + game.state.spacecraft.filter(x => !['Lost', 'Expended'].includes(x.status)).length * 8 - 8);
 
 // Called once per game day.
 export function dailyFinance(game) {
@@ -37,8 +38,9 @@ export function dailyFinance(game) {
   if (day - s.finance.lastGrantDay >= BASE.grantEveryDays) {
     s.finance.lastGrantDay = day;
     const grant = Math.round(BASE.monthlyGrant * (1 + 0.04 * s.resources.reputation));
-    addCredits(game, grant, 'Monthly research grant from Earth', 'income');
-    game.log(`Monthly research grant received: ${grant.toLocaleString('en-US')} RC.`, 'good');
+    const usable = splitGrant(game, grant);
+    addCredits(game, usable, 'Monthly research grant from Earth', 'income');
+    game.log(`Monthly research grant received: ${grant.toLocaleString('en-US')} RC${usable < grant ? ` (${grant - usable} RC set aside as savings)` : ''}.`, 'good');
     closeMonth(game);
   }
   if (day >= s.finance.nextResupplyDay) {

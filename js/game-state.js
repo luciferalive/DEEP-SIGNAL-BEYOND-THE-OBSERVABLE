@@ -28,7 +28,7 @@ export function createNewGame(seed = Date.now() % 2147483647) {
     events: { pending: null, history: [], pauseObsUntil: 0, records: [], responses: [] },
     finance: { ledger: [], lastGrantDay: 0, nextResupplyDay: BASE.resupplyFirstDay, lastSupplyRequestDay: -999, reports: [], period: { income: 0, expense: 0, byCat: {} }, reserve: 600 },
     chronicle: [], publications: [], modules: {},
-    schedule: [], expeditions: [], comms: { interruptedUntil: 0, history: [] }, earth: { completed: 0, failed: 0, aborted: 0 },
+    schedule: [], expeditions: [], comms: { interruptedUntil: 0, history: [] }, earth: { contracts: [], completed: 0, failed: 0, aborted: 0 },
     bookmarks: [], tracked: [], destinations: [],
     history: { oxygen: [], water: [], food: [], power: [], credits: [] },
     log: [],

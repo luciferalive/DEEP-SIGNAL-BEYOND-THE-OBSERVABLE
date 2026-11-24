@@ -1,3 +1,4 @@
+import { emergencyActive } from '../earth.js';
 import { esc, num, pct, bar, badge, panel, head, empty, select, btn, tabs } from '../ui-components.js';
 import { estimate, targetsFor, STAGES, PREP, activeExpeditions, targetOf } from '../expeditions.js';
 import { isIdle, classOf } from '../spacecraft.js';
@@ -9,7 +10,7 @@ export const title = 'Expeditions';
 const HIDDEN = new Set(['emergency']);
 export function defaultPlan(game) { const t = game.data.expTypes.find(x => !HIDDEN.has(x.id)); return { type: t.id, targetId: '', shipId: '', crewIds: [], equipment: [], days: t.days[0], prep: 0 }; }
 export function render(ui) {
-  const g = ui.game, s = g.state, st = ui.s; const plan = st.plan || (st.plan = defaultPlan(g)); const types = g.data.expTypes.filter(t => !HIDDEN.has(t.id)); const type = g.data.typeById[plan.type];
+  const g = ui.game, s = g.state, st = ui.s; const plan = st.plan || (st.plan = defaultPlan(g)); const types = g.data.expTypes.filter(t => !HIDDEN.has(t.id) || emergencyActive(g)); const type = g.data.typeById[plan.type];
   const ships = s.spacecraft.filter(x => isIdle(x) && type.classes.includes(x.class)); if (plan.shipId && !ships.some(x => x.id === plan.shipId)) { plan.shipId = ''; plan.crewIds = []; plan.equipment = []; }
   const ship = s.spacecraft.find(x => x.id === plan.shipId); const targets = targetsFor(g, type); if (plan.targetId && !targets.some(t => t.id === plan.targetId)) plan.targetId = '';
   const e = plan.targetId && ship ? estimate(g, plan) : null; const cls = ship && classOf(g, ship);
