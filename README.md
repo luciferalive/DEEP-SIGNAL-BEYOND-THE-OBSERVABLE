@@ -15,7 +15,7 @@
 ![Browser game](https://img.shields.io/badge/browser_game-0a1426)
 ![Simulation](https://img.shields.io/badge/space_simulation-0a1426)
 
-**[▶ Play online](https://luciferalive.github.io/DEEP-SIGNAL-BEYOND-THE-OBSERVABLE/)** · **[Run it](#-run-it) · [What you do](#-what-you-do) · [Real vs fictional](#-real-vs-fictional-the-core-rule) · [Roadmap status](#-the-five-versions) · [Honest limits](#-honest-limits)**
+**[📖 How to play (PDF)](docs/HOW_TO_PLAY.pdf)** · **[▶ Play online](https://luciferalive.github.io/DEEP-SIGNAL-BEYOND-THE-OBSERVABLE/)** · **[Run it](#-run-it) · [What you do](#-what-you-do) · [Real vs fictional](#-real-vs-fictional-the-core-rule) · [Roadmap status](#-the-five-versions) · [Honest limits](#-honest-limits)**
 
 </div>
 
@@ -28,6 +28,17 @@ It is **2189**. You command **Meridian Station**, a deep-space observatory at th
 Then something in the data doesn't add up.
 
 What begins as an observatory sim grows, in one continuous universe and one continuous save, into a civilization that surveys the galaxy, plants colonies at other stars, and chases mysteries that may or may not have an explanation. **There is no final boss.** There are eras, and the universe keeps going after each one.
+
+## 📖 New here? How to play
+
+Read the **[How to Play guide (PDF)](docs/HOW_TO_PLAY.pdf)**. The 30-second version:
+
+1. Click **New game**, then **unpause** with a speed button (the game starts paused).
+2. **Observatory**: observe a real object.
+3. **Research Laboratory**: analyse the data to earn research points.
+4. **Technology Tree**: spend them on upgrades.
+5. **Mission Control**: take Earth contracts for credits and reputation.
+6. Watch power, life support and crew morale, and investigate anomalies when they appear.
 
 ## 🔭 What you do
 
