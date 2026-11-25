@@ -1,70 +1,102 @@
-# DEEP SIGNAL: BEYOND THE OBSERVABLE
+<div align="center">
 
-A browser-based scientific exploration and cosmic-mystery simulation set in 2189. You command **Meridian Station**, a deep-space observatory at Sun–Earth L2. Observe real astronomical objects, analyse your data, run missions for Earth Mission Control and decide what counts as a discovery.
+<img src="assets/images/banner.svg" alt="DEEP SIGNAL: Beyond the Observable" width="100%">
 
-**Current version: 0.2.0** (V2 milestone 1 of the roadmap)
+### *Observe the real universe. Investigate the unknown. Decide what counts as a discovery.*
 
-## Run it
+![version](https://img.shields.io/badge/version-1.0.0-5ee0ff?style=for-the-badge)
+![save format](https://img.shields.io/badge/save_format-v7-e3c987?style=for-the-badge)
+![tests](https://img.shields.io/badge/tests-77_passing-3fb97a?style=for-the-badge)
+![deps](https://img.shields.io/badge/dependencies-zero-8a7cff?style=for-the-badge)
+![license](https://img.shields.io/badge/license-MIT-lightgrey?style=for-the-badge)
+
+![JavaScript](https://img.shields.io/badge/ES_Modules-F7DF1E?logo=javascript&logoColor=black)
+![No build](https://img.shields.io/badge/no_build_step-111?logo=html5&logoColor=white)
+![Browser game](https://img.shields.io/badge/browser_game-0a1426)
+![Simulation](https://img.shields.io/badge/space_simulation-0a1426)
+
+**[Run it](#-run-it) · [What you do](#-what-you-do) · [Real vs fictional](#-real-vs-fictional-the-core-rule) · [Roadmap status](#-the-five-versions) · [Honest limits](#-honest-limits)**
+
+</div>
+
+---
+
+## 🛰️ The pitch
+
+It is **2189**. You command **Meridian Station**, a deep-space observatory at the Sun–Earth L2 point. Point real instruments at real objects, turn raw data into research, run missions for Earth Mission Control, and keep a crew alive while you do it.
+
+Then something in the data doesn't add up.
+
+What begins as an observatory sim grows, in one continuous universe and one continuous save, into a civilization that surveys the galaxy, plants colonies at other stars, and chases mysteries that may or may not have an explanation. **There is no final boss.** There are eras, and the universe keeps going after each one.
+
+## 🔭 What you do
+
+| | |
+|---|---|
+| **Observe** | Optical and radio observation of 59+ real catalogue objects, pulsars, clusters, asteroids and comets. Buy better instruments. Noise, completeness and reliability are tracked on every dataset. |
+| **Research** | 62 technologies in a visual tree with data requirements, from basic optics to wormhole theory. Each is labelled real, simulated, speculative or fictional. |
+| **Command** | Crew with specialisations and training, station modules, power and life support, a fleet you can design and build, 8-stage expeditions with risk and recovery. |
+| **Answer to Earth** | Contracts, emergency missions, budget allocation, monthly finance, publications and peer review. |
+| **Investigate** | Anomalies are staged investigations. Evidence is noisy and can conflict. You propose hypotheses, set a confidence, conclude, and may be proven wrong later. |
+| **Expand** | Planetary exploration, relays, factories, mines, outposts, interstellar precursor probes, a galactic map of 48 sectors out to 8,000 ly, and colonies that fail if you can't supply them. |
+| **Listen** | Decode signals from unknown civilizations (fictional), exchange messages across light-delay, and face decisions with real consequences. |
+| **Remember** | A permanent searchable timeline, an archive, achievements and eras, and a Universe Memory summary. |
+
+## 🧭 Real vs fictional: the core rule
+
+Everything on screen is labelled. No exceptions.
+
+| Label | Meaning |
+|---|---|
+| 🟢 **REAL** | Astronomy catalogue data (stars, pulsars, clusters, small bodies). Missing values show `DATA UNKNOWN`, never a made-up number. |
+| 🔵 **SIMULATED** | Game mechanics modelled on real science: planet ratings, economics, signal delay, colony supply. |
+| 🟣 **SPECULATIVE** | Plausible but unproven science: precursor probes, fusion and antimatter drives, wormhole theory. |
+| 🔴 **FICTIONAL** | Invented story content: unknown civilizations, mysteries, procedural star systems, the 2189 setting. |
+
+## 🚀 Run it
+
+No build step. No dependencies. Needs only a static server (the game loads JSON and ES modules, so `file://` will not work).
 
 ```bash
-python3 -m http.server 8000     # any static server works
+git clone https://github.com/luciferalive/DEEP-SIGNAL-BEYOND-THE-OBSERVABLE.git
+cd DEEP-SIGNAL-BEYOND-THE-OBSERVABLE
+python3 -m http.server 8000      # or: npm start
 # open http://localhost:8000
-npm test                        # engine tests (Node 18+, no dependencies)
 ```
 
-The game must be served over HTTP (not opened as a `file://` page) because it loads JSON data and ES modules.
+```bash
+npm test                         # 77 engine tests, Node 18+
+```
 
-## Principles
+## 🗺️ The five versions
 
-- **Real and fictional data are kept separate.** The Universe Explorer contains only real objects (`category: known`). Earth agencies, crew, the station and the 2189 setting are fiction and labelled as simulated.
-- **No invented measurements.** Missing values show `DATA UNKNOWN`; uncertainties are shown where known.
-- **Honesty about data provenance:** values were compiled from published catalogues from memory and have **not** been re-verified against live archives (`last_verified` is `null` for every object). Live verification is planned.
-- **Saves are never overwritten without confirmation** (autosave is the only silent overwrite, and only of the autosave slot).
+One universe, one save lineage. Saves from every earlier version still load, with an automatic backup made before any migration.
 
-## Status by version
+| Version | Theme | Highlights |
+|---|---|---|
+| **V1** | The Observatory | 14 sections, game clock, real catalogue, optical/radio observation, labs, crew, station, missions, archive |
+| **V2** | The Living Universe | Scheduler and speed ladder, fleet and expeditions, 43 technologies, instruments, anomaly investigation, Earth contracts, finance |
+| **V3** | Beyond Human Limits | Planetary stages, facilities, ship design, interstellar probes, civilization index and policies |
+| **V4** | The Unknown | Persistent mystery engine, hypotheses, anomaly network, decisions, rare events, unknown civilizations |
+| **V5** | Beyond the Observable | Galactic map, colonies, networks, cosmic intelligence, achievements, procedural mysteries |
 
-The roadmap is V1 → V2 (The Living Universe) → V3 → V4 → V5, all in one continuous universe and one save lineage. See `DEVELOPMENT_ROADMAP.md` for the full spec checklist.
+<details>
+<summary><b>V5 in detail</b></summary>
 
-### V1 (0.1.0) – kept intact
+- **Galactic Map:** 8 rings × 6 sectors out to 8,000 ly. Survey range grows with technology. Real stars plus deterministic procedural FICTIONAL systems, seeded per save.
+- **Interstellar Civilization:** station, mine, hub and relay colonies up to 150 ly, years of transit with 10% loss, supply and sustainability, failure when starved. Five network priorities.
+- **Cosmic Intelligence:** decode signals to reveal lore, study alien technology for a data-yield bonus.
+- **Frontier:** 10 achievements, eras, unlimited method refinement, procedurally generated mysteries, chronicle compaction.
 
-All V1 systems still work: 14 original sections, game clock, 59 real catalogue objects, observatory (optical and radio), research laboratory and technology tree (7 technologies), crew, station life support and power, one spacecraft (refuel/repair), 6 missions, Earth communications, 6 decision events, anomaly re-observation, discovery archive, finance, saves.
+</details>
 
-### V2 milestone 1 (0.2.0) – implemented and tested
+## ⚙️ Under the hood
 
-| Spec item | What exists now |
-| --- | --- |
-| V2.2 Cosmic events (partial) | Every event is a structured record (id, type, category, severity, time, description, affected systems, consequences, resolution, status). Time-limited science alerts: solar flare, stellar variability, coronal mass ejection, pulsar timing, supernova candidate, gamma-ray burst and gravitational-wave alerts (the last two can only be logged: no such instruments exist yet). Flares and CMEs really lower solar output. All are labelled simulated. |
-| V2.8 Station infrastructure | Ten modules, levels 1–4, condition, power draw, upgrade cost/time, servicing. Effects reach real systems: solar output and battery, storage caps, instrument accuracy, analysis speed, repair speed, convoy transit, health recovery, morale, crew efficiency, mission rewards. |
-| V2.9 Finance (partial) | Monthly reports from running totals with spending categories, financial warnings from the real balance, player-set emergency reserve. |
-| V2.17 Publications | Five types, four stages, peer review that can return weak work, rewards in RP, reputation and credits. |
-| V2.18 Civilization history | Permanent timeline with search, kind filter and major milestones; rebuilt from older saves once. |
-| V2.19 Saves (partial) | Format v2, validated, V1→V2 migration, automatic backup before any older save is upgraded, recovery to the newest readable save. |
-
-### Status by version (honest)
-
-- **V2 The Living Universe** – implemented: speed ladder and scheduler, spacecraft classes and fleet, 8-stage expeditions with risk and recovery, communications link states, crew specialisations/training/hiring/shifts, 43 technologies with data requirements and a visual tree, six purchasable instruments, pulsars/clusters/asteroids/comets, staged anomaly investigation, Earth contracts and emergency missions, budget allocation, archive sorting/comparison, saves v1→v5 with automatic backups.
-  Not done in V2: data-economy uses beyond dataset quality fields, research-category requirement tiers, rotating per-autosave backups (only pre-migration backups).
-- **V3 Beyond Human Limits** (save v5) – implemented in compact form: planetary exploration stages, facilities (relay, factory, mines, outposts), resource stock and connection rules, settlements, spacecraft design and construction, interstellar precursor probes, civilization index, policies and map.
-  Not done in V3: multiple independent stations, a separate deep-space-network simulation beyond relay range, resource logistics routes (production is credited to a single stock), crewed settlement life-support detail.
-- **V4 The Unknown** (save v6) – implemented: persistent mystery engine with 7 data-driven FICTIONAL arcs (Silent Star, Forgotten Transmission, Impossible Planet, Dark Structure, Observer, Distant Signal, Empty System), 7-stage investigations with real instruments/techs/expeditions, noisy conflicting evidence with a hidden truth, player hypotheses with confidence, calibrated conclusions and later disputes, follow-ups and experiments, anomaly network cross-references, five scientific decisions with consequences, rare cosmic events, unknown civilizations with light-delay messaging, fictional catalogue objects in the Universe Explorer, archive integration, extraordinary anomaly causes (3%).
-  Not done in V4: more than 7 arcs (the data format is expandable), branching story text beyond the evidence lines, crew assignment to specific steps, a map placement of fictional objects.
-- **V5** – not started (nothing is claimed).
-
-Tested with `npm test` (engine tests including migration of genuine saves made by the V1, V2, V3 and V4 engines in `tests/fixtures/`, plus a test that renders every view) and with headless Chromium: every section renders with no console errors.
-
-### V5 (1.0.0) - implemented and tested
-Galactic map and surveys, colonies, networks, cosmic intelligence, achievements, procedural mysteries, memory. 77 automated tests pass (`node tests/run.mjs`), including migrations from real v1-v6 saves and a 3-year deterministic run; all views were opened in a browser without console errors.
-
-**Not done / limits (honest):** colonies capped at 150 ly; no per-ship fleet simulation (networks are aggregate); no combat or multiplayer; planets of all systems are simulated, not real; touch and screen-reader support are basic; long-run balance beyond about 3 simulated years is lightly tested.
-
-## Known limitations
-
-- Values for the astronomy database were compiled from memory of published catalogues and are not re-verified against live archives (`last_verified` is null).
-- Gameplay numbers are hand-tuned and not playtested at length.
-- Transient-event responses are a simplified 4-hour block, not full observations.
-- Mobile layout was checked at 390 px in an emulator only; no real-device or cross-browser testing (Chromium only).
-
-## Project layout
+- **Deterministic, DOM-free engine.** Seeded RNG (mulberry32), a 600 s tick and an event scheduler. The engine runs in Node with no browser.
+- **Pure views.** Each section is a `render(ui)` function; one delegated event handler drives all actions.
+- **Safe saves.** Format v7, validated on load, stepwise migrations, automatic backup before upgrading, recovery to the newest readable save.
+- **Tested against real history.** Migration tests use genuine saves written by the V1 to V6 engines, plus a 3-year deterministic run and a test that renders every view.
+- **Fast.** About 0.8 s to simulate a year; saves around 200 KB.
 
 ```
 index.html          entry point
@@ -73,9 +105,31 @@ data/               JSON: real astronomy + game content
 js/                 DOM-free engine modules (tested in Node)
 js/views/           one module per navigation section
 js/ui-manager.js    router, actions, saves, modals
-tests/run.mjs       engine tests
+tests/              engine tests and real save fixtures
 ```
 
-## Changelog
+## ⚠️ Honest limits
 
-See `CHANGELOG.md`.
+- Astronomy values were compiled from published catalogues from memory and are **not** re-verified against live archives (`last_verified` is `null`).
+- Colonies are capped at 150 ly; networks are aggregate, with no per-ship fleet simulation.
+- Gameplay numbers are hand-tuned; balance beyond about 3 simulated years is lightly tested.
+- Browser testing was Chromium only; mobile was checked in an emulator at 390 px; accessibility is basic.
+- No multiplayer or combat.
+
+Per-version "not done" lists are in `CHANGELOG.md` and `DEVELOPMENT_ROADMAP.md`.
+
+## 📚 Docs
+
+[`CHANGELOG.md`](CHANGELOG.md) · [`ARCHITECTURE.md`](ARCHITECTURE.md) · [`SYSTEMS.md`](SYSTEMS.md) · [`DEVELOPMENT_ROADMAP.md`](DEVELOPMENT_ROADMAP.md) · [`DATA_SOURCES.md`](DATA_SOURCES.md)
+
+---
+
+<div align="center">
+
+### 🏷️ Suggested GitHub topics
+
+`space-game` `space-simulation` `astronomy` `browser-game` `javascript` `es-modules` `no-dependencies` `sci-fi` `science-fiction` `mystery` `strategy-game` `management-simulation` `procedural-generation` `deterministic` `exoplanets` `observatory` `idle-game` `text-based-game` `save-migration` `vanilla-js`
+
+*Suggested repo description:* **Command a deep-space observatory in 2189. Observe real objects, chase fictional mysteries, colonise the galaxy. Zero-dependency browser sci-fi sim.**
+
+</div>
