@@ -52,6 +52,11 @@ All V1 systems still work: 14 original sections, game clock, 59 real catalogue o
 
 Tested with `npm test` (engine tests including migration of genuine saves made by the V1, V2, V3 and V4 engines in `tests/fixtures/`, plus a test that renders every view) and with headless Chromium: every section renders with no console errors.
 
+### V5 (1.0.0) - implemented and tested
+Galactic map and surveys, colonies, networks, cosmic intelligence, achievements, procedural mysteries, memory. 77 automated tests pass (`node tests/run.mjs`), including migrations from real v1-v6 saves and a 3-year deterministic run; all views were opened in a browser without console errors.
+
+**Not done / limits (honest):** colonies capped at 150 ly; no per-ship fleet simulation (networks are aggregate); no combat or multiplayer; planets of all systems are simulated, not real; touch and screen-reader support are basic; long-run balance beyond about 3 simulated years is lightly tested.
+
 ## Known limitations
 
 - Values for the astronomy database were compiled from memory of published catalogues and are not re-verified against live archives (`last_verified` is null).

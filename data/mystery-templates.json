@@ -1,0 +1,207 @@
+{
+ "truths": [
+  "natural",
+  "interference",
+  "instrumental",
+  "unknown",
+  "artificial"
+ ],
+ "stages": [
+  "detect",
+  "verify",
+  "characterise",
+  "pattern",
+  "source"
+ ],
+ "titles": {
+  "detect": "Initial detection",
+  "verify": "Independent verification",
+  "characterise": "Characterisation",
+  "pattern": "Pattern analysis",
+  "source": "Source investigation"
+ },
+ "clues": {
+  "detect": {
+   "natural": "A faint, repeatable change in {s} fits what is known about {n}.",
+   "interference": "The feature in {s} lines up with a known terrestrial or station interference pattern.",
+   "instrumental": "The same feature shows up in calibration frames taken with {s} out of the field, so the instrument is the likely source.",
+   "unknown": "A change in {s} that does not match any catalogued behaviour. No obvious cause.",
+   "artificial": "A change in {s} with an oddly regular structure: {a}."
+  },
+  "verify": {
+   "natural": "A second look confirms the change and its slow drift, consistent with {n}.",
+   "interference": "The second dataset shows the feature moving with the station's own cycles, not with the sky.",
+   "instrumental": "A cross-check with a second detector does not reproduce the feature.",
+   "unknown": "A second independent look reproduces the feature. It is real but unexplained.",
+   "artificial": "The feature repeats in the second dataset with the same structure: {a}."
+  },
+  "characterise": {
+   "natural": "Its spectrum and timing are broad and smooth, as expected for {n}.",
+   "interference": "Its spectrum is narrow and sits on a band used by human equipment.",
+   "instrumental": "Its amplitude follows the detector temperature and gain, not the target.",
+   "unknown": "Its spectrum and timing match nothing in the reference tables.",
+   "artificial": "Its spectrum is unusually narrow and stable, and its timing is too regular for a natural process: {a}."
+  },
+  "pattern": {
+   "natural": "Over a month the pattern wanders irregularly and decays, like {n}.",
+   "interference": "The pattern vanishes whenever the station changes its operating mode.",
+   "instrumental": "The pattern appears and disappears with detector maintenance.",
+   "unknown": "The pattern persists, is not periodic, and is not obviously stochastic. Different analyses disagree.",
+   "artificial": "The pattern repeats on a fixed cycle and carries structure that survives re-analysis: {a}."
+  },
+  "source": {
+   "natural": "The source region shows an ordinary physical environment, consistent with {n}.",
+   "interference": "No source is found at the position; the signal came from within the Solar System's own transmissions.",
+   "instrumental": "On-site instruments see nothing at all. The earlier detections were produced by the detector chain.",
+   "unknown": "On-site measurements find a real source, but its nature cannot be classified with current knowledge.",
+   "artificial": "On-site measurements find a compact source whose behaviour is hard to explain without design: {a}."
+  }
+ },
+ "vocab": [
+  {
+   "theme": "signal",
+   "kind1": "radio",
+   "kind2": "optical",
+   "tech": "high-gain-antennas",
+   "data": "radio",
+   "exp": "radio-signal-investigation",
+   "s": "a faint radio source",
+   "n": "an unresolved pulsar population",
+   "a": "pulses grouped by a rule that repeats",
+   "tags": [
+    "signal"
+   ]
+  },
+  {
+   "theme": "signal",
+   "kind1": "radio",
+   "kind2": "infrared",
+   "tech": "laser-communications",
+   "data": "radio",
+   "exp": "deep-space-exploration",
+   "s": "a narrow-band emission",
+   "n": "a maser in a gas cloud",
+   "a": "a carrier that shifts as a moving transmitter would",
+   "tags": [
+    "signal",
+    "deep-space"
+   ]
+  },
+  {
+   "theme": "object",
+   "kind1": "optical",
+   "kind2": "spectral",
+   "tech": "exoplanet-science",
+   "data": "spectral",
+   "exp": "planetary-survey",
+   "s": "a planetary transit signal",
+   "n": "an unusual but possible formation history",
+   "a": "a transit shape with flat, geometric edges",
+   "tags": [
+    "object",
+    "exoplanet"
+   ]
+  },
+  {
+   "theme": "object",
+   "kind1": "infrared",
+   "kind2": "optical",
+   "tech": "habitability",
+   "data": "spectral",
+   "exp": "planetary-survey",
+   "s": "a dust ring",
+   "n": "a young collisional disk",
+   "a": "rings with sharp, evenly spaced gaps",
+   "tags": [
+    "object",
+    "star"
+   ]
+  },
+  {
+   "theme": "structure",
+   "kind1": "gravitational",
+   "kind2": "optical",
+   "tech": "extreme-gravity",
+   "data": "gravitational",
+   "exp": "gravitational-wave-research",
+   "s": "a gravitational-wave residual",
+   "n": "an unresolved merger background",
+   "a": "a repeating pattern in the residual",
+   "tags": [
+    "structure",
+    "gravity"
+   ]
+  },
+  {
+   "theme": "structure",
+   "kind1": "infrared",
+   "kind2": "spectral",
+   "tech": "cosmology",
+   "data": "infrared",
+   "exp": "deep-space-exploration",
+   "s": "a faint background glow",
+   "n": "diffuse emission from unresolved galaxies",
+   "a": "a glow whose edges follow a regular grid",
+   "tags": [
+    "structure"
+   ]
+  },
+  {
+   "theme": "signal",
+   "kind1": "radio",
+   "kind2": "radio",
+   "tech": "quantum-mechanics",
+   "data": "radio",
+   "exp": "radio-signal-investigation",
+   "s": "a burst repeating from one direction",
+   "n": "a magnetar flaring on a long cycle",
+   "a": "bursts whose spacing encodes a ratio",
+   "tags": [
+    "signal"
+   ]
+  },
+  {
+   "theme": "object",
+   "kind1": "optical",
+   "kind2": "infrared",
+   "tech": "stellar-classification",
+   "data": "optical",
+   "exp": "stellar-observation",
+   "s": "a star that dims in steps",
+   "n": "a clumpy cloud of dust crossing the star",
+   "a": "dips with identical shapes at fixed intervals",
+   "tags": [
+    "object",
+    "star"
+   ]
+  }
+ ],
+ "adjectives": [
+  "Wandering",
+  "Patient",
+  "Hollow",
+  "Twin",
+  "Quiet",
+  "Burning",
+  "Leaning",
+  "Fading",
+  "Returning",
+  "Veiled",
+  "Counting",
+  "Borrowed"
+ ],
+ "nouns": [
+  "Light",
+  "Echo",
+  "Lantern",
+  "Window",
+  "Tide",
+  "Garden",
+  "Choir",
+  "Mirror",
+  "Threshold",
+  "Ledger",
+  "Beacon",
+  "Horizon"
+ ]
+}

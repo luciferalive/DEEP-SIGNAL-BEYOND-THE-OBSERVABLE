@@ -871,6 +871,257 @@
     }
    ],
    "label": "FICTIONAL storyline built on real observing methods"
+  },
+  {
+   "id": "the-edge",
+   "title": "THE EDGE OF THE MAP",
+   "theme": "structure",
+   "blurb": "Surveys of the most distant regions show a faint, sharp boundary where the expected distribution of galaxies and radiation thins out unexpectedly.",
+   "truthWeights": {
+    "natural": 0.38,
+    "interference": 0.04,
+    "instrumental": 0.26,
+    "unknown": 0.28,
+    "artificial": 0.04
+   },
+   "tags": [
+    "structure",
+    "cosmology"
+   ],
+   "links": [
+    "dark-structure",
+    "empty-system"
+   ],
+   "unlock": {
+    "minDay": 400,
+    "tier": "Solar Programme",
+    "tech": "unified-cosmology"
+   },
+   "object": {
+    "name": "DS-8 (the boundary)",
+    "designation": "DS-8",
+    "classification": "Unexplained boundary in distant surveys",
+    "group": "unknown",
+    "ra_deg": 180.0,
+    "dec_deg": 60.0,
+    "distance_ly": 8000,
+    "characteristics": "FICTIONAL. A sharp edge in the most distant survey data, at the limit of the mapped region."
+   },
+   "civ": null,
+   "clues": [
+    {
+     "id": "detect",
+     "title": "Initial detection",
+     "step": {
+      "kind": "observe",
+      "instrument": "infrared",
+      "hours": 12,
+      "cost": 80
+     },
+     "points": {
+      "natural": "A faint, repeatable change in the outer boundary of the survey volume fits what is known about a selection effect of the survey and dust.",
+      "interference": "The feature in the outer boundary of the survey volume lines up with a known terrestrial or station interference pattern.",
+      "instrumental": "The same feature shows up in calibration frames taken with the outer boundary of the survey volume out of the field, so the instrument is the likely source.",
+      "unknown": "A change in the outer boundary of the survey volume that does not match any catalogued behaviour. No obvious cause.",
+      "artificial": "A change in the outer boundary of the survey volume with an oddly regular structure: a boundary that is too smooth and too regular for a selection effect."
+     }
+    },
+    {
+     "id": "verify",
+     "title": "Independent verification",
+     "step": {
+      "kind": "observe",
+      "instrument": "gravitational",
+      "hours": 24,
+      "cost": 160
+     },
+     "points": {
+      "natural": "A second look confirms the change and its slow drift, consistent with a selection effect of the survey and dust.",
+      "interference": "The second dataset shows the feature moving with the station's own cycles, not with the sky.",
+      "instrumental": "A cross-check with a second detector does not reproduce the feature.",
+      "unknown": "A second independent look reproduces the feature. It is real but unexplained.",
+      "artificial": "The feature repeats in the second dataset with the same structure: a boundary that is too smooth and too regular for a selection effect."
+     }
+    },
+    {
+     "id": "characterise",
+     "title": "Characterisation",
+     "step": {
+      "kind": "research",
+      "tech": "unified-cosmology",
+      "data": {
+       "gravitational": 2
+      }
+     },
+     "points": {
+      "natural": "Its spectrum and timing are broad and smooth, as expected for a selection effect of the survey and dust.",
+      "interference": "Its spectrum is narrow and sits on a band used by human equipment.",
+      "instrumental": "Its amplitude follows the detector temperature and gain, not the target.",
+      "unknown": "Its spectrum and timing match nothing in the reference tables.",
+      "artificial": "Its spectrum is unusually narrow and stable, and its timing is too regular for a natural process: a boundary that is too smooth and too regular for a selection effect."
+     }
+    },
+    {
+     "id": "pattern",
+     "title": "Pattern analysis",
+     "step": {
+      "kind": "monitor",
+      "days": 30,
+      "cost": 300
+     },
+     "points": {
+      "natural": "Over a month the pattern wanders irregularly and decays, like a selection effect of the survey and dust.",
+      "interference": "The pattern vanishes whenever the station changes its operating mode.",
+      "instrumental": "The pattern appears and disappears with detector maintenance.",
+      "unknown": "The pattern persists, is not periodic, and is not obviously stochastic. Different analyses disagree.",
+      "artificial": "The pattern repeats on a fixed cycle and carries structure that survives re-analysis: a boundary that is too smooth and too regular for a selection effect."
+     }
+    },
+    {
+     "id": "source",
+     "title": "Source investigation",
+     "step": {
+      "kind": "mission",
+      "expType": "gravitational-wave-research"
+     },
+     "points": {
+      "natural": "The source region shows an ordinary physical environment, consistent with a selection effect of the survey and dust.",
+      "interference": "No source is found at the position; the signal came from within the Solar System's own transmissions.",
+      "instrumental": "On-site instruments see nothing at all. The earlier detections were produced by the detector chain.",
+      "unknown": "On-site measurements find a real source, but its nature cannot be classified with current knowledge.",
+      "artificial": "On-site measurements find a compact source whose behaviour is hard to explain without design: a boundary that is too smooth and too regular for a selection effect."
+     }
+    }
+   ],
+   "label": "FICTIONAL storyline built on real observing methods"
+  },
+  {
+   "id": "the-long-silence",
+   "title": "THE LONG SILENCE",
+   "theme": "object",
+   "blurb": "A system you could settle looks as if it was once settled by someone else, and then left.",
+   "truthWeights": {
+    "natural": 0.34,
+    "interference": 0.02,
+    "instrumental": 0.14,
+    "unknown": 0.3,
+    "artificial": 0.2
+   },
+   "tags": [
+    "object",
+    "civilization"
+   ],
+   "links": [
+    "the-observer",
+    "forgotten-transmission"
+   ],
+   "unlock": {
+    "minDay": 500,
+    "tier": "Interplanetary Society",
+    "tech": "interstellar-colonization"
+   },
+   "object": {
+    "name": "DS-9 (the long silence)",
+    "designation": "DS-9",
+    "classification": "System with signs of past habitation",
+    "group": "unknown",
+    "ra_deg": 100.0,
+    "dec_deg": -70.0,
+    "distance_ly": 95,
+    "characteristics": "FICTIONAL. A system whose orbits and debris suggest it was once used and abandoned."
+   },
+   "civ": {
+    "name": "The Absent Builders (provisional)",
+    "distanceLy": 95,
+    "disposition": "silent",
+    "reason": "A civilization that has left, or one that no longer sends."
+   },
+   "clues": [
+    {
+     "id": "detect",
+     "title": "Initial detection",
+     "step": {
+      "kind": "observe",
+      "instrument": "optical",
+      "hours": 12,
+      "cost": 80
+     },
+     "points": {
+      "natural": "A faint, repeatable change in the system's planets and orbital debris fits what is known about natural impact debris from a past collision.",
+      "interference": "The feature in the system's planets and orbital debris lines up with a known terrestrial or station interference pattern.",
+      "instrumental": "The same feature shows up in calibration frames taken with the system's planets and orbital debris out of the field, so the instrument is the likely source.",
+      "unknown": "A change in the system's planets and orbital debris that does not match any catalogued behaviour. No obvious cause.",
+      "artificial": "A change in the system's planets and orbital debris with an oddly regular structure: debris whose orbits show deliberate placement."
+     }
+    },
+    {
+     "id": "verify",
+     "title": "Independent verification",
+     "step": {
+      "kind": "observe",
+      "instrument": "infrared",
+      "hours": 24,
+      "cost": 160
+     },
+     "points": {
+      "natural": "A second look confirms the change and its slow drift, consistent with natural impact debris from a past collision.",
+      "interference": "The second dataset shows the feature moving with the station's own cycles, not with the sky.",
+      "instrumental": "A cross-check with a second detector does not reproduce the feature.",
+      "unknown": "A second independent look reproduces the feature. It is real but unexplained.",
+      "artificial": "The feature repeats in the second dataset with the same structure: debris whose orbits show deliberate placement."
+     }
+    },
+    {
+     "id": "characterise",
+     "title": "Characterisation",
+     "step": {
+      "kind": "research",
+      "tech": "interstellar-colonization",
+      "data": {
+       "infrared": 2
+      }
+     },
+     "points": {
+      "natural": "Its spectrum and timing are broad and smooth, as expected for natural impact debris from a past collision.",
+      "interference": "Its spectrum is narrow and sits on a band used by human equipment.",
+      "instrumental": "Its amplitude follows the detector temperature and gain, not the target.",
+      "unknown": "Its spectrum and timing match nothing in the reference tables.",
+      "artificial": "Its spectrum is unusually narrow and stable, and its timing is too regular for a natural process: debris whose orbits show deliberate placement."
+     }
+    },
+    {
+     "id": "pattern",
+     "title": "Pattern analysis",
+     "step": {
+      "kind": "monitor",
+      "days": 30,
+      "cost": 300
+     },
+     "points": {
+      "natural": "Over a month the pattern wanders irregularly and decays, like natural impact debris from a past collision.",
+      "interference": "The pattern vanishes whenever the station changes its operating mode.",
+      "instrumental": "The pattern appears and disappears with detector maintenance.",
+      "unknown": "The pattern persists, is not periodic, and is not obviously stochastic. Different analyses disagree.",
+      "artificial": "The pattern repeats on a fixed cycle and carries structure that survives re-analysis: debris whose orbits show deliberate placement."
+     }
+    },
+    {
+     "id": "source",
+     "title": "Source investigation",
+     "step": {
+      "kind": "mission",
+      "expType": "planetary-survey"
+     },
+     "points": {
+      "natural": "The source region shows an ordinary physical environment, consistent with natural impact debris from a past collision.",
+      "interference": "No source is found at the position; the signal came from within the Solar System's own transmissions.",
+      "instrumental": "On-site instruments see nothing at all. The earlier detections were produced by the detector chain.",
+      "unknown": "On-site measurements find a real source, but its nature cannot be classified with current knowledge.",
+      "artificial": "On-site measurements find a compact source whose behaviour is hard to explain without design: debris whose orbits show deliberate placement."
+     }
+    }
+   ],
+   "label": "FICTIONAL storyline built on real observing methods"
   }
  ]
 }

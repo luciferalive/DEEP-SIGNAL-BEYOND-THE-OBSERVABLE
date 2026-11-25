@@ -19,15 +19,20 @@ import { startPublication } from './publications.js';
 import { setReserve } from './finance.js';
 import { refuel, repairSystem } from './spacecraft.js';
 import { startClue, requestFollowup, proposeHypothesis, withdrawHypothesis, conclude, reopenMystery, resolveDecision, transmit } from './mysteries.js';
+import { startSurvey } from './galaxy.js';
+import { foundColony } from './colonies.js';
+import { setPriorities, PRIORITY_KEYS } from './network.js';
+import { investDecoding, studyTechnology } from './cosmic-intelligence.js';
+import { refine } from './endgame.js';
 import { buildFacility, staffFacility, serviceFacility, importMaterials, setPolicy } from './civilization.js';
 import { saveDesign, deleteDesign, buildShip } from './shipyard.js';
 import { launchProbe } from './interstellar.js';
 import { acceptContract, declineContract, setAllocation, releaseSavings, ALLOC_KEYS } from './earth.js';
 import * as V from './views/index.js';
 
-const NAV_GROUPS = { command: 'Station', explorer: 'Science', observatory: 'Science', lab: 'Science', spacecraft: 'Fleet', expeditions: 'Fleet', shipyard: 'Fleet', worlds: 'Civilization', interstellar: 'Civilization', civilization: 'Civilization', missions: 'Earth', crew: 'Station', tech: 'Science', events: 'Universe', archive: 'Science', anomalies: 'Universe', comms: 'Earth', finance: 'Earth', station: 'Station', publications: 'Science', history: 'Universe', mysteries: 'Universe', settings: 'System' };
-const NAV = [['command', 'Command Centre'], ['crew', 'Crew Management'], ['station', 'Station Infrastructure'], ['explorer', 'Universe Explorer'], ['observatory', 'Observatory'], ['lab', 'Research Laboratory'], ['tech', 'Technology Tree'], ['archive', 'Discovery Archive'], ['publications', 'Publications'], ['spacecraft', 'Spacecraft'], ['shipyard', 'Shipyard'], ['expeditions', 'Expeditions'], ['worlds', 'Worlds and Facilities'], ['interstellar', 'Interstellar'], ['civilization', 'Civilization'], ['missions', 'Mission Control'], ['comms', 'Communications'], ['finance', 'Financial Management'], ['events', 'Cosmic Events'], ['anomalies', 'Anomaly Investigation'], ['mysteries', 'The Unknown'], ['history', 'Civilization History'], ['settings', 'Settings']];
-const VIEWS = { command: V.command, explorer: V.explorer, observatory: V.observatory, lab: V.lab, spacecraft: V.spacecraft, shipyard: V.shipyard, worlds: V.worlds, interstellar: V.interstellar, civilization: V.civilization, expeditions: V.expeditions, missions: V.missions, crew: V.crew, tech: V.tech, events: V.events, archive: V.archive, anomalies: V.anomalies, mysteries: V.mysteries, comms: V.comms, finance: V.finance, station: V.station, publications: V.publications, history: V.history, settings: V.settings };
+const NAV_GROUPS = { command: 'Station', explorer: 'Science', observatory: 'Science', lab: 'Science', spacecraft: 'Fleet', expeditions: 'Fleet', shipyard: 'Fleet', worlds: 'Civilization', interstellar: 'Civilization', galaxy: 'Beyond', colonies: 'Beyond', achievements: 'Beyond', civilization: 'Civilization', missions: 'Earth', crew: 'Station', tech: 'Science', events: 'Universe', archive: 'Science', anomalies: 'Universe', comms: 'Earth', finance: 'Earth', station: 'Station', publications: 'Science', history: 'Universe', mysteries: 'Universe', settings: 'System' };
+const NAV = [['command', 'Command Centre'], ['crew', 'Crew Management'], ['station', 'Station Infrastructure'], ['explorer', 'Universe Explorer'], ['observatory', 'Observatory'], ['lab', 'Research Laboratory'], ['tech', 'Technology Tree'], ['archive', 'Discovery Archive'], ['publications', 'Publications'], ['spacecraft', 'Spacecraft'], ['shipyard', 'Shipyard'], ['expeditions', 'Expeditions'], ['worlds', 'Worlds and Facilities'], ['interstellar', 'Interstellar'], ['civilization', 'Civilization'], ['galaxy', 'Galactic Map'], ['colonies', 'Interstellar Civilization'], ['achievements', 'Frontier and Achievements'], ['missions', 'Mission Control'], ['comms', 'Communications'], ['finance', 'Financial Management'], ['events', 'Cosmic Events'], ['anomalies', 'Anomaly Investigation'], ['mysteries', 'The Unknown'], ['history', 'Civilization History'], ['settings', 'Settings']];
+const VIEWS = { command: V.command, explorer: V.explorer, observatory: V.observatory, lab: V.lab, spacecraft: V.spacecraft, shipyard: V.shipyard, worlds: V.worlds, interstellar: V.interstellar, galaxy: V.galaxy, colonies: V.colonies, achievements: V.achievements, civilization: V.civilization, expeditions: V.expeditions, missions: V.missions, crew: V.crew, tech: V.tech, events: V.events, archive: V.archive, anomalies: V.anomalies, mysteries: V.mysteries, comms: V.comms, finance: V.finance, station: V.station, publications: V.publications, history: V.history, settings: V.settings };
 const $ = s => document.querySelector(s);
 
 export class UI {
@@ -194,6 +199,15 @@ export class UI {
       case 'my-reopen': return this.res(reopenMystery(g, id), 'Case re-opened.');
       case 'decision-resolve': return this.res(resolveDecision(g, id, +v), 'Decision made.');
       case 'civ-transmit': return this.res(transmit(g, id, v), 'Message sent.');
+      case 'sector-select': s.sector = id; return this.render(true);
+      case 'sector-survey': return this.res(startSurvey(g, id), 'Survey started.');
+      case 'col-tab': s.colTab = id; return this.render(true);
+      case 'col-set': s.colSys = $('#col-sys')?.value; s.colType = $('#col-type')?.value; s.colPop = +($('#col-pop')?.value || 4); return this.render(true);
+      case 'col-found': return this.res(foundColony(g, $('#col-sys')?.value, $('#col-type')?.value, +$('#col-pop')?.value), 'Colony expedition launched.');
+      case 'net-set': return this.res(setPriorities(g, Object.fromEntries(PRIORITY_KEYS.map(k => [k, $(`#pr-${k}`)?.value]))), 'Priorities applied.');
+      case 'civ-decode': return this.res(investDecoding(g, id), 'Decoding effort made.');
+      case 'civ-study': return this.res(studyTechnology(g, id), 'Technology studied.');
+      case 'refine': return this.res(refine(g), 'Methods refined.');
       case 'buy-instrument': return this.res(buyInstrument(g, id), 'Instrument purchased.');
       case 'an-initial': return this.res(startInitialAnalysis(g, id), 'Initial analysis started.');
       case 'an-hypothesis': return this.res(setHypothesis(g, id, v), 'Working hypothesis set.');

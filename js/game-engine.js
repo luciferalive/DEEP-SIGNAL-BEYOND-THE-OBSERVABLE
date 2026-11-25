@@ -1,3 +1,7 @@
+import { colonyDaily } from './colonies.js';
+import { continuousDaily } from './endgame.js';
+import './galaxy.js';
+import { studiedCount } from './cosmic-intelligence.js';
 import { mysteriesTick } from './mysteries.js';
 import { civilizationDaily, relayBonus } from './civilization.js';
 import './interstellar.js';
@@ -64,6 +68,7 @@ export class Game {
   techEffect(type, kind) {
     let sum = 0;
     for (const id of Object.keys(this.state.tech.researched)) for (const e of this.data.techById[id]?.effects || []) if (e.type === type && (!kind || !e.kind || e.kind === kind)) sum += e.value;
+    if (type === 'dataYield') sum += 0.02 * (this.state.refinements || 0) + 0.03 * studiedCount(this);
     return sum;
   }
   networkRangeBonus() { return relayBonus(this); }
@@ -79,7 +84,7 @@ export class Game {
     eventsTick(this); missionControlTick(this); expeditionsTick(this);
     const day = Math.floor(s.time.t / DAY);
     if (s.finance.lastUpkeepDay === undefined) s.finance.lastUpkeepDay = Math.floor((s.time.t - dt) / DAY);
-    while (s.finance.lastUpkeepDay < day) { s.finance.lastUpkeepDay += 1; dailyFinance(this); civilizationDaily(this); mysteriesTick(this); }
+    while (s.finance.lastUpkeepDay < day) { s.finance.lastUpkeepDay += 1; dailyFinance(this); civilizationDaily(this); mysteriesTick(this); colonyDaily(this); continuousDaily(this); }
     this.sampleHistory();
   }
   sampleHistory() {

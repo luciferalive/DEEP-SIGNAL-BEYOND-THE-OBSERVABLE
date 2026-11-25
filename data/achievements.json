@@ -1,0 +1,124 @@
+{
+ "achievements": [
+  {
+   "id": "galactic-cartographer",
+   "title": "Galactic Cartographer",
+   "text": "Map 24 of the 48 galactic sectors.",
+   "metric": "sectors",
+   "target": 24,
+   "reward": {
+    "rep": 6,
+    "rp": 200
+   },
+   "label": "SIMULATED milestone"
+  },
+  {
+   "id": "frontier-explorer",
+   "title": "Frontier Explorer",
+   "text": "Map sectors out to 1000 light-years.",
+   "metric": "radius",
+   "target": 1000,
+   "reward": {
+    "rep": 5,
+    "rp": 150
+   },
+   "label": "SIMULATED milestone"
+  },
+  {
+   "id": "interstellar-infrastructure",
+   "title": "Interstellar Infrastructure",
+   "text": "Have 3 active colonies at other stars.",
+   "metric": "colonies",
+   "target": 3,
+   "reward": {
+    "rep": 8,
+    "rp": 250
+   },
+   "label": "SIMULATED milestone"
+  },
+  {
+   "id": "multi-system-network",
+   "title": "A Network Across Systems",
+   "text": "Have active colonies in 2 different systems with a research station among them.",
+   "metric": "netsystems",
+   "target": 2,
+   "reward": {
+    "rep": 6,
+    "rp": 200
+   },
+   "label": "SIMULATED milestone"
+  },
+  {
+   "id": "autonomous-network",
+   "title": "Autonomous Exploration Network",
+   "text": "Run 4 active facilities without staff, with autonomous fleets researched.",
+   "metric": "autonomous",
+   "target": 4,
+   "reward": {
+    "rep": 5,
+    "rp": 150
+   },
+   "label": "SIMULATED milestone"
+  },
+  {
+   "id": "mystery-solver",
+   "title": "Solver of Mysteries",
+   "text": "Correctly conclude 4 investigations.",
+   "metric": "solved",
+   "target": 4,
+   "reward": {
+    "rep": 6,
+    "rp": 200
+   },
+   "label": "FICTIONAL storylines"
+  },
+  {
+   "id": "theoretical-frontier",
+   "title": "Theoretical Frontier",
+   "text": "Research 6 frontier-physics technologies.",
+   "metric": "frontier",
+   "target": 6,
+   "reward": {
+    "rep": 5,
+    "rp": 250
+   },
+   "label": "Includes SPECULATIVE and FICTIONAL technology"
+  },
+  {
+   "id": "first-contact",
+   "title": "First Contact (fictional)",
+   "text": "Receive a reply from a fictional civilization.",
+   "metric": "replies",
+   "target": 1,
+   "reward": {
+    "rep": 10,
+    "rp": 300
+   },
+   "label": "FICTIONAL"
+  },
+  {
+   "id": "changed-understanding",
+   "title": "A Changed Understanding",
+   "text": "Decode 75% of a fictional civilization's records.",
+   "metric": "decode",
+   "target": 75,
+   "reward": {
+    "rep": 8,
+    "rp": 300
+   },
+   "label": "FICTIONAL"
+  },
+  {
+   "id": "edge-of-the-observable",
+   "title": "The Edge of the Observable",
+   "text": "Correctly conclude the investigation The Edge of the Map.",
+   "metric": "edge",
+   "target": 1,
+   "reward": {
+    "rep": 10,
+    "rp": 400
+   },
+   "label": "FICTIONAL"
+  }
+ ]
+}

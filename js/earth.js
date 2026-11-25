@@ -8,7 +8,7 @@ export const ALLOC_DEFAULT = { science: 40, operations: 30, expeditions: 20, res
 export const allocation = game => game.state.finance.allocation || ALLOC_DEFAULT;
 // Effects: science share raises research points from analysis; operations share lowers daily upkeep; expeditions share lowers mission cost;
 // the reserve share of each monthly grant is set aside as protected savings.
-export const rpMult = game => (1 + (allocation(game).science - 25) / 250) * (game.state.flags.priorityUntil > game.state.time.t ? 0.8 : 1);
+export const rpMult = game => (1 + (allocation(game).science - 25) / 250) * (game.state.flags.priorityUntil > game.state.time.t ? 0.8 : 1) * (game.unlocked('network:manage') && game.state.network ? 1 + ((game.state.network.priority.research ?? 20) - 20) / 150 : 1);
 export const upkeepMult = game => 1 - (allocation(game).operations - 25) / 500;
 export const expeditionCostMult = game => 1 - (allocation(game).expeditions - 25) / 400;
 export function setAllocation(game, a) {
@@ -47,7 +47,7 @@ function offer(game, tpl) {
 export function acceptContract(game, uid) {
   const c = game.state.earth.contracts.find(x => x.uid === uid); if (!c || c.status !== 'offered') return { ok: false, error: 'Not available.' };
   if (game.state.earth.contracts.filter(x => x.status === 'active').length >= 3) return { ok: false, error: 'You can hold at most 3 active contracts.' };
-  c.status = 'active'; c.acceptedAt = game.state.time.t; c.deadline = c.acceptedAt + c.days * DAY; c.base = { discoveries: game.state.discoveries.length }; return { ok: true };
+  c.status = 'active'; c.acceptedAt = game.state.time.t; c.deadline = c.acceptedAt + c.days * DAY; c.base = { discoveries: game.state.discoveries.length, sectors: game.state.galaxy?.count || 0 }; return { ok: true };
 }
 export function declineContract(game, uid) {
   const c = game.state.earth.contracts.find(x => x.uid === uid); if (!c || c.status !== 'offered') return { ok: false, error: 'Not available.' };
@@ -63,6 +63,7 @@ function finish(game, c, ok) {
 export function contractProgress(game, c) {
   const s = game.state; if (c.status !== 'active') return c.progress;
   if (c.kind === 'datasets') return s.datasets.filter(d => d.status === 'analysed' && d.analysedAt >= c.acceptedAt && (d.kind === c.dataKind)).length;
+  if (c.kind === 'sectors') return Math.max(0, (s.galaxy?.count || 0) - (c.base?.sectors ?? 0));
   if (c.kind === 'discoveries') return Math.max(0, s.discoveries.length - (c.base?.discoveries ?? 0));
   return c.progress;
 }

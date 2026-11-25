@@ -1248,24 +1248,389 @@
    "status": "hypothesis",
    "data": {},
    "category": ""
-  }
- ],
- "planned": [
-  {
-   "branch": "Propulsion",
-   "version": "V5",
-   "items": [
-    "Advanced fusion concepts",
-    "Antimatter research",
-    "Experimental spacetime propulsion (fictional)"
-   ]
   },
   {
+   "id": "fusion-drive",
+   "name": "Fusion propulsion concepts",
+   "branch": "Propulsion",
+   "description": "Engineering concepts for fusion-powered spacecraft, studied in real research programmes.",
+   "costRP": 300,
+   "costCredits": 9000,
+   "days": 28,
+   "requires": [
+    "advanced-propulsion",
+    "nuclear-thermal"
+   ],
+   "effects": [
+    {
+     "type": "cruiseFraction",
+     "value": 0.05
+    }
+   ],
+   "effectText": "Interstellar probes cruise 0.05 c faster",
+   "limitation": "HYPOTHESIS: net-energy fusion in a flight-weight engine is not demonstrated. Needs an orbital factory and materials.",
+   "status": "hypothesis",
+   "data": {},
+   "category": "",
+   "facility": "factory",
+   "materials": 40
+  },
+  {
+   "id": "antimatter-research",
+   "name": "Antimatter production and storage",
+   "branch": "Propulsion",
+   "description": "Producing and containing antimatter. Real laboratories make tiny amounts; storing useful quantities is far beyond current ability.",
+   "costRP": 420,
+   "costCredits": 14000,
+   "days": 36,
+   "requires": [
+    "fusion-drive",
+    "high-energy-physics"
+   ],
+   "effects": [
+    {
+     "type": "cruiseFraction",
+     "value": 0.1
+    }
+   ],
+   "effectText": "Interstellar probes cruise 0.1 c faster",
+   "limitation": "SPECULATIVE at the scale needed for propulsion. Needs a factory and a large stock of materials.",
+   "status": "speculative",
+   "data": {},
+   "category": "",
+   "facility": "factory",
+   "materials": 80
+  },
+  {
+   "id": "advanced-navigation",
+   "name": "Advanced autonomous navigation",
+   "branch": "Robotics",
+   "description": "Onboard navigation that corrects course over decades without contact.",
+   "costRP": 220,
+   "costCredits": 6000,
+   "days": 22,
+   "requires": [
+    "autonomous-operations",
+    "relativity"
+   ],
+   "effects": [
+    {
+     "type": "shipReliability",
+     "value": 0.1
+    },
+    {
+     "type": "cruiseFraction",
+     "value": 0.02
+    }
+   ],
+   "effectText": "More reliable long voyages; probes 0.02 c faster",
+   "limitation": "Cannot fix hardware failures.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "spacetime-drive-concept",
+   "name": "Spacetime drive concept",
+   "branch": "Propulsion",
+   "description": "FICTIONAL TECHNOLOGY: a speculative drive that bends spacetime around the ship. No such device is known to be possible.",
+   "costRP": 700,
+   "costCredits": 30000,
+   "days": 60,
+   "requires": [
+    "antimatter-research",
+    "spacetime-engineering"
+   ],
+   "effects": [
+    {
+     "type": "cruiseFraction",
+     "value": 0.3
+    },
+    {
+     "type": "unlock",
+     "key": "fiction:spacetime-drive"
+    }
+   ],
+   "effectText": "FICTIONAL: probes cruise 0.3 c faster",
+   "limitation": "FICTIONAL TECHNOLOGY. Not real science. Needs enormous resources and a factory.",
+   "status": "fictional",
+   "data": {},
+   "category": "",
+   "facility": "factory",
+   "materials": 200
+  },
+  {
+   "id": "extreme-gravity",
+   "name": "Extreme gravity physics",
    "branch": "Theory",
-   "version": "V5",
-   "items": [
-    "Hypothetical wormhole research (fictional)"
-   ]
+   "description": "General relativity applied to black holes, neutron stars and mergers, tested by gravitational-wave observations.",
+   "costRP": 260,
+   "costCredits": 6000,
+   "days": 24,
+   "requires": [
+    "relativity",
+    "gravitational-physics"
+   ],
+   "effects": [
+    {
+     "type": "dataYield",
+     "value": 0.04
+    },
+    {
+     "type": "unlock",
+     "key": "frontier:extreme-gravity"
+    }
+   ],
+   "effectText": "+4% data yield; unlocks extreme-gravity studies",
+   "limitation": "Established theory, but its regime near singularities is untested.",
+   "status": "established",
+   "data": {
+    "gravitational": 2
+   },
+   "category": ""
+  },
+  {
+   "id": "wormhole-theory",
+   "name": "Wormhole theory",
+   "branch": "Theory",
+   "description": "Mathematical solutions of general relativity that connect distant regions. No evidence that they exist.",
+   "costRP": 380,
+   "costCredits": 9000,
+   "days": 32,
+   "requires": [
+    "spacetime-topology",
+    "exotic-matter"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "frontier:wormholes"
+    }
+   ],
+   "effectText": "Unlocks theoretical wormhole studies (no physical device)",
+   "limitation": "SPECULATIVE THEORY. Needs exotic matter that has never been observed.",
+   "status": "speculative",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "spacetime-engineering",
+   "name": "Theoretical spacetime engineering",
+   "branch": "Theory",
+   "description": "FICTIONAL TECHNOLOGY: deliberate manipulation of spacetime geometry. Not supported by any known physics.",
+   "costRP": 520,
+   "costCredits": 16000,
+   "days": 45,
+   "requires": [
+    "wormhole-theory",
+    "quantum-gravity"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "fiction:spacetime-engineering"
+    }
+   ],
+   "effectText": "FICTIONAL: unlocks the spacetime drive concept",
+   "limitation": "FICTIONAL TECHNOLOGY. Not real science.",
+   "status": "fictional",
+   "data": {},
+   "category": "",
+   "facility": "factory",
+   "materials": 100
+  },
+  {
+   "id": "unified-cosmology",
+   "name": "Unified cosmological framework",
+   "branch": "Theory",
+   "description": "A hypothetical framework joining quantum gravity with cosmology, aimed at the earliest universe and its boundary.",
+   "costRP": 480,
+   "costCredits": 12000,
+   "days": 36,
+   "requires": [
+    "advanced-cosmological-models",
+    "quantum-gravity"
+   ],
+   "effects": [
+    {
+     "type": "mapRangeLy",
+     "value": 1500
+    },
+    {
+     "type": "unlock",
+     "key": "frontier:unified-cosmology"
+    }
+   ],
+   "effectText": "Extends mapping range by 1500 ly; opens boundary studies",
+   "limitation": "ACTIVE HYPOTHESIS. Testable predictions are scarce.",
+   "status": "hypothesis",
+   "data": {
+    "gravitational": 2,
+    "radio": 2
+   },
+   "category": ""
+  },
+  {
+   "id": "galactic-survey-arrays",
+   "name": "Galactic survey arrays",
+   "branch": "Astronomy",
+   "description": "Wide-field survey arrays and relay-fed telescopes for mapping stars across our region of the galaxy.",
+   "costRP": 240,
+   "costCredits": 7000,
+   "days": 24,
+   "requires": [
+    "deep-space-relay",
+    "galactic-structure"
+   ],
+   "effects": [
+    {
+     "type": "mapRangeLy",
+     "value": 400
+    },
+    {
+     "type": "unlock",
+     "key": "galaxy:survey"
+    }
+   ],
+   "effectText": "Unlocks sector surveys; mapping range 500 ly",
+   "limitation": "Mapping range is limited by instrument sensitivity and relay coverage.",
+   "status": "established",
+   "data": {
+    "optical": 3
+   },
+   "category": ""
+  },
+  {
+   "id": "deep-field-surveys",
+   "name": "Deep-field surveys",
+   "branch": "Astronomy",
+   "description": "Long-baseline surveys reaching far across the galaxy.",
+   "costRP": 360,
+   "costCredits": 10000,
+   "days": 30,
+   "requires": [
+    "galactic-survey-arrays",
+    "cosmology"
+   ],
+   "effects": [
+    {
+     "type": "mapRangeLy",
+     "value": 2000
+    }
+   ],
+   "effectText": "Mapping range 2500 ly",
+   "limitation": "Distant regions are mapped at coarse resolution.",
+   "status": "established",
+   "data": {
+    "spectral": 3
+   },
+   "category": ""
+  },
+  {
+   "id": "galactic-cartography",
+   "name": "Galactic cartography",
+   "branch": "Astronomy",
+   "description": "Combining all survey data into a map of a large part of the Milky Way.",
+   "costRP": 500,
+   "costCredits": 13000,
+   "days": 36,
+   "requires": [
+    "deep-field-surveys",
+    "unified-cosmology"
+   ],
+   "effects": [
+    {
+     "type": "mapRangeLy",
+     "value": 5500
+    }
+   ],
+   "effectText": "Mapping range 8000 ly",
+   "limitation": "ACTIVE HYPOTHESIS for the most distant regions, where dust blocks the view.",
+   "status": "hypothesis",
+   "data": {
+    "infrared": 3
+   },
+   "category": ""
+  },
+  {
+   "id": "interstellar-colonization",
+   "name": "Interstellar colonization",
+   "branch": "Engineering",
+   "description": "Establishing permanent research settlements at other stars: transport, life support, supply and governance.",
+   "costRP": 450,
+   "costCredits": 15000,
+   "days": 40,
+   "requires": [
+    "habitat-engineering",
+    "fusion-drive",
+    "autonomous-operations"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "facility:colony"
+    }
+   ],
+   "effectText": "Unlocks interstellar colonies and research stations",
+   "limitation": "HYPOTHESIS: very long transit times and supply lines make this fragile.",
+   "status": "hypothesis",
+   "data": {},
+   "category": "",
+   "facility": "factory",
+   "materials": 120
+  },
+  {
+   "id": "network-engineering",
+   "name": "Civilization network engineering",
+   "branch": "Robotics",
+   "description": "Coordinating research, energy, logistics and manufacturing across many sites.",
+   "costRP": 280,
+   "costCredits": 8000,
+   "days": 24,
+   "requires": [
+    "deep-space-relay",
+    "manufacturing"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "network:manage"
+    }
+   ],
+   "effectText": "Unlocks network priorities",
+   "limitation": "Capacity still has to be built.",
+   "status": "established",
+   "data": {},
+   "category": ""
+  },
+  {
+   "id": "autonomous-fleets",
+   "name": "Autonomous fleets",
+   "branch": "Robotics",
+   "description": "Fleets of self-managing craft that explore and supply other systems.",
+   "costRP": 340,
+   "costCredits": 9000,
+   "days": 28,
+   "requires": [
+    "advanced-navigation",
+    "network-engineering"
+   ],
+   "effects": [
+    {
+     "type": "unlock",
+     "key": "ops:fleets"
+    },
+    {
+     "type": "shipReliability",
+     "value": 0.05
+    }
+   ],
+   "effectText": "Unlocks autonomous survey fleets",
+   "limitation": "HYPOTHESIS at interstellar scale.",
+   "status": "hypothesis",
+   "data": {},
+   "category": ""
   }
- ]
+ ],
+ "planned": []
 }

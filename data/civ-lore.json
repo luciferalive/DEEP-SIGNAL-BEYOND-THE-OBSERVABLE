@@ -1,0 +1,41 @@
+{
+ "label": "FICTIONAL lore. Nothing here describes the real universe.",
+ "sets": {
+  "curious": {
+   "history": [
+    "The transmissions are built from a layered code. The simplest layer is a counting system with a base the senders seem to have chosen for its symmetry.",
+    "A second layer records what looks like a long period of isolation, followed by a deliberate decision to listen rather than broadcast.",
+    "The third layer describes a catastrophe that nearly ended their civilization and the archive they built afterwards so it would never be forgotten.",
+    "The deepest layer is an invitation: a list of questions, addressed to whoever answers."
+   ],
+   "tech": [
+    "Their messages describe a method for filtering noise out of very faint signals.",
+    "They record a way to store information in stable atomic arrangements."
+   ]
+  },
+  "silent": {
+   "history": [
+    "The signal is a repeating carrier with a slow modulation. Decoding it shows a counting sequence and nothing more, so far.",
+    "Long-baseline comparison shows the modulation changes once every few thousand years, as if an automatic system updated the message.",
+    "The updates are small corrections, as if the source records the drift of its own clocks and stars.",
+    "The final decoded layer is a list of coordinates that match no star we know. They may be places the senders once lived."
+   ],
+   "tech": [
+    "The carrier is stabilised in a way our oscillators cannot match.",
+    "The sender corrects for stellar motion automatically."
+   ]
+  },
+  "cautious": {
+   "history": [
+    "The echoes contain a structured preamble that repeats, as if testing whether a listener understands the basic rules.",
+    "Subsequent layers show the senders answering only when a message follows their rules exactly. They seem careful.",
+    "The records describe past contact that went badly, and a decision to share little until trust is established.",
+    "The deepest layer is a short, polite refusal to share more now, and an offer to continue the exchange slowly."
+   ],
+   "tech": [
+    "The senders encode messages so that only a listener who has followed the preamble can read them.",
+    "Their echoes are shaped to carry as little energy as possible."
+   ]
+  }
+ }
+}

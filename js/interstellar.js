@@ -6,7 +6,7 @@ import { schedule, onSchedule } from './scheduler.js';
 import { record } from './chronicle.js';
 import { getObject } from './astronomy-database.js';
 
-export const PROBE_COST = 30000; export const CRUISE_C = 0.2; export const MAX_LY = 15; export const YEAR = 365.25 * DAY;
+export const PROBE_COST = 30000; export const CRUISE_C = 0.2; export const cruiseC = game => CRUISE_C + game.techEffect('cruiseFraction'); export const MAX_LY = 15; export const YEAR = 365.25 * DAY;
 export const probeTargets = game => game.data.db.list.filter(o => o.group === 'star' && o.distance_ly > 0 && o.distance_ly <= MAX_LY);
 export function launchProbe(game, targetId) {
   const s = game.state; const t = getObject(game.data.db, targetId);
@@ -14,7 +14,7 @@ export function launchProbe(game, targetId) {
   if (!t || t.group !== 'star' || !(t.distance_ly > 0) || t.distance_ly > MAX_LY) return { ok: false, error: `Choose a star within ${MAX_LY} light-years.` };
   if (s.interstellar.some(p => p.targetId === targetId && p.status !== 'lost')) return { ok: false, error: 'A probe is already on its way there.' };
   if (!spend(game, PROBE_COST, `Interstellar probe to ${t.name}`)) return { ok: false, error: `The probe costs ${PROBE_COST} RC.` };
-  const years = t.distance_ly / CRUISE_C; const p = { id: `probe-${s.uid++}`, targetId, launchedAt: s.time.t, arriveAt: s.time.t + years * YEAR, dataAt: s.time.t + (years + t.distance_ly) * YEAR, years: Math.round(years * 10) / 10, status: 'cruise', datasets: [] };
+  const years = t.distance_ly / cruiseC(game); const p = { id: `probe-${s.uid++}`, targetId, launchedAt: s.time.t, arriveAt: s.time.t + years * YEAR, dataAt: s.time.t + (years + t.distance_ly) * YEAR, years: Math.round(years * 10) / 10, status: 'cruise', datasets: [] };
   s.interstellar.push(p); schedule(game, p.arriveAt, 'probe-arrival', { id: p.id });
   game.log(`Interstellar probe launched toward ${t.name}: arrival in ${p.years} years (SPECULATIVE propulsion).`, 'info');
   record(game, { kind: 'mission', title: `Interstellar probe launched toward ${t.name}`, text: `Arrival in about ${p.years} years.`, major: true, ref: p.id }); return { ok: true, probe: p };

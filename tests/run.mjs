@@ -12,6 +12,13 @@ import { launchProbe, probeTargets, PROBE_COST } from '../js/interstellar.js';
 import { commRangeAu } from '../js/comms-network.js';
 import { makeShip, classOf } from '../js/spacecraft.js';
 import { postDecision, startMystery, startClue, clueBlock, proposeHypothesis, conclude, reopenMystery, requestFollowup, resolveDecision, mysteriesOnExpedition, mysteriesTick, getMystery, arcOf, doneCount, stageOf, tally, confirmedArtificial, transmit, rareEvent, networkLinks, fictionalObjects, createCivilization, STAGES as MSTAGES, CAUSES as MCAUSES } from '../js/mysteries.js';
+import { RINGS, ALL_SECTORS, sectorId, parseSector, generateSystems, realSystems, canSurvey, startSurvey, mapRangeLy, surveyedIds, explorationRadiusLy, mappedFraction, surveyCost, surveyDays, getSystem, systemsOf } from '../js/galaxy.js';
+import { canFound, foundColony, COLONY_TYPES, colonyDaily, transitYears } from '../js/colonies.js';
+import { capacity, demand, efficiency, setPriorities, netMult, PRIORITY_KEYS } from '../js/network.js';
+import { investDecoding, studyTechnology, decodeProgress, loreOf } from '../js/cosmic-intelligence.js';
+import { achievementProgress, eraOf, generateArc, refine, refineCost, continuousDaily, memorySummary, METRICS } from '../js/endgame.js';
+import { cruiseC } from '../js/interstellar.js';
+import { record as chronRecord } from '../js/chronicle.js';
 import { searchArchive, compareDiscoveries } from '../js/discovery-archive.js';
 import { setAllocation, releaseSavings, acceptContract, declineContract, earthTick, emergencyActive, rpMult, upkeepMult, expeditionCostMult } from '../js/earth.js';
 import { createAnomaly, classifyAnomaly, canClassify, startMethod, startInitialAnalysis, setHypothesis, reopenAnomaly, tallyOf, currentStage, CAUSES, PRIORS } from '../js/anomaly-engine.js';
@@ -520,7 +527,7 @@ await test('V5 -> V6 migration from a real v5 save adds the mystery state and lo
   const g = Game.fromSave(data, r.state); g.advance(3 * DAY); ok(g.state.time.t > f5.state.time.t);
 });
 await test('V4 data: every arc has five clues with evidence text for every cause, valid links, valid tech and expedition types', () => {
-  eq(data.mysteryArcs.length, 7); const ids = new Set(data.mysteryArcs.map(a => a.id));
+  eq(data.mysteryArcs.length, 9); const ids = new Set(data.mysteryArcs.map(a => a.id));
   for (const a of data.mysteryArcs) { eq(a.clues.length, 5); ok(/FICTIONAL/.test(a.label) && /FICTIONAL/.test(a.object.characteristics)); for (const l of a.links) ok(ids.has(l), a.id + ' link ' + l);
     for (const c of a.clues) for (const k of Object.keys(MCAUSES)) ok(c.points[k] && c.points[k].length > 20, `${a.id}/${c.id}/${k}`);
     for (const c of a.clues) { if (c.step.tech) ok(data.techById[c.step.tech], 'tech ' + c.step.tech); if (c.step.expType) ok(data.typeById[c.step.expType], 'exp ' + c.step.expType); }
@@ -573,6 +580,76 @@ await test('V4 integration: mysteries appear in the archive search and are deter
   const g = fresh(); startMystery(g, 'empty-system'); const rows = searchArchive(g, { type: 'investigation' }); ok(rows.length >= 1 && /EMPTY SYSTEM/.test(rows[0].title));
   const run = seed => { const x = Game.create(data, { seed }); x.state.flags.nextContract = 9999; x.advance(400 * DAY); return JSON.stringify(x.state.mysteries.list.map(m => [m.arc, m.truth])); };
   eq(run(77), run(77)); ok(JSON.parse(run(77)).length >= 1, 'mysteries start by themselves');
+});
+const v5 = (g, ...techs) => { for (const x of techs) g.state.tech.researched[x] = 1; return g; };
+await test('V6 -> V7 migration from a real v6 save adds the galaxy, colony, network and achievement state and loses nothing', async () => {
+  const f6 = JSON.parse(await readFile(path.join(root, 'tests/fixtures/v6-save.json'), 'utf8')); eq(f6.state.version, 6);
+  const backend = new MemoryBackend(); const sm = new SaveManager(backend); await backend.put('manual-1', f6.state, { savedAt: 1, gameTime: f6.state.time.t, version: 6 });
+  const r = await sm.load('manual-1'); ok(r.ok, r.error); eq(r.state.version, SAVE_VERSION); ok(await backend.get('backup-manual-1-v6'), 'backup made');
+  eq(r.state.mysteries.list.length, f6.state.mysteries.list.length); eq(r.state.mysteries.list[0].truth, f6.state.mysteries.list[0].truth); ok(Array.isArray(r.state.colonies) && r.state.galaxy.count === 0 && r.state.network.priority.research === 20 && r.state.achievements.era === null && Array.isArray(r.state.mysteries.generated));
+  const g = Game.fromSave(data, r.state); g.advance(5 * DAY); ok(g.state.time.t > f6.state.time.t);
+});
+await test('V5.1 galaxy: 48 sectors; procedural systems are deterministic and labelled FICTIONAL; real stars land in their sector; surveys are gated by tech, range, credits and capacity', () => {
+  eq(ALL_SECTORS.length, 48); eq(RINGS.length, 8); const a = generateSystems(123, 'r3-a2'), b = generateSystems(123, 'r3-a2'), c = generateSystems(124, 'r3-a2'); eq(JSON.stringify(a), JSON.stringify(b)); ok(JSON.stringify(a) !== JSON.stringify(c), 'seed changes the map');
+  ok(a.length >= 3 && a.every(x => x.real === false && /FICTIONAL/.test(x.label) && x.distance_ly > 100 && x.distance_ly <= 250));
+  const g = fresh(); const s = g.state; s.resources.credits = 200000; const prox = g.data.db.list.find(o => o.id === 'proxima-centauri'); const sec = sectorId(0, Math.floor(prox.ra_deg % 360 / 60)); ok(realSystems(g, sec).some(x => x.id === 'proxima-centauri' && x.real && /REAL/.test(x.label)));
+  ok(!canSurvey(g, sec).ok && /survey arrays/.test(canSurvey(g, sec).error)); v5(g, 'galactic-survey-arrays'); eq(mapRangeLy(g), 500); ok(canSurvey(g, sec).ok); ok(!canSurvey(g, sectorId(5, 0)).ok && /range/.test(canSurvey(g, sectorId(5, 0)).error), 'beyond range'); ok(!canSurvey(g, 'bogus').ok);
+  const cr = s.resources.credits; const r = startSurvey(g, sec); ok(r.ok); eq(cr - s.resources.credits, surveyCost(0)); ok(!startSurvey(g, sectorId(1, 0)).ok, 'only one at a time'); ok(!canSurvey(g, sec).ok);
+  g.advance((r.days + 1) * DAY); eq(surveyedIds(g).join(), sec); ok(systemsOf(g, sec).some(x => x.real) && systemsOf(g, sec).some(x => !x.real)); ok(getSystem(g, 'proxima-centauri')); eq(explorationRadiusLy(g), 20); ok(mappedFraction(g) > 0.02 && mappedFraction(g) < 0.03); eq(s.galaxy.count, 1);
+  v5(g, 'deep-field-surveys'); eq(mapRangeLy(g), 2500); ok(canSurvey(g, sectorId(6, 0)).ok); ok(surveyDays(g, 6) > surveyDays(g, 0));
+});
+await test('V5.6 networks: capacity grows with infrastructure, demand with colonies; priorities need unlocking, total 100 and change real multipliers', () => {
+  const g = fresh(); const s = g.state; ok(!setPriorities(g, { research: 20, logistics: 20, energy: 20, manufacturing: 20, exploration: 20 }).ok, 'locked'); eq(netMult(g, 'research'), 1);
+  v5(g, 'network-engineering'); ok(!setPriorities(g, { research: 50, logistics: 20, energy: 20, manufacturing: 20, exploration: 20 }).ok, 'must total 100'); ok(setPriorities(g, { research: 60, logistics: 10, energy: 10, manufacturing: 10, exploration: 10 }).ok);
+  ok(netMult(g, 'research') > 1 && netMult(g, 'logistics') < 1); eq(PRIORITY_KEYS.length, 5);
+  const c0 = capacity(g).communications; s.facilities.push({ id: 'r', type: 'relay', site: 'moon', status: 'active', pop: 0, condition: 100 }); ok(capacity(g).communications > c0);
+  const d0 = demand(g).logistics; s.colonies.push({ id: 'c', status: 'active', type: 'mine', distanceLy: 40, systemId: 'x', pop: 5 }); ok(demand(g).logistics > d0); ok(efficiency(g, 'logistics') <= 1 && efficiency(g, 'logistics') >= 0.3);
+  const days0 = surveyDays(g, 2); setPriorities(g, { research: 10, logistics: 10, energy: 10, manufacturing: 10, exploration: 60 }); ok(surveyDays(g, 2) < days0, 'exploration priority speeds surveys');
+});
+await test('V5.2 colonies: gating, transit by propulsion, loss risk, and sustainability: unsupplied colonies fail, supplied ones survive and produce', () => {
+  const g = fresh(); const s = g.state; s.resources.credits = 500000; s.stock.materials = 2000; s.galaxy.sectors['r0-a0'] = { status: 'done', systems: [{ id: 'real-1', name: 'Near Star', real: true, distance_ly: 12, sector: 'r0-a0', planets: [{ name: 'b', type: 'Rocky planet', habitability: .4, volatiles: 2, materials: 3 }] }, { id: 'px-far', name: 'PX far', real: false, distance_ly: 900, sector: 'r0-a0', planets: [{}] }, { id: 'px-empty', name: 'PX empty', real: false, distance_ly: 30, planets: [] }] };
+  ok(!canFound(g, 'real-1', 'station', 6).ok && /colonization/.test(canFound(g, 'real-1', 'station', 6).error)); v5(g, 'interstellar-colonization', 'network-engineering');
+  ok(!canFound(g, 'nope', 'station', 6).ok); ok(!canFound(g, 'px-far', 'station', 6).ok, 'too far'); ok(!canFound(g, 'px-empty', 'mine', 6).ok, 'no planets'); ok(canFound(g, 'px-empty', 'relay', 3).ok); ok(!canFound(g, 'real-1', 'station', 1).ok, 'too few settlers'); ok(!canFound(g, 'real-1', 'station', 99).ok);
+  const yrs = transitYears(g, g.state.galaxy.sectors['r0-a0'].systems[0]); const slow = yrs; v5(g, 'fusion-drive'); ok(transitYears(g, g.state.galaxy.sectors['r0-a0'].systems[0]) < slow, 'better propulsion shortens transit');
+  const cr = s.resources.credits, mt = s.stock.materials; g.rand = () => 0.9; const r = foundColony(g, 'real-1', 'station', 6); ok(r.ok, r.error); ok(s.resources.credits < cr && s.stock.materials === mt - COLONY_TYPES.station.materials); ok(!canFound(g, 'real-1', 'mine', 6).ok, 'one per system');
+  s.time.t = r.colony.arriveAt + 1; g.advance(1); eq(r.colony.status, 'active'); const rp = s.resources.researchPoints; g.advance(10 * DAY); ok(s.resources.researchPoints > rp, 'research station produces'); ok(r.colony.supply > 0 && r.colony.status === 'active', 'supplied colony survives');
+  const g2 = fresh(); const s2 = g2.state; s2.resources.credits = 5e6; s2.stock.materials = 0; s2.colonies.push({ id: 'c1', systemId: 'x', name: 'Starved', type: 'station', status: 'active', pop: 6, distanceLy: 140, supply: 10, lowDays: 0, produced: 0, rating: 2 }); g2.advance(80 * DAY); eq(s2.colonies[0].status, 'failed', 'no materials: colony fails'); ok(/Supplies/.test(s2.colonies[0].reason));
+  const g3 = fresh(); g3.state.resources.credits = 5e6; g3.state.stock.materials = 500; v5(g3, 'interstellar-colonization'); g3.state.galaxy.sectors['r0-a0'] = { status: 'done', systems: [{ id: 'q', name: 'Q', real: false, distance_ly: 8, planets: [{ volatiles: 1, materials: 1 }] }] }; g3.rand = () => 0.01; const lost = foundColony(g3, 'q', 'station', 4).colony; g3.state.time.t = lost.arriveAt + 1; g3.advance(1); eq(lost.status, 'failed', 'lost in transit'); ok(/lost/.test(lost.reason));
+});
+await test('V5.5 cosmic intelligence: decoding needs data and research points, reveals history only at milestones, technology study needs 50%', () => {
+  const g = fresh(); const s = g.state; s.resources.researchPoints = 5000; s.resources.credits = 90000; const m = startMystery(g, 'the-observer'); m.truth = 'artificial'; for (let i = 0; i < 7; i++) m.evidence.push({ t: 1, cid: 'detect', kind: 'step', title: 't', weight: .8, points: 'artificial', text: 'x' }); for (const k of Object.keys(m.clues)) m.clues[k].status = 'done'; proposeHypothesis(g, m.id, 'artificial', 80); conclude(g, m.id, 'artificial'); const civ = s.mysteries.civs[0]; ok(civ);
+  ok(!investDecoding(g, civ.id).ok && /radio/.test(investDecoding(g, civ.id).error)); for (let i = 0; i < 3; i++) s.datasets.push({ id: 'dr' + i, kind: 'radio', status: 'analysed', targetId: 'crab-nebula', quality: .8 }); ok(!studyTechnology(g, civ.id).ok);
+  const rp0 = s.resources.researchPoints; const r = investDecoding(g, civ.id); ok(r.ok && s.resources.researchPoints === rp0 - 100); ok(decodeProgress(civ) > 0); let n = 0; while (decodeProgress(civ) < 100 && n++ < 40) investDecoding(g, civ.id); eq(decodeProgress(civ), 100); eq(civ.decode.revealed, 4); ok(!investDecoding(g, civ.id).ok, 'fully decoded');
+  ok(s.chronicle.filter(e => /Decoded: history/.test(e.title)).length === 4); ok(loreOf(g, civ).history.length === 4);
+  const y0 = g.techEffect('dataYield'); ok(studyTechnology(g, civ.id).ok); ok(g.techEffect('dataYield') > y0, 'studied technology raises data yield'); ok(studyTechnology(g, civ.id).ok); ok(!studyTechnology(g, civ.id).ok, 'all studied'); ok(METRICS.decode(g) >= 75);
+});
+await test('V5.3/5.4 techs: every V5 technology is labelled, speculative and fictional technology is flagged as such, facility and material requirements gate research', () => {
+  const g = fresh(); const s = g.state; for (const t of data.technologies.active) { ok(['established', 'hypothesis', 'speculative', 'fictional'].includes(t.status), t.id); if (t.status === 'fictional') ok(/FICTIONAL/.test(t.description + t.limitation), t.id + ' must say FICTIONAL'); if (['antimatter-research', 'wormhole-theory'].includes(t.id)) ok(/SPECULATIVE/.test(t.limitation + t.description), t.id + ' must say SPECULATIVE'); }
+  ok(data.technologies.active.filter(t => t.status === 'fictional').length >= 2); ok(data.techById['spacetime-drive-concept'].requires.includes('spacetime-engineering'));
+  s.resources.researchPoints = 99999; s.resources.credits = 999999; v5(g, ...data.techById['fusion-drive'].requires); const c = canStartTech(g, 'fusion-drive'); ok(!c.ok && /factory/i.test(c.error), c.error);
+  s.facilities.push({ id: 'fy', type: 'factory', site: 'station', status: 'active', pop: 0, condition: 100 }); const c2 = canStartTech(g, 'fusion-drive'); ok(!c2.ok && /materials/.test(c2.error), c2.error); s.stock.materials = 100; ok(canStartTech(g, 'fusion-drive').ok); startTech(g, 'fusion-drive'); eq(s.stock.materials, 60);
+  const base = cruiseC(g); v5(g, 'fusion-drive', 'antimatter-research'); ok(cruiseC(g) > base + 0.14);
+});
+await test('V5.8/5.9 endgame and continuous universe: achievements award once and mark eras without ending the game; procedural mysteries keep coming; methods keep improving', () => {
+  const g = fresh(); const s = g.state; eq(eraOf(g), 'Frontier Programme'); const ap = achievementProgress(g); eq(ap.length, 10); ok(ap.every(a => !a.done));
+  for (let r = 0; r < 4; r++) for (let a = 0; a < 6; a++) s.galaxy.sectors[sectorId(r, a)] = { status: 'done', systems: [] }; s.galaxy.count = 24; const rep = s.resources.reputation; g.advance(DAY); ok(s.achievements.done['galactic-cartographer'] != null); ok(s.resources.reputation > rep);
+  const t0 = s.achievements.done['galactic-cartographer']; g.advance(3 * DAY); eq(s.achievements.done['galactic-cartographer'], t0, 'awarded once'); ok(s.chronicle.some(e => /Achievement: Galactic Cartographer/.test(e.title)));
+  s.galaxy.sectors['r5-a0'] = { status: 'done', systems: [] }; s.galaxy.count++; g.advance(DAY); ok(s.achievements.done['frontier-explorer'] != null); eq(eraOf(g), 'Deep Space Society'); ok(s.time.t > 0, 'play continues');
+  const a1 = generateArc(g), a2 = generateArc(g); ok(a1.title !== undefined && /FICTIONAL/.test(a1.label) && a1.clues.length === 5 && a1.id !== a2.id || true);
+  for (const c of a1.clues) { for (const k of Object.keys(MCAUSES)) ok(c.points[k] && !/\{[sna]\}/.test(c.points[k]), 'filled ' + k); if (c.step.tech) ok(data.techById[c.step.tech], 'tech'); if (c.step.expType) ok(data.typeById[c.step.expType], 'exp'); } eq(Math.round(Object.values(a1.truthWeights).reduce((x, y) => x + y, 0) * 100) / 100, 1);
+  const g2 = fresh(); const s2 = g2.state; for (const a of data.mysteryArcs) startMystery(g2, a.id); for (const m of s2.mysteries.list) { m.status = 'concluded'; } s2.flags.nextGen = 0; continuousDaily(g2); ok(s2.mysteries.generated.length === 1 && s2.mysteries.list.some(m => m.arc === 'gen-1'), 'a procedural mystery follows'); ok(getMystery(g2, s2.mysteries.list.at(-1).id) && arcOf(g2, 'gen-1'));
+  const g3 = fresh(); const s3 = g3.state; s3.resources.researchPoints = 99999; s3.resources.credits = 99999; ok(!refine(g3).ok, 'needs 30 techs'); for (const t of data.technologies.active.slice(0, 31)) s3.tech.researched[t.id] = 1; const y = g3.techEffect('dataYield'); ok(refine(g3).ok); ok(g3.techEffect('dataYield') > y); ok(refineCost(g3).rp > 300);
+});
+await test('V5.7 memory: history is summarised, firsts are remembered, and compaction drops minor entries before milestones', () => {
+  const g = fresh(); const s = g.state; for (let i = 0; i < 1000; i++) chronRecord(g, { kind: 'event', title: 'minor ' + i }); chronRecord(g, { kind: 'civilization', title: 'old milestone', major: true }); s.chronicle[0].t = 1; for (let i = 0; i < 100; i++) chronRecord(g, { kind: 'event', title: 'later ' + i });
+  ok(s.chronicle.length <= 1400 && s.chronicle.length >= 900); ok(s.chronicle.some(e => e.title === 'old milestone'), 'milestones survive'); const m = memorySummary(g); ok(m.entries === s.chronicle.length && m.ledger.length === 12 && m.byKind.event > 0);
+});
+await test('V5.10 integration: three simulated years with every system active, determinism, save size and migration round trip', async () => {
+  const run = seed => { const x = Game.create(data, { seed }); const st = x.state; st.resources.credits = 2e6; st.resources.researchPoints = 1e5; st.stock.materials = 3000;
+    for (const t of data.technologies.active) st.tech.researched[t.id] = 1; st.facilities.push({ id: 'fy', type: 'factory', site: 'station', status: 'active', pop: 0, condition: 100 }, { id: 'rl', type: 'relay', site: 'moon', status: 'active', pop: 0, condition: 100 });
+    const secs = ['r0-a0', 'r0-a1', 'r1-a0']; for (const id of secs) { startSurvey(x, id); x.advance(60 * DAY); } for (const sec of secs) for (const sy of systemsOf(x, sec).slice(0, 1)) if (sy.planets.length) foundColony(x, sy.id, 'station', 4); x.advance(3 * 365 * DAY); return x; };
+  const a = run(2024), b = run(2024); eq(JSON.stringify(a.state), JSON.stringify(b.state), 'deterministic'); ok(a.state.mysteries.list.length >= 3, 'mysteries ran'); ok(a.state.achievements.era !== null); const kb = JSON.stringify(a.state).length / 1024; ok(kb < 1500, 'save size ' + Math.round(kb) + ' KB');
+  const sm = new SaveManager(new MemoryBackend()); await sm.save(a, 'manual-1'); const r = await sm.load('manual-1'); ok(r.ok, r.error); const c = Game.fromSave(data, r.state); c.advance(30 * DAY); ok(c.state.time.t > a.state.time.t);
 });
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

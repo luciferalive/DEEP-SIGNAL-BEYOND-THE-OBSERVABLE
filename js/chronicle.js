@@ -1,9 +1,11 @@
 // Civilization history: a permanent timeline of milestones. Entries are never deleted (capped at 600 for save size).
-export const KINDS = ['station', 'mission', 'discovery', 'research', 'technology', 'event', 'anomaly', 'publication', 'infrastructure', 'finance'];
+export const KINDS = ['station', 'mission', 'discovery', 'research', 'technology', 'event', 'anomaly', 'publication', 'infrastructure', 'finance', 'exploration', 'civilization'];
 
 export function record(game, { kind, title, text = '', major = false, ref = null }) {
   const s = game.state; const e = { id: `h-${s.uid++}`, t: s.time.t, kind, title, text, major, ref };
-  s.chronicle.unshift(e); if (s.chronicle.length > 600) s.chronicle.length = 600;
+  s.chronicle.unshift(e);
+  // Keep the history bounded for save size. Milestones (major) are kept first: the oldest minor entries are dropped before any major one.
+  if (s.chronicle.length > 900) { let drop = s.chronicle.length - 900; for (let i = s.chronicle.length - 1; i >= 0 && drop > 0; i--) if (!s.chronicle[i].major) { s.chronicle.splice(i, 1); drop--; } if (s.chronicle.length > 1400) s.chronicle.length = 1400; }
   return e;
 }
 export const hasKind = (game, kind) => game.state.chronicle.some(e => e.kind === kind);

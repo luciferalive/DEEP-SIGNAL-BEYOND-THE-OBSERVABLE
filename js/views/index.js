@@ -21,3 +21,6 @@ export * as shipyard from './shipyard.js';
 export * as interstellar from './interstellar.js';
 export * as civilization from './civilization.js';
 export * as mysteries from './mysteries.js';
+export * as galaxy from './galaxy.js';
+export * as colonies from './colonies.js';
+export * as achievements from './achievements.js';

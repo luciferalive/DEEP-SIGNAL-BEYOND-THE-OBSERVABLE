@@ -13,7 +13,7 @@ import { civIndex, TIERS } from './civilization.js';
 export const STAGES = ['DETECTION', 'VERIFICATION', 'CHARACTERIZATION', 'PATTERN ANALYSIS', 'SOURCE INVESTIGATION', 'HYPOTHESIS', 'CONCLUSION'];
 export const CAUSES = { natural: 'Natural phenomenon', interference: 'Known interference', instrumental: 'Instrument artifact', unknown: 'Unknown source', artificial: 'Artificial origin (fictional)' };
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
-export const arcOf = (game, id) => game.data.mysteryArcs.find(a => a.id === id);
+export const arcOf = (game, id) => game.data.mysteryArcs.find(a => a.id === id) || game.state.mysteries.generated?.find(a => a.id === id);
 export const ms = game => game.state.mysteries;
 export const getMystery = (game, id) => ms(game).list.find(m => m.id === id);
 export const tierRank = name => TIERS.findIndex(t => t[1] === name);

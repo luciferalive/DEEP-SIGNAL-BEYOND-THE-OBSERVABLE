@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0 (V5) - Beyond the Observable
+- Galactic map: 8 rings x 6 sectors (to 8,000 ly), sector surveys limited by technology range. Real catalogued stars plus deterministic procedural FICTIONAL systems (seeded per save); planets always SIMULATED.
+- Interstellar colonies (station, mine, hub, relay; max 150 ly, years of transit, 10% loss, supply/sustainability, failure when starved) and aggregate civilization networks with five priorities.
+- Cosmic intelligence: decoding signals of unknown civilizations (FICTIONAL lore) and studying their technology for data-yield bonuses.
+- 12 new technologies (fusion, antimatter, wormhole theory etc.; SPECULATIVE/FICTIONAL ones labelled), 10 achievements and eras, procedurally generated mysteries, unlimited method refinement, chronicle compaction and a universe-memory summary.
+- Views: Galactic Map, Interstellar Civilization (colonies, networks), Frontier and Achievements; decode/study buttons in the mysteries view.
+- Save format 7 with migration from v6 (real v6 fixture). Saves v1 to v6 still load.
+
 ## 0.5.0 (V4) 
 - The Unknown: mystery engine, hypotheses, conclusions with consequences, anomaly network, decisions, rare events, unknown civilizations (all FICTIONAL, clearly labelled), explorer and archive integration.
 - Save format 6 with migration from v5 (real v5 fixture). Anomalies can have a rare FICTIONAL extraordinary cause that opens a mystery.

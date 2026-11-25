@@ -28,7 +28,7 @@ export function createNewGame(seed = Date.now() % 2147483647) {
     events: { pending: null, history: [], pauseObsUntil: 0, records: [], responses: [] },
     finance: { ledger: [], lastGrantDay: 0, nextResupplyDay: BASE.resupplyFirstDay, lastSupplyRequestDay: -999, reports: [], period: { income: 0, expense: 0, byCat: {} }, reserve: 600 },
     chronicle: [], publications: [], modules: {},
-    schedule: [], mysteries: { list: [], objects: [], civs: [], decisions: { pending: [], history: [] }, rareLog: [], nextStart: null, nextRare: null }, worlds: {}, facilities: [], stock: { materials: 0, volatiles: 0 }, designs: [], interstellar: [], civ: { policy: { safety: 'standard', pace: 'steady' } }, expeditions: [], comms: { interruptedUntil: 0, history: [] }, earth: { contracts: [], completed: 0, failed: 0, aborted: 0 },
+    schedule: [], mysteries: { list: [], objects: [], civs: [], generated: [], decisions: { pending: [], history: [] }, rareLog: [], nextStart: null, nextRare: null }, galaxy: { sectors: {}, count: 0 }, colonies: [], network: { priority: { research: 20, logistics: 20, energy: 20, manufacturing: 20, exploration: 20 } }, achievements: { done: {}, era: null }, refinements: 0, worlds: {}, facilities: [], stock: { materials: 0, volatiles: 0 }, designs: [], interstellar: [], civ: { policy: { safety: 'standard', pace: 'steady' } }, expeditions: [], comms: { interruptedUntil: 0, history: [] }, earth: { contracts: [], completed: 0, failed: 0, aborted: 0 },
     bookmarks: [], tracked: [], destinations: [],
     history: { oxygen: [], water: [], food: [], power: [], credits: [] },
     log: [],
@@ -51,6 +51,8 @@ export function validateState(s) {
 // Future versions add migration steps here. Never drop data silently.
 const SPEC_BY_NAME = { astrophysics: 'astrophysicist', engineering: 'engineer', 'planetary science': 'astrobiologist', 'computer science': 'data', 'medical science': 'medical' };
 const STEPS = {
+  // 6 -> 7 (V5): galaxy map, colonies, networks, achievements, generated mysteries. Nothing existing is changed.
+  6: s => { s.galaxy = s.galaxy || { sectors: {}, count: 0 }; s.colonies = s.colonies || []; s.network = s.network || { priority: { research: 20, logistics: 20, energy: 20, manufacturing: 20, exploration: 20 } }; s.achievements = s.achievements || { done: {}, era: null }; s.refinements = s.refinements || 0; if (s.mysteries) s.mysteries.generated = s.mysteries.generated || []; },
   // 5 -> 6 (V4): mystery engine state. Nothing existing is changed.
   5: s => { s.mysteries = s.mysteries || { list: [], objects: [], civs: [], decisions: { pending: [], history: [] }, rareLog: [], nextStart: null, nextRare: null }; },
   // 4 -> 5 (V3): worlds, facilities, resource stock, custom designs, interstellar probes and civilization policies. Nothing existing is changed.

@@ -62,6 +62,8 @@ export function canStartTech(game, techId) {
   const missing = tech.requires.filter(r => !s.tech.researched[r]);
   if (missing.length) return { ok: false, error: `Requires: ${missing.map(m => game.data.techById[m]?.name || m).join(', ')}.` };
   if (workRates(game).research <= 0) return { ok: false, error: 'Assign at least one healthy crew member to Research and analysis.' };
+  if (tech.facility && !game.state.facilities.some(f => f.type === tech.facility && f.status === 'active')) return { ok: false, error: `Needs an operational ${game.data.facilityById[tech.facility]?.name || tech.facility}.` };
+  if (tech.materials && game.state.stock.materials < tech.materials) return { ok: false, error: `Needs ${tech.materials} units of materials in stock (you have ${Math.floor(game.state.stock.materials)}).` };
   for (const [k, n] of Object.entries(tech.data || {})) { const have = analysedCount(game, k); if (have < n) return { ok: false, error: `Needs ${n} analysed ${k} dataset${n > 1 ? 's' : ''} (you have ${have}).` }; }
   if (s.resources.researchPoints < tech.costRP) return { ok: false, error: `Needs ${tech.costRP} research points.` };
   if (s.resources.credits < tech.costCredits) return { ok: false, error: `Needs ${tech.costCredits} RC.` };
@@ -70,7 +72,7 @@ export function canStartTech(game, techId) {
 export function startTech(game, techId) {
   const c = canStartTech(game, techId); if (!c.ok) return c;
   const tech = game.data.techById[techId]; const s = game.state;
-  spend(game, tech.costCredits, `Research: ${tech.name}`); s.resources.researchPoints -= tech.costRP;
+  spend(game, tech.costCredits, `Research: ${tech.name}`); s.resources.researchPoints -= tech.costRP; if (tech.materials) s.stock.materials -= tech.materials;
   s.tech.active = { id: techId, progress: 0, days: tech.days, startedAt: s.time.t };
   game.log(`Research started: ${tech.name}.`, 'info');
   return { ok: true };
