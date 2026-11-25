@@ -126,10 +126,4 @@ Per-version "not done" lists are in `CHANGELOG.md` and `DEVELOPMENT_ROADMAP.md`.
 
 <div align="center">
 
-### 🏷️ Suggested GitHub topics
-
-`space-game` `space-simulation` `astronomy` `browser-game` `javascript` `es-modules` `no-dependencies` `sci-fi` `science-fiction` `mystery` `strategy-game` `management-simulation` `procedural-generation` `deterministic` `exoplanets` `observatory` `idle-game` `text-based-game` `save-migration` `vanilla-js`
-
-*Suggested repo description:* **Command a deep-space observatory in 2189. Observe real objects, chase fictional mysteries, colonise the galaxy. Zero-dependency browser sci-fi sim.**
-
 </div>
