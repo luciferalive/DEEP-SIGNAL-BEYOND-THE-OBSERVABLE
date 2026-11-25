@@ -15,7 +15,7 @@
 ![Browser game](https://img.shields.io/badge/browser_game-0a1426)
 ![Simulation](https://img.shields.io/badge/space_simulation-0a1426)
 
-**[Run it](#-run-it) · [What you do](#-what-you-do) · [Real vs fictional](#-real-vs-fictional-the-core-rule) · [Roadmap status](#-the-five-versions) · [Honest limits](#-honest-limits)**
+**[▶ Play online](https://luciferalive.github.io/DEEP-SIGNAL-BEYOND-THE-OBSERVABLE/)** · **[Run it](#-run-it) · [What you do](#-what-you-do) · [Real vs fictional](#-real-vs-fictional-the-core-rule) · [Roadmap status](#-the-five-versions) · [Honest limits](#-honest-limits)**
 
 </div>
 
@@ -55,7 +55,9 @@ Everything on screen is labelled. No exceptions.
 
 ## 🚀 Run it
 
-No build step. No dependencies. Needs only a static server (the game loads JSON and ES modules, so `file://` will not work).
+**Play in the browser (no install):** https://luciferalive.github.io/DEEP-SIGNAL-BEYOND-THE-OBSERVABLE/ — deployed automatically from `main` by GitHub Pages after the tests pass.
+
+**Or run locally.** No build step. No dependencies. Needs only a static server (the game loads JSON and ES modules, so `file://` will not work).
 
 ```bash
 git clone https://github.com/luciferalive/DEEP-SIGNAL-BEYOND-THE-OBSERVABLE.git
